@@ -1532,13 +1532,15 @@ html:has(#sheetView:not([hidden])) body{overflow-y:hidden}
 .pop-img{display:block; margin-top:14px; border:1px solid #2a2a2a; border-radius:2px; overflow:hidden; background:#000}
 .pop-img img{display:block; width:100%; max-height:52vh; object-fit:contain}
 .pop-audio{display:block; width:100%; margin-top:14px; height:40px}
-</style>
+
+/* v2.5 · versão visível ao lado do nome */
+.topbar .brand .ver{display:inline-block; font-size:9.5px; padding:1px 5px; opacity:.8}</style>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.4</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.5</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -4107,11 +4109,11 @@ const profileFields = () => `
       <label class="f span2"><span>Nome do lutador</span><input class="in name-in" data-k="info.nome" placeholder="Sem nome"></label>
       <label class="f"><span>Apelido / Vulgo</span><input class="in" data-k="info.apelido" placeholder="—"></label>
       <label class="f"><span>Jogador</span><input class="in" data-k="info.jogador"></label>
-      <label class="f"><span>Idade</span><input class="in" data-k="info.idade" inputmode="numeric"></label>
+      <label class="f"><span>Idade</span><input class="in nonneg" data-k="info.idade" inputmode="numeric" maxlength="3" placeholder="0"></label>
       <label class="f"><span>Ano escolar</span>
         <select class="in" data-k="info.ano"><option value="">—</option><option>1º ano</option><option>2º ano</option><option>3º ano</option><option>Fora da escola</option></select>
       </label>
-      <label class="f"><span>Grana (¥)</span><input class="in mono" data-k="info.grana" inputmode="numeric" placeholder="0"></label>
+      <label class="f"><span>Grana (¥)</span><input class="in mono nonneg" data-k="info.grana" inputmode="numeric" maxlength="9" placeholder="0"></label>
       <label class="f span2"><span>Gangue / Distrito</span><select class="in" data-k="info.gangue" id="gangSel"></select></label>
       <label class="f span3"><span>Conceito</span><input class="in" data-k="info.conceito" placeholder="Ex.: Ex-boxeador amador que luta pela honra do distrito"></label>
       <div class="gang-info span3" id="gangInfo" hidden></div>
@@ -4317,7 +4319,7 @@ function renderSheetViews(){
   const g = GANGS.find(x=>x.g === S.info.gangue);
   const fact = (k, v) => `<div><dt>${k}</dt><dd>${v ? esc(v) : '<span class="muted">—</span>'}</dd></div>`;
   $('#factsPerfil').innerHTML = fact('Nome', S.info.nome) + fact('Apelido', S.info.apelido) + fact('Jogador', S.info.jogador)
-    + fact('Idade', S.info.idade) + fact('Ano escolar', S.info.ano) + fact('Grana', S.info.grana ? '¥ ' + S.info.grana : '')
+    + fact('Idade', S.info.idade) + fact('Ano escolar', S.info.ano) + fact('Grana', S.info.grana !== '' && S.info.grana != null ? '¥ ' + (Number(String(S.info.grana).replace(/\D+/g,'')) || 0).toLocaleString('pt-BR') : '')
     + fact('Gangue', g ? (g.d !== '—' ? `${g.g} · ${g.d}` : g.g) : '') + fact('Conceito', S.info.conceito);
   const gv = $('#gangView');
   gv.hidden = !(g && g.d !== '—');
@@ -4749,6 +4751,25 @@ document.addEventListener('paste', e=>{
 });
 renderMedia();
 
+/* =====================================================================
+   v2.5 · AVISO DE VERSÃO NOVA
+   O GitHub Pages pode entregar o arquivo antigo por alguns minutos.
+   Ao abrir, o site busca a versão publicada; se for mais nova que a
+   aberta, mostra um aviso com o botão "Atualizar agora".
+   ===================================================================== */
+(async function(){
+  try{
+    const cur = (document.querySelector('.ver')?.textContent || '').trim();
+    if(!cur || location.protocol === 'file:') return;
+    const res = await fetch(location.pathname + '?v=' + Date.now(), {cache:'no-store'});
+    if(!res.ok) return;
+    const m = (await res.text()).match(/class="ver"[^>]*>(v[\d.]+)</);
+    if(m && m[1] !== cur){
+      toast('Versão nova disponível', `Você está na ${cur} e já existe a ${m[1]}.`, null,
+        `<button class="btn sm red" onclick="location.href=location.pathname+'?v='+Date.now()+location.hash">Atualizar agora</button>`);
+    }
+  }catch(e){}
+})();
 try{ setTab(localStorage.getItem(TAB_KEY) || 'perfil'); }catch(e){ setTab('perfil'); }
 show('inicio');
 initAuth();
