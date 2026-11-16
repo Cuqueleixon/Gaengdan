@@ -1469,13 +1469,51 @@ html:has(#sheetView:not([hidden])) body{overflow-y:hidden}
 /* mestre editando a ficha de outra pessoa: sempre em modo de edição */
 #btnRoEdit{display:none}
 @media (max-height:480px){ html:has(#sheetView:not([hidden])) body{overflow-y:auto} }
+
+/* =====================================================================
+   v2.3 · BARRAS LISAS COM NÚMERO DENTRO E − / +, ATRIBUTOS EM DUPLA
+   ===================================================================== */
+.bar::after{display:none !important}
+.hv{display:grid; grid-template-columns:30px minmax(0,1fr) auto; align-items:center; gap:8px}
+.hero .bar{position:relative; height:22px; margin:0; overflow:visible; border-radius:2px; background:#0a0a0a; border:1px solid #2a2a2a}
+.hero .bar i{border-radius:1px}
+.bar[data-win]{cursor:pointer}
+.bar[data-win]:hover{border-color:#444}
+.bar[data-win]:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.hero .bar .bar-num{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:3px;
+  font-family:var(--display); font-weight:800; font-stretch:75%; font-size:14px; letter-spacing:.02em; line-height:1;
+  color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.95), 0 0 6px rgba(0,0,0,.7);
+}
+.hero .bar .bar-num small{font-family:var(--ui); font-weight:600; font-stretch:87.5%; font-size:11px; color:rgba(255,255,255,.78)}
+.hv-btns{display:flex; gap:4px}
+.hv-btn{
+  width:26px; height:22px; display:grid; place-items:center; padding:0;
+  background:#151515; border:1px solid #333; border-radius:2px; color:var(--ink);
+  font-size:16px; line-height:1; user-select:none; touch-action:manipulation;
+}
+.hv-btn:hover{border-color:var(--yellow); color:var(--yellow)}
+.hv-btn:active{background:#222}
+.hv-btn:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+@media (max-height:820px) and (min-width:761px){
+  .hero .bar{height:18px}
+  .hero .bar .bar-num{font-size:12.5px}
+  .hv-btn{height:18px; width:24px; font-size:14px}
+}
+/* atributos: escolha em dupla */
+.at.picked{border-color:var(--yellow); background:rgba(245,196,0,.07)}
+.at.picked .at-k{color:var(--yellow)}
+.at.picked::after{content:"1º"; position:absolute; top:6px; right:8px; font-family:var(--mono); font-size:10px; color:var(--yellow)}
+.at{position:relative}
+/* na janela "Distribuir pontos" os dados não rolam */
+.win .die{pointer-events:none}
 </style>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.2</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.3</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -1535,17 +1573,19 @@ html:has(#sheetView:not([hidden])) body{overflow-y:hidden}
       <div class="hero-sub" id="heroSub"></div>
       <div class="hero-tags" id="heroTags"></div>
     </div>
-    <div class="hero-vit" data-win="vida" role="button" tabindex="0" title="Dano e cura">
+    <div class="hero-vit">
       <div class="hv">
-        <div class="hv-head"><span class="hv-k">Q.V</span><span class="vital-val" id="qvVal" data-tip=""></span></div>
-        <div class="bar qv" id="qvBar"><i></i></div>
+        <span class="hv-k">Q.V</span>
+        <div class="bar qv" id="qvBar" data-win="vida" role="button" tabindex="0" aria-label="Vida: abrir dano e cura"><i></i><span class="bar-num vital-val" id="qvVal" data-tip=""></span></div>
+        <div class="hv-btns"><button type="button" class="hv-btn" data-hv="qv" data-d="-1" aria-label="Diminuir 1 de vida" title="−1 · segure para repetir">−</button><button type="button" class="hv-btn" data-hv="qv" data-d="1" aria-label="Aumentar 1 de vida" title="+1 · segure para repetir">+</button></div>
       </div>
       <div class="hv">
-        <div class="hv-head"><span class="hv-k">E.S</span><span class="vital-val" id="esVal" data-tip=""></span></div>
-        <div class="bar es" id="esBar"><i></i></div>
+        <span class="hv-k">E.S</span>
+        <div class="bar es" id="esBar" data-win="vida" role="button" tabindex="0" aria-label="Estamina: abrir dano e cura"><i></i><span class="bar-num vital-val" id="esVal" data-tip=""></span></div>
+        <div class="hv-btns"><button type="button" class="hv-btn" data-hv="es" data-d="-1" aria-label="Diminuir 1 de estamina" title="−1 · segure para repetir">−</button><button type="button" class="hv-btn" data-hv="es" data-d="1" aria-label="Aumentar 1 de estamina" title="+1 · segure para repetir">+</button></div>
       </div>
     </div>
-    <div class="hero-stats">
+<div class="hero-stats">
       <div class="stat" id="stCA" data-tip=""><div class="v">0</div><div class="l">C.A</div></div>
       <div class="stat" id="stMOV" data-tip=""><div class="v">0</div><div class="l">Movim.</div></div>
       <div class="stat" id="stN" data-tip="Nível total (Faixa Branca nível 1 = 0)"><div class="v">0</div><div class="l">Nível</div></div>
@@ -1585,7 +1625,7 @@ html:has(#sheetView:not([hidden])) body{overflow-y:hidden}
       <section class="panel">
         <div class="panel-h"><h2>Atributos</h2><button class="btn sm" data-win="status">Distribuir pontos <span class="tc" id="incBadge"></span></button></div>
         <div class="attr-row" id="attrView"></div>
-        <p class="hint" style="margin:10px 0 0">Clique num atributo para rolar o dado.</p>
+        <p class="hint" id="attrHint" style="margin:10px 0 0">Clique em dois atributos para rolar os dois dados juntos.</p>
       </section>
       <div class="pane-grid">
         <section class="panel">
@@ -4245,7 +4285,7 @@ function renderSheetViews(){
   gv.hidden = !(g && g.d !== '—');
   if(g && g.d !== '—') gv.innerHTML = `<b>${esc(g.g)}</b> · líder ${esc(g.l)}. ${esc(g.t)}`;
 
-  $('#attrView').innerHTML = ATTRS.map(a=>`<button class="at" data-roll-attr="${a.k}" title="Rolar ${a.n}"><span class="at-k">${a.k}</span><span class="at-d ${S.attrs[a.k] > 6 ? 'up' : ''}">d${S.attrs[a.k]}</span><span class="at-n">${a.n}</span></button>`).join('');
+  $('#attrView').innerHTML = ATTRS.map(a=>`<button class="at ${PICK === a.k ? 'picked' : ''}" data-pick-attr="${a.k}" title="Escolher ${a.n}"><span class="at-k">${a.k}</span><span class="at-d ${S.attrs[a.k] > 6 ? 'up' : ''}">d${S.attrs[a.k]}</span><span class="at-n">${a.n}</span></button>`).join('');
   const inc = D.incAvail - D.incUsed;
   $('#incBadge').textContent = inc > 0 ? inc : '';
 
@@ -4322,7 +4362,7 @@ document.addEventListener('keydown', e=>{
     else if(id === 'expr'){ e.preventDefault(); $('#btnExpr').click(); }
     else if(id === 'qvAmt' || id === 'esAmt'){ e.preventDefault(); changeVital(id === 'qvAmt' ? 'qv' : 'es', '-', e.target.value); e.target.value = ''; }
   }
-  if((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hero-vit')){ e.preventDefault(); if(!isRO()) openWin('vida'); }
+  if((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.bar[data-win]')){ e.preventDefault(); if(!isRO()) openWin('vida'); }
 });
 
 /* =====================================================================
@@ -4404,6 +4444,52 @@ function fitSheet(){
   if(topbar && 'ResizeObserver' in window) new ResizeObserver(later).observe(topbar);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(later);
   later();
+})();
+
+/* =====================================================================
+   v2.3 · ATRIBUTOS EM DUPLA E BARRAS COM − / +
+   ===================================================================== */
+/* Status: clique em dois atributos para rolar os dois dados juntos.
+   (Um dado só fica na janela "Rolar dados".) */
+var PICK = null;
+function markPick(){
+  $$('#attrView .at').forEach(el=>el.classList.toggle('picked', el.dataset.pickAttr === PICK));
+  const h = document.getElementById('attrHint');
+  if(h) h.textContent = PICK ? `${PICK} escolhido. Agora clique no segundo atributo (ou no mesmo para cancelar).` : 'Clique em dois atributos para rolar os dois dados juntos.';
+}
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-pick-attr]'); if(!b) return;
+  const k = b.dataset.pickAttr;
+  if(PICK === null){ PICK = k; markPick(); return; }
+  if(PICK === k){ PICK = null; markPick(); return; }
+  const a = PICK; PICK = null; markPick();
+  doRoll(`Teste ${a} + ${k}`, rollTest(a, k));
+});
+
+/* Barras do topo: − e + direto na barra; segure o botão para repetir. */
+(function(){
+  let rep, delay, lastDown = 0;
+  const step = (k, d) => {
+    if(isRO()) return;
+    const max = D[k + 'Max'];
+    S[k] = clamp((S[k] ?? max) + d, 0, max);
+    save(); renderDerived(); renderCombat();
+  };
+  const stop = () => { clearTimeout(delay); clearInterval(rep); };
+  document.addEventListener('pointerdown', e=>{
+    const b = e.target.closest('.hv-btn'); if(!b || e.button > 0) return;
+    e.preventDefault(); lastDown = Date.now();
+    const k = b.dataset.hv, d = +b.dataset.d;
+    stop(); step(k, d);
+    delay = setTimeout(()=>{ rep = setInterval(()=>step(k, d), 70); }, 380);
+  });
+  ['pointerup', 'pointercancel', 'blur'].forEach(ev=>window.addEventListener(ev, stop, true));
+  document.addEventListener('pointerout', e=>{ if(e.target.closest && e.target.closest('.hv-btn')) stop(); }, true);
+  document.addEventListener('click', e=>{
+    const b = e.target.closest('.hv-btn'); if(!b) return;
+    e.stopPropagation(); e.preventDefault();
+    if(e.detail === 0 && Date.now() - lastDown > 600) step(b.dataset.hv, +b.dataset.d);   // pelo teclado (Enter/Espaço)
+  }, true);
 })();
 
 try{ setTab(localStorage.getItem(TAB_KEY) || 'perfil'); }catch(e){ setTab('perfil'); }
