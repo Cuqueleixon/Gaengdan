@@ -1196,13 +1196,152 @@ body{background:#080808}
 .tm-limit p{margin:0}
 .tm-limit b{color:var(--ink)}
 .tm-limit-list{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+
+/* =====================================================================
+   FICHA LIMPA + JANELAS
+   As abas só mostram o que o lutador é e tem; toda edição abre numa
+   janela central. Painéis com bastante respiro e pouca informação.
+   ===================================================================== */
+.ver{font-family:var(--mono); font-size:10px; letter-spacing:.06em; color:var(--ink-3); border:1px solid #2a2a2a; padding:1px 6px; border-radius:2px; align-self:center}
+.sheet-body{padding:24px}
+.pane.on{gap:18px}
+.panel{background:#111; border:1px solid #1f1f1f; border-radius:3px; padding:20px}
+.panel-h{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px}
+.panel-h h2{margin:0; font-family:var(--display); font-weight:800; font-stretch:80%; font-size:14px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink)}
+.panel-h h2 span{color:var(--ink-3)}
+.panel-h .aside{font-size:12.5px; color:var(--ink-3); letter-spacing:.06em}
+.panel-acts{display:flex; gap:6px; flex-wrap:wrap}
+.page-h{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
+.page-h .cap-row{margin:0}
+.tabs-act{
+  margin-left:auto; align-self:center; background:transparent; border:1px solid #333; border-radius:2px; color:var(--ink);
+  font-family:var(--ui); font-weight:700; font-stretch:87.5%; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; padding:7px 12px; white-space:nowrap;
+}
+.tabs-act:hover{border-color:var(--yellow); color:var(--yellow)}
+.hero-vit[data-win]{cursor:pointer; border-radius:3px; padding:4px; margin:-4px; transition:background .15s}
+.hero-vit[data-win]:hover{background:rgba(255,255,255,.03)}
+.hero-vit[data-win]:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.hero-sub:empty{display:none}
+
+/* perfil */
+.facts{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:18px 28px; margin:0}
+.facts dt{font-weight:600; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.facts dd{margin:5px 0 0; font-size:16px; color:var(--ink); overflow-wrap:anywhere}
+.gang-note{margin:18px 0 0; padding-top:14px; border-top:1px solid #1f1f1f; font-size:14px; color:var(--ink-2); line-height:1.5}
+.gang-note b{color:var(--ink)}
+
+/* status */
+.attr-row{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px}
+@media (max-width:560px){ .attr-row{grid-template-columns:repeat(3,minmax(0,1fr))} }
+.at{display:grid; justify-items:center; gap:3px; padding:16px 6px 14px; background:#0d0d0d; border:1px solid #222; border-radius:3px; color:var(--ink); transition:border-color .15s}
+.at:hover{border-color:var(--yellow)}
+.at:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.at-k{font-weight:700; font-size:11px; letter-spacing:.2em; color:var(--ink-3)}
+.at-d{font-family:var(--display); font-weight:900; font-stretch:75%; font-size:36px; line-height:1}
+.at-d.up{color:var(--yellow)}
+.at-n{font-size:11.5px; color:var(--ink-3)}
+.bv-strip{position:relative; height:14px; border-radius:2px; overflow:hidden}
+.bv-tip{position:absolute; right:8%; top:0; bottom:0; width:28%; background:#141414; display:flex; align-items:center; justify-content:space-evenly}
+.bv-tip i{width:4px; height:60%; background:rgba(255,255,255,.14)}
+.bv-tip i.on{background:#f4efe6}
+.bv-row{display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-top:12px; flex-wrap:wrap}
+.bv-row b{font-family:var(--display); font-weight:800; font-stretch:80%; font-size:19px; text-transform:uppercase; letter-spacing:.04em}
+.bv-row span{font-size:13.5px; color:var(--ink-2)}
+.bv-row.small{margin-top:6px}
+.bv-row .ok{color:var(--yellow); font-weight:700; font-size:12.5px; letter-spacing:.06em}
+.cv b{display:block; font-family:var(--display); font-weight:800; font-stretch:80%; font-size:19px; text-transform:uppercase; letter-spacing:.04em}
+.cv p{margin:6px 0 0; font-size:14px; color:var(--ink-2); line-height:1.45}
+.arch-list{list-style:none; margin:14px 0 0; padding:0; display:grid}
+.arch-list li{display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-top:1px solid #1d1d1d; font-size:14.5px}
+.arch-list li > span:last-child{color:var(--ink-3); font-size:12px; letter-spacing:.04em; white-space:nowrap}
+.pcv{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px}
+@media (max-width:560px){ .pcv{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.pcv div{display:grid; gap:3px; padding:12px; background:#0d0d0d; border:1px solid #222; border-radius:3px}
+.pcv b{font-family:var(--display); font-weight:900; font-stretch:75%; font-size:28px; line-height:1}
+.pcv span{font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.pcv div:first-child b{color:var(--yellow)}
+
+/* combate */
+.quick{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px}
+@media (max-width:760px){ .quick{grid-template-columns:1fr 1fr} }
+.qbtn{display:grid; gap:3px; text-align:left; padding:16px; background:#111; border:1px solid #232323; border-radius:3px; color:var(--ink); transition:border-color .15s, background .15s}
+.qbtn b{font-family:var(--display); font-weight:800; font-stretch:80%; font-size:15px; letter-spacing:.1em; text-transform:uppercase}
+.qbtn span{font-size:12.5px; color:var(--ink-3)}
+.qbtn:hover{border-color:#454545; background:#141414}
+.qbtn:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.qbtn.danger{border-color:rgba(239,68,68,.4)}
+.qbtn.danger b{color:#ff6b6b}
+.combat-line{padding:12px 0}
+
+/* golpes e inventário */
+.notes{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.notes label:nth-child(3), .notes label:nth-child(6){grid-column:1/-1}
+@media (max-width:700px){ .notes{grid-template-columns:1fr} }
+.li{background:#0e0e0e; border-color:#1f1f1f}
+.li .in{border-bottom-color:transparent}
+.li .in:hover{border-bottom-color:#333}
+.li .in:focus{border-bottom-color:var(--yellow)}
+
+/* ---------- JANELA ---------- */
+.win-wrap{
+  position:fixed; inset:0; z-index:95; display:grid; place-items:center;
+  padding:max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background:rgba(0,0,0,.75); backdrop-filter:blur(4px); animation:fadeIn .16s ease-out;
+}
+.win{
+  width:min(640px,100%); max-height:calc(100vh - 32px); display:grid; grid-template-rows:auto minmax(0,1fr) auto;
+  background:#0f0f0f; border:1px solid #2c2c2c; border-top:2px solid var(--yellow); border-radius:3px;
+  box-shadow:0 40px 120px rgba(0,0,0,.85); animation:tmIn .2s cubic-bezier(.2,.8,.2,1);
+}
+.win.sm{width:min(480px,100%)}
+.win.lg{width:min(1060px,100%)}
+.win-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:18px 22px 14px; border-bottom:1px solid #212121}
+.win-head h2{margin:0; font-family:var(--display); font-weight:900; font-stretch:75%; font-size:28px; line-height:1; text-transform:uppercase}
+.win-head .eyebrow{margin-bottom:6px}
+.win-head .x{font-size:22px; width:36px; height:36px}
+.win-body{overflow:auto; padding:20px 22px 24px; display:grid; gap:16px; align-content:start}
+.win-body .subh{margin:6px 0 0}
+.win-foot{display:flex; justify-content:flex-end; gap:8px; padding:14px 22px; border-top:1px solid #212121; flex-wrap:wrap}
+.win .profile-grid{grid-template-columns:130px minmax(0,1fr)}
+.win .profile-grid .photo{width:130px}
+.win .profile-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+.win .moves{grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+@media (max-width:640px){
+  .win-wrap{padding:0; display:block}
+  .win, .win.sm, .win.lg{width:100%; height:100%; max-height:none; border-radius:0; border-left:0; border-right:0}
+  .win .profile-grid{grid-template-columns:1fr}
+  .win .profile-fields{grid-template-columns:1fr 1fr}
+}
+.xp-big{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.xp-big b{font-family:var(--display); font-weight:900; font-stretch:75%; font-size:48px; line-height:1}
+.xp-big span{color:var(--ink-3); font-size:14px}
+.xp-quick{display:flex; gap:6px; flex-wrap:wrap}
+.lvl-jump{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px}
+.lj{display:grid; gap:3px; padding:14px; background:#0d0d0d; border:1px solid #232323; border-radius:3px}
+.lj b{font-family:var(--display); font-weight:900; font-stretch:75%; font-size:22px; text-transform:uppercase}
+.lj span:last-child{color:var(--ink-2); font-size:13.5px}
+.lj.on{border-color:var(--yellow)}
+.lj-arrow{font-size:22px; color:var(--ink-3)}
+.gains{list-style:none; margin:0; padding:0; display:grid; gap:6px}
+.gains li{display:flex; gap:12px; align-items:baseline; padding:9px 12px; background:#121212; border-left:2px solid var(--yellow); font-size:14.5px}
+.gains b{font-family:var(--display); font-weight:900; font-stretch:75%; font-size:19px; color:var(--yellow); min-width:46px}
+.adv summary{cursor:pointer; font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+.adv summary:hover{color:var(--ink)}
+.adv[open] summary{margin-bottom:12px}
+.vw{padding:16px; background:#0d0d0d; border:1px solid #222; border-radius:3px; display:grid; gap:10px}
+.vw-h{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.vw-h b{font-family:var(--display); font-weight:900; font-stretch:75%; font-size:30px}
+.vw .bar{margin:0}
+.rest{display:grid; gap:8px}
+.win .dice-row{margin-top:2px}
+.win .chips{gap:8px}
 </style>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.0</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -1253,7 +1392,7 @@ body{background:#080808}
 
 <main class="sheet" id="sheetView" hidden>
 
-  <!-- ================= BARRA DO LUTADOR (sempre visível) ================= -->
+  <!-- ================= BARRA DO LUTADOR ================= -->
   <section class="hero" aria-label="Resumo do lutador">
     <div class="hero-pic" id="heroPic" aria-hidden="true"></div>
     <div class="hero-id">
@@ -1262,7 +1401,7 @@ body{background:#080808}
       <div class="hero-sub" id="heroSub"></div>
       <div class="hero-tags" id="heroTags"></div>
     </div>
-    <div class="hero-vit">
+    <div class="hero-vit" data-win="vida" role="button" tabindex="0" title="Dano e cura">
       <div class="hv">
         <div class="hv-head"><span class="hv-k">Q.V</span><span class="vital-val" id="qvVal" data-tip=""></span></div>
         <div class="bar qv" id="qvBar"><i></i></div>
@@ -1275,8 +1414,8 @@ body{background:#080808}
     <div class="hero-stats">
       <div class="stat" id="stCA" data-tip=""><div class="v">0</div><div class="l">C.A</div></div>
       <div class="stat" id="stMOV" data-tip=""><div class="v">0</div><div class="l">Movim.</div></div>
-      <div class="stat" id="stN" data-tip="Nível lógico: Faixa Branca nível 1 = 0"><div class="v">0</div><div class="l">Nível</div></div>
-      <div class="stat" id="stPC" data-tip="Pontos de Combate disponíveis (aba Técnica)"><div class="v">0</div><div class="l">PC</div></div>
+      <div class="stat" id="stN" data-tip="Nível total (Faixa Branca nível 1 = 0)"><div class="v">0</div><div class="l">Nível</div></div>
+      <div class="stat" id="stPC" data-tip="Pontos de Combate disponíveis"><div class="v">0</div><div class="l">PC</div></div>
     </div>
     <div class="hero-alerts">
       <div class="banner" id="downBanner"></div>
@@ -1289,320 +1428,139 @@ body{background:#080808}
   <nav class="tabs" role="tablist" id="tabs" aria-label="Partes da ficha">
     <button class="tab" data-tab="perfil" role="tab">Perfil</button>
     <button class="tab" data-tab="status" role="tab">Status</button>
-    <button class="tab" data-tab="faixa" role="tab">Faixa</button>
-    <button class="tab" data-tab="classe" role="tab">Classe</button>
-    <button class="tab" data-tab="combate" role="tab">Combate</button>
-    <button class="tab" data-tab="efeitos" role="tab">Efeitos <span class="tc" id="tcFx"></span></button>
+    <button class="tab" data-tab="combate" role="tab">Combate <span class="tc" id="tcFx"></span></button>
     <button class="tab" data-tab="golpes" role="tab">Golpes <span class="tc" id="tcGolpes"></span></button>
-    <button class="tab" data-tab="tec" role="tab">Técnica</button>
     <button class="tab" data-tab="inv" role="tab">Inventário <span class="tc" id="tcInv"></span></button>
-    <button class="tab" data-tab="dados" role="tab">Dados</button>
-    <button class="tab" data-tab="notas" role="tab">História</button>
+    <button class="tab" data-tab="notas" role="tab">Notas</button>
+    <button class="tabs-act" data-win="dados">Rolar dados</button>
   </nav>
 
   <div class="sheet-body" id="sheetBody">
 
-  <!-- PERFIL -->
-  <div class="pane" id="pane-perfil" role="tabpanel">
-    <section class="card">
-      <h2 class="sec">Perfil<span class="kr">프로필</span></h2>
-      <div class="profile-grid">
-        <button class="photo" id="photo" type="button" aria-label="Adicionar foto">
-          <span class="ph">+ Foto</span>
-          <span class="rm" id="photoRm" role="button" aria-label="Remover foto">×</span>
-        </button>
-        <div class="profile-fields">
-          <label class="f span2"><span>Nome do lutador</span><input class="in name-in" data-k="info.nome" placeholder="Sem nome"></label>
-          <label class="f"><span>Apelido / Vulgo</span><input class="in" data-k="info.apelido" placeholder="—"></label>
-          <label class="f"><span>Jogador</span><input class="in" data-k="info.jogador"></label>
-          <label class="f"><span>Idade</span><input class="in" data-k="info.idade" inputmode="numeric"></label>
-          <label class="f"><span>Ano escolar</span>
-            <select class="in" data-k="info.ano">
-              <option value="">—</option><option>1º ano</option><option>2º ano</option><option>3º ano</option><option>Fora da escola</option>
-            </select>
-          </label>
-          <label class="f"><span>Grana (¥)</span><input class="in mono" data-k="info.grana" inputmode="numeric" placeholder="0"></label>
-          <label class="f"><span>Gangue / Distrito</span><select class="in" data-k="info.gangue" id="gangSel"></select></label>
-          <label class="f span3"><span>Conceito</span><input class="in" data-k="info.conceito" placeholder="Ex.: Ex-boxeador amador que luta pela honra do distrito"></label>
-          <div class="gang-info span3" id="gangInfo" hidden></div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- STATUS -->
-  <div class="pane" id="pane-status" role="tabpanel">
-    <section class="card">
-      <h2 class="sec">Status<span class="kr">능력치</span><span class="aside">clique no dado para rolar</span></h2>
-      <div class="dice-row" id="attrs"></div>
-      <div class="inc-note">
-        <span id="incNote"></span>
-        <span class="hint">Começa tudo em d6 · dois sobem para d8 no início · +1 aumento por faixa · máx. d18</span>
-      </div>
-    </section>
-    <section class="card">
-      <h2 class="sec">Bônus manuais<span class="aside">para itens, cenas e decisões do mestre</span></h2>
-      <div class="grid4">
-        <label class="f"><span>Q.V</span><input class="in mono" type="number" data-k="bonus.qv" data-num></label>
-        <label class="f"><span>E.S</span><input class="in mono" type="number" data-k="bonus.es" data-num></label>
-        <label class="f"><span>C.A</span><input class="in mono" type="number" data-k="bonus.ca" data-num></label>
-        <label class="f"><span>Movimentação</span><input class="in mono" type="number" data-k="bonus.mov" data-num></label>
-      </div>
-      <p class="hint" style="margin:12px 0 0">Passe o mouse sobre Q.V, E.S, C.A e Movim. na barra do lutador para ver de onde vem cada número.</p>
-    </section>
-  </div>
-
-  <!-- FAIXA -->
-  <div class="pane" id="pane-faixa" role="tabpanel">
-    <div class="pane-grid">
-      <section class="card">
-        <h2 class="sec">Faixa &amp; Nível<span class="kr">등급</span><span class="aside" id="lvTotal"></span></h2>
-        <div class="belt-wrap">
-          <div class="belt" id="belt"><div class="tip" id="beltTip"></div></div>
-          <div class="belt-meta"><span class="belt-name" id="beltName">Branca</span><span class="belt-lv" id="beltLv"></span></div>
-          <div class="belt-ladder" id="beltLadder"></div>
-        </div>
-        <div class="grid2">
-          <label class="f"><span>Faixa</span><select class="in" id="selBelt"></select></label>
-          <label class="f"><span>Nível na faixa</span><select class="in" id="selLvl"></select></label>
-        </div>
-        <div style="margin-top:16px">
-          <div style="display:flex; justify-content:space-between; align-items:baseline">
-            <span class="lbl" style="margin:0">Experiência</span>
-            <span class="mono small"><span id="xpNow">0</span> / <span id="xpNeed">50</span> XP</span>
-          </div>
-          <div class="xpbar"><i id="xpFill"></i></div>
-          <div class="xp-row">
-            <input class="box num-in" id="xpAdd" type="number" inputmode="numeric" placeholder="XP" aria-label="XP a adicionar">
-            <button class="btn sm" id="btnXp">+ XP</button>
-            <button class="btn sm red" id="btnLvlUp" hidden>Subir de nível</button>
-          </div>
-        </div>
-      </section>
-      <section class="card">
-        <h2 class="sec">Progressão</h2>
-        <table class="tbl">
-          <thead><tr><th>Faixa</th><th>Níveis</th><th>XP / nível</th><th>Libera</th></tr></thead>
-          <tbody>
-            <tr><th><i class="bd" style="background:#efe9dc"></i>Branca</th><td>4</td><td>50</td><td>1º arquétipo</td></tr>
-            <tr><th><i class="bd" style="background:#f2c230"></i>Amarela</th><td>4</td><td>65</td><td>+1 aumento</td></tr>
-            <tr><th><i class="bd" style="background:#ef7f26"></i>Laranja</th><td>4</td><td>80</td><td>2º arquétipo</td></tr>
-            <tr><th><i class="bd" style="background:#2f6fd6"></i>Azul</th><td>6</td><td>95</td><td>+1 aumento</td></tr>
-            <tr><th><i class="bd" style="background:#2e9e5b"></i>Verde</th><td>6</td><td>105</td><td>+1 aumento</td></tr>
-            <tr><th><i class="bd" style="background:#7d3cc4"></i>Roxa</th><td>8</td><td>120</td><td>+1 aumento</td></tr>
-            <tr><th><i class="bd" style="background:#7a4a2a"></i>Marrom</th><td>8</td><td>135</td><td>+1 aumento</td></tr>
-            <tr><th><i class="bd" style="background:#0d0c0d; box-shadow:inset 0 0 0 1px #555"></i>Preta</th><td>8</td><td>150</td><td>3º arquétipo</td></tr>
-          </tbody>
-        </table>
-        <p class="hint" style="margin:6px 0 0">Cada nível: +2+CON de Q.V, +1+PRE de E.S e +1 PC. Cada nova faixa dá +1 aumento de status.</p>
+    <!-- PERFIL -->
+    <div class="pane" id="pane-perfil" role="tabpanel">
+      <section class="panel">
+        <div class="panel-h"><h2>Perfil</h2><button class="btn sm" data-win="perfil">Editar perfil</button></div>
+        <dl class="facts" id="factsPerfil"></dl>
+        <p class="gang-note" id="gangView" hidden></p>
       </section>
     </div>
-  </div>
 
-  <!-- CLASSE -->
-  <div class="pane" id="pane-classe" role="tabpanel">
-    <div class="pane-grid">
-      <section class="card">
-        <h2 class="sec">Classe<span class="kr">유형</span></h2>
-        <label class="f"><span>Classe</span><select class="in" data-k="classe" id="selClass"></select></label>
-        <p class="desc" id="classDesc"></p>
+    <!-- STATUS -->
+    <div class="pane" id="pane-status" role="tabpanel">
+      <section class="panel">
+        <div class="panel-h"><h2>Atributos</h2><button class="btn sm" data-win="status">Distribuir pontos <span class="tc" id="incBadge"></span></button></div>
+        <div class="attr-row" id="attrView"></div>
+        <p class="hint" style="margin:10px 0 0">Clique num atributo para rolar o dado.</p>
       </section>
-      <section class="card">
-        <h2 class="sec">Arquétipos</h2>
-        <div id="archSlots"></div>
-      </section>
-    </div>
-  </div>
-
-  <!-- COMBATE -->
-  <div class="pane" id="pane-combate" role="tabpanel">
-    <div class="pane-grid">
-      <section class="card">
-        <h2 class="sec">Vida &amp; Estamina<span class="kr">생명</span></h2>
-        <div class="vital">
-          <div class="lbl">Q.V · Quantidade de Vida</div>
-          <div class="vital-ctrl">
-            <input class="box num-in nonneg" id="qvAmt" type="text" inputmode="numeric" maxlength="5" placeholder="0" aria-label="Valor de vida">
-            <button class="btn sm danger" data-vit="qv" data-op="-">Dano</button>
-            <button class="btn sm green" data-vit="qv" data-op="+">Curar</button>
-            <button class="btn sm ghost" data-vit="qv" data-op="max" data-tip="Restaurar Q.V máxima">Cheia</button>
+      <div class="pane-grid">
+        <section class="panel">
+          <div class="panel-h"><h2>Faixa e nível</h2>
+            <div class="panel-acts"><button class="btn sm" data-win="xp">+ XP</button><button class="btn sm red" data-win="nivel" id="btnNivelWin">Subir de nível</button></div>
           </div>
-        </div>
-        <div class="vital">
-          <div class="lbl">E.S · Estamina</div>
-          <div class="vital-ctrl">
-            <input class="box num-in nonneg" id="esAmt" type="text" inputmode="numeric" maxlength="5" placeholder="0" aria-label="Valor de estamina">
-            <button class="btn sm yellow" data-vit="es" data-op="-">Gastar</button>
-            <button class="btn sm green" data-vit="es" data-op="+">Recuperar</button>
-          </div>
-        </div>
-        <div class="vital" style="margin-bottom:0">
-          <div class="lbl">Descanso</div>
-          <div class="vital-ctrl">
-            <button class="btn sm ghost" id="btnShortRest" data-tip="Descanso curto: +35 E.S">Descanso curto</button>
-            <button class="btn sm ghost" id="btnLongRest" data-tip="Descanso completo: recupera toda a E.S">Descanso longo</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2 class="sec">Combate<span class="kr">전투</span>
-          <button class="btn sm ghost" id="btnNewCombat" style="margin-left:auto" data-tip="Restaura as 4 ações, usos de classe e encerra o Cansado">Novo combate</button>
-        </h2>
-        <div class="lbl" style="display:flex; justify-content:space-between"><span>Ações do combate</span><span id="actLeft"></span></div>
-        <div class="toks" id="toks"></div>
-        <p class="hint" style="margin:8px 0 4px">As 4 ações valem para o combate inteiro: gastou, só volta no próximo.</p>
-        <div class="combat-line" id="classUseLine" hidden>
-          <span class="lbl" id="classUseLbl"></span>
-          <div class="pips" id="classUsePips"></div>
-        </div>
-        <div class="combat-line">
-          <span class="lbl" data-tip="Inspiração comum: +4 no reroll">Inspiração comum <span class="muted">+4</span></span>
-          <div class="counter">
-            <button class="btn sm ghost" data-insp="comum" data-d="-1" aria-label="Menos">−</button><b id="inspComum">0</b><button class="btn sm ghost" data-insp="comum" data-d="1" aria-label="Mais">+</button>
-          </div>
-        </div>
-        <div class="combat-line">
-          <span class="lbl" data-tip="Inspiração de combate: +1d8 no reroll">Inspiração de combate <span class="muted">+1d8</span></span>
-          <div class="counter">
-            <button class="btn sm ghost" data-insp="combate" data-d="-1" aria-label="Menos">−</button><b id="inspCombate">0</b><button class="btn sm ghost" data-insp="combate" data-d="1" aria-label="Mais">+</button>
-          </div>
-        </div>
-        <div class="combat-line">
-          <span class="lbl" data-tip="3 falhas = morte. Clique para marcar.">Testes contra morte</span>
-          <div class="pips" id="tcm"></div>
-        </div>
-        <div class="combat-line" id="quickLine" hidden>
-          <span class="lbl">Ações rápidas</span>
-          <div id="quickBtns" style="display:flex; gap:6px; flex-wrap:wrap"></div>
-        </div>
+          <div id="beltView"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-h"><h2>Classe e arquétipos</h2><button class="btn sm" data-win="classe">Escolher</button></div>
+          <div id="classView"></div>
+        </section>
+      </div>
+      <section class="panel">
+        <div class="panel-h"><h2>Pontos de combate</h2><button class="btn sm" data-win="pc">Gerenciar</button></div>
+        <div class="pcv" id="pcView"></div>
       </section>
     </div>
-  </div>
 
-  <!-- EFEITOS -->
-  <div class="pane" id="pane-efeitos" role="tabpanel">
-    <section class="card">
-      <h2 class="sec">Efeitos<span class="kr">상태</span>
-        <button class="btn sm ghost" id="btnTick" style="margin-left:auto" data-tip="Aplica Sangrando (−4 Q.V) e Sufocado (−8 E.S)">Aplicar turno</button>
-        <button class="btn sm ghost" id="btnClearFx">Limpar</button>
-      </h2>
-      <div class="chips" id="fxChips"></div>
-      <div class="active-fx" id="fxActive"></div>
-    </section>
-  </div>
+    <!-- COMBATE -->
+    <div class="pane" id="pane-combate" role="tabpanel">
+      <div class="quick">
+        <button class="qbtn danger" data-win="vida"><b>Dano / cura</b><span>vida e estamina</span></button>
+        <button class="qbtn" data-win="efeitos"><b>Efeitos</b><span id="qFx">nenhum ativo</span></button>
+        <button class="qbtn" data-win="descanso"><b>Descansar</b><span>curto ou longo</span></button>
+        <button class="qbtn" id="btnNewCombat"><b>Novo combate</b><span>restaura as 4 ações</span></button>
+      </div>
+      <div class="pane-grid">
+        <section class="panel">
+          <div class="panel-h"><h2>Ações do combate</h2><span class="aside" id="actLeft"></span></div>
+          <div class="toks" id="toks"></div>
+          <p class="hint" style="margin:10px 0 0">Gastou, só volta no próximo combate.</p>
+        </section>
+        <section class="panel">
+          <div class="panel-h"><h2>Recursos</h2></div>
+          <div class="combat-line" id="classUseLine" hidden>
+            <span class="lbl" id="classUseLbl"></span>
+            <div class="pips" id="classUsePips"></div>
+          </div>
+          <div class="combat-line">
+            <span class="lbl">Inspiração comum <span class="muted">+4</span></span>
+            <div class="counter"><button class="btn sm ghost" data-insp="comum" data-d="-1" aria-label="Menos">−</button><b id="inspComum">0</b><button class="btn sm ghost" data-insp="comum" data-d="1" aria-label="Mais">+</button></div>
+          </div>
+          <div class="combat-line">
+            <span class="lbl">Inspiração de combate <span class="muted">+1d8</span></span>
+            <div class="counter"><button class="btn sm ghost" data-insp="combate" data-d="-1" aria-label="Menos">−</button><b id="inspCombate">0</b><button class="btn sm ghost" data-insp="combate" data-d="1" aria-label="Mais">+</button></div>
+          </div>
+          <div class="combat-line">
+            <span class="lbl">Testes contra morte</span>
+            <div class="pips" id="tcm"></div>
+          </div>
+          <div class="combat-line" id="quickLine" hidden>
+            <span class="lbl">Ações rápidas</span>
+            <div id="quickBtns" style="display:flex; gap:6px; flex-wrap:wrap"></div>
+          </div>
+        </section>
+      </div>
+    </div>
 
-  <!-- GOLPES -->
-  <div class="pane" id="pane-golpes" role="tabpanel">
-    <section class="card">
-      <div class="style-head">
-        <label class="f"><span>Estilo de luta</span><select class="in" data-k="estilo" id="selStyle"></select></label>
-        <div class="legend" id="styleDesc"></div>
+    <!-- GOLPES -->
+    <div class="pane" id="pane-golpes" role="tabpanel">
+      <div class="page-h">
+        <div class="cap-row" id="capGolpes"></div>
+        <div class="panel-acts"><button class="btn sm" data-win="golpes">Aprender golpes</button><button class="btn sm red" id="btnAddTec">+ Técnica própria</button></div>
       </div>
-      <div class="legend" style="margin-bottom:12px">
-        <b>SL</b> nível do golpe · <b>HR</b> maior dado · <b>AR</b> soma dos dados · <b>HR 2</b> maior dado ×2 · <b>Vigor</b> = CON.
-        Golpes acima da sua faixa ficam bloqueados.
-        <label style="display:inline-flex; gap:6px; align-items:center; margin-left:8px; cursor:pointer"><input type="checkbox" id="onlyLearned"> só aprendidos</label>
-      </div>
-      <div class="cap-row" id="capGolpes"></div>
-      <div class="moves" id="moves"></div>
-    </section>
-  </div>
+      <section class="panel">
+        <div class="panel-h"><h2>Golpes · <span id="styleName"></span></h2></div>
+        <div class="moves" id="myMoves"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h2>Técnicas próprias</h2></div>
+        <div class="moves tec-list" id="tecs"></div>
+      </section>
+    </div>
 
-  <!-- TÉCNICA PRÓPRIA -->
-  <div class="pane" id="pane-tec" role="tabpanel">
-    <section class="card">
-      <h2 class="sec">Pontos de Combate</h2>
-      <div class="pc-panel">
-        <div class="stat"><div class="v" id="pcEarned">0</div><div class="l">Ganhos</div></div>
-        <div class="stat"><div class="v" id="pcSpentV">0</div><div class="l">Em técnicas</div></div>
-        <div class="stat"><div class="v" id="pcConv">0</div><div class="l">Convertidos</div></div>
-        <div class="stat mod"><div class="v" id="pcAvail">0</div><div class="l">Disponíveis</div></div>
+    <!-- INVENTÁRIO -->
+    <div class="pane" id="pane-inv" role="tabpanel">
+      <div class="page-h">
+        <span class="hint" id="invSummary"></span>
+        <div class="panel-acts"><button class="btn sm red" data-win="item">Adicionar item</button></div>
       </div>
-      <div class="adder" style="margin-top:0">
-        <button class="btn sm" id="btnPcQV">1 PC → +4+CON Q.V</button>
-        <button class="btn sm" id="btnPcES">1 PC → +PRE+6 E.S</button>
-        <button class="btn sm ghost" id="btnPcUndo" data-tip="Desfaz a última conversão">Desfazer</button>
-        <span class="hint">PC gastos em técnicas = soma dos níveis das técnicas abaixo.</span>
-      </div>
-    </section>
-    <section class="card">
-      <h2 class="sec">Técnicas próprias<span class="aside" id="capTec"></span></h2>
-      <p class="hint" style="margin:-4px 0 14px">Monte o golpe do seu jeito: quais dados rolar, como somar, o bônus fixo e quanto ele cresce por nível. A prévia mostra a fórmula igual aos golpes do livro.</p>
-      <div class="moves tec-list" id="tecs"></div>
-      <div class="adder"><button class="btn sm red" id="btnAddTec">+ Nova técnica</button><span class="hint" id="tecLimitHint"></span></div>
-    </section>
-  </div>
-
-  <!-- INVENTÁRIO -->
-  <div class="pane" id="pane-inv" role="tabpanel">
-    <section class="card">
-      <h2 class="sec">Armas</h2>
-      <div class="list" id="weapons"></div>
-      <div class="adder">
-        <select class="box" id="weaponCat"></select>
-        <button class="btn sm" id="btnAddWeapon">Adicionar</button>
-        <button class="btn sm ghost" id="btnAddWeaponBlank">+ Arma própria</button>
-      </div>
-    </section>
-    <div class="pane-grid">
-      <section class="card">
-        <h2 class="sec">Consumíveis</h2>
+      <section class="panel">
+        <div class="panel-h"><h2>Armas</h2></div>
+        <div class="list" id="weapons"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h2>Consumíveis</h2></div>
         <div class="list" id="cons"></div>
-        <div class="adder">
-          <select class="box" id="consCat"></select>
-          <button class="btn sm" id="btnAddCons">Adicionar</button>
-        </div>
       </section>
-      <section class="card">
-        <h2 class="sec">Outros itens</h2>
-        <textarea class="box" data-k="itens" placeholder="Walkman, cigarros, chave do armário, foto da namorada..."></textarea>
+      <section class="panel">
+        <div class="panel-h"><h2>Outros itens</h2></div>
+        <textarea class="box" data-k="itens" placeholder="Walkman, cigarros, chave do armário…"></textarea>
       </section>
     </div>
-  </div>
 
-  <!-- DADOS -->
-  <div class="pane" id="pane-dados" role="tabpanel">
-    <div class="pane-grid">
-      <section class="card">
-        <h2 class="sec">Dados<span class="kr">주사위</span></h2>
-        <div class="tray" id="trayStd"></div>
-        <h3 class="subh">Teste combinado</h3>
-        <div class="adder" style="margin-top:0">
-          <select class="box" id="testA" style="min-width:110px; flex:0 1 140px"></select>
-          <span class="mono">+</span>
-          <select class="box" id="testB" style="min-width:110px; flex:0 1 140px"></select>
-          <input class="box num-in" id="testMod" type="number" placeholder="mod" aria-label="Modificador">
-          <button class="btn sm red" id="btnTest">Rolar teste</button>
+    <!-- NOTAS -->
+    <div class="pane" id="pane-notas" role="tabpanel">
+      <section class="panel">
+        <div class="panel-h"><h2>Notas</h2></div>
+        <div class="notes">
+          <label class="f"><span>Aparência</span><textarea class="box" data-k="notas.aparencia"></textarea></label>
+          <label class="f"><span>Personalidade</span><textarea class="box" data-k="notas.personalidade"></textarea></label>
+          <label class="f"><span>História</span><textarea class="box" data-k="notas.historia" style="min-height:150px"></textarea></label>
+          <label class="f"><span>Aliados</span><textarea class="box" data-k="notas.aliados"></textarea></label>
+          <label class="f"><span>Rivais</span><textarea class="box" data-k="notas.rivais"></textarea></label>
+          <label class="f"><span>Anotações de sessão</span><textarea class="box" data-k="notas.sessao" style="min-height:120px"></textarea></label>
         </div>
-        <h3 class="subh">Expressão livre</h3>
-        <div class="adder" style="margin-top:0">
-          <input class="box" id="expr" placeholder="ex.: 2d6+dFOR+3" style="flex:1; min-width:180px" aria-label="Expressão de dados">
-          <button class="btn sm red" id="btnExpr">Rolar</button>
-        </div>
-        <p class="hint" style="margin:8px 0 0">dFOR rola o dado de Força; FOR usa o valor dele.</p>
-      </section>
-      <section class="card">
-        <h2 class="sec">Histórico <button class="btn sm ghost" id="btnClearLog" style="margin-left:auto">Limpar</button></h2>
-        <div class="log" id="log" style="margin-top:0"></div>
       </section>
     </div>
-  </div>
-
-  <!-- HISTÓRIA -->
-  <div class="pane" id="pane-notas" role="tabpanel">
-    <section class="card">
-      <h2 class="sec">História<span class="kr">이야기</span></h2>
-      <div class="grid2" style="gap:14px">
-        <label class="f"><span>Aparência</span><textarea class="box" data-k="notas.aparencia"></textarea></label>
-        <label class="f"><span>Personalidade</span><textarea class="box" data-k="notas.personalidade"></textarea></label>
-        <label class="f span2"><span>História</span><textarea class="box" data-k="notas.historia" style="min-height:150px"></textarea></label>
-        <label class="f"><span>Aliados</span><textarea class="box" data-k="notas.aliados"></textarea></label>
-        <label class="f"><span>Rivais</span><textarea class="box" data-k="notas.rivais"></textarea></label>
-        <label class="f span2"><span>Anotações de sessão</span><textarea class="box" data-k="notas.sessao" style="min-height:120px"></textarea></label>
-      </div>
-    </section>
-  </div>
 
   </div>
 </main>
@@ -1769,6 +1727,18 @@ body{background:#080808}
       <button class="btn" id="btnPopOk">Entendi</button>
     </div>
     <div class="pop-queue" id="popQueue"></div>
+  </div>
+</div>
+
+<!-- JANELA (todas as telas de edição abrem aqui) -->
+<div class="win-wrap" id="win" hidden>
+  <div class="win md" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+    <header class="win-head">
+      <div><p class="eyebrow" id="winKicker"></p><h2 id="winTitle"></h2></div>
+      <button class="x" id="winClose" aria-label="Fechar">×</button>
+    </header>
+    <div class="win-body" id="winBody"></div>
+    <footer class="win-foot" id="winFoot"></footer>
   </div>
 </div>
 
@@ -2564,7 +2534,21 @@ function bindGmNotes(){
 /* =====================================================================
    UTIL
    ===================================================================== */
-const $ = (q,r=document)=>r.querySelector(q);
+/* elemento "vazio": quando uma parte da ficha está numa janela fechada,
+   as funções de desenho escrevem nele sem quebrar nada */
+const NULLEL = new Proxy(function(){}, {
+  get(t, k){
+    if(k === Symbol.toPrimitive || k === 'toString' || k === 'valueOf') return () => '';
+    if(k === 'then') return undefined;
+    if(k === 'options' || k === 'children') return [];
+    if(k === 'hidden' || k === 'checked' || k === 'disabled' || k === 'isConnected') return false;
+    if(k === 'value' || k === 'textContent' || k === 'innerHTML') return '';
+    return NULLEL;
+  },
+  set(){ return true; },
+  apply(){ return NULLEL; },
+});
+const $ = (q,r=document)=>r.querySelector(q) || NULLEL;
 const $$ = (q,r=document)=>[...r.querySelectorAll(q)];
 const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
@@ -2660,6 +2644,7 @@ function renderAll(){
   syncVitals();
   renderInputs(); renderPhoto(); renderGang(); renderBelt(); renderAttrs(); renderDerived();
   renderCombat(); renderFx(); renderClass(); renderMoves(); renderInv(); renderTec(); renderLog();
+  renderSheetViews(); renderWin();
 }
 function renderInputs(){
   $$('[data-k]').forEach(el=>{
@@ -2707,6 +2692,7 @@ function renderHero(){
   $('#tcFx').textContent = fx.length || '';
   $('#tcGolpes').textContent = st ? (st.m.filter((m,i)=>S.golpes[`${S.estilo}:${i}`]).length || '') : '';
   $('#tcInv').textContent = (S.armas.length + S.cons.reduce((a,c)=>a+(+c.qtd||0),0)) || '';
+  winLive();
   const stp = $('#heroStamp');
   if(stp){ const qp = S.qv / (D.qvMax || 1); const txt = S.tcm >= 3 ? 'MORTO' : S.qv <= 0 ? 'CAÍDO' : qp <= .25 ? 'EM PERIGO' : ''; stp.textContent = txt; stp.hidden = !txt; }
 }
@@ -3495,7 +3481,7 @@ document.addEventListener('click', e=>{
   if(d.tecsl){ const tc = S.tecs[+d.tecsl], v = +d.v; tc.nivel = (+tc.nivel === v) ? v-1 : v; save(); renderAll(); return; }
   switch(t.id){
     case 'btnXp': { const v = parseInt($('#xpAdd').value)||0; if(v){ S.xp = Math.max(0, S.xp+v); $('#xpAdd').value=''; save(); renderBelt(); } break; }
-    case 'btnLvlUp': levelUp(); break;
+    case 'btnLvlUp': openWin('nivel'); break;
     case 'btnShortRest': {
       if(activeArchs().some(a=>a.id==='pausa')){ S.es = D.esMax; toast('Descanso curto (Estágio de Pausa)', 'Funciona como descanso longo: E.S total.'); }
       else { S.es = Math.min(D.esMax, S.es+35); toast('Descanso curto', '+35 E.S'); }
@@ -3891,6 +3877,319 @@ $('#gmExpr').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#btnGmExpr'
 bindGmNotes();
 
 renderAll();
+/* =====================================================================
+   JANELAS
+   Tudo que muda a ficha abre numa janela sobre ela; as abas só mostram
+   o essencial. Cada janela reaproveita os mesmos campos e botões de
+   antes (mesmos ids), então salvar, rolar e calcular funcionam igual.
+   ===================================================================== */
+const WIN_VER = 'v2.0';
+const profileFields = () => `
+  <div class="profile-grid">
+    <button class="photo" id="photo" type="button" aria-label="Adicionar foto">
+      <span class="ph">+ Foto</span>
+      <span class="rm" id="photoRm" role="button" aria-label="Remover foto">×</span>
+    </button>
+    <div class="profile-fields">
+      <label class="f span2"><span>Nome do lutador</span><input class="in name-in" data-k="info.nome" placeholder="Sem nome"></label>
+      <label class="f"><span>Apelido / Vulgo</span><input class="in" data-k="info.apelido" placeholder="—"></label>
+      <label class="f"><span>Jogador</span><input class="in" data-k="info.jogador"></label>
+      <label class="f"><span>Idade</span><input class="in" data-k="info.idade" inputmode="numeric"></label>
+      <label class="f"><span>Ano escolar</span>
+        <select class="in" data-k="info.ano"><option value="">—</option><option>1º ano</option><option>2º ano</option><option>3º ano</option><option>Fora da escola</option></select>
+      </label>
+      <label class="f"><span>Grana (¥)</span><input class="in mono" data-k="info.grana" inputmode="numeric" placeholder="0"></label>
+      <label class="f span2"><span>Gangue / Distrito</span><select class="in" data-k="info.gangue" id="gangSel"></select></label>
+      <label class="f span3"><span>Conceito</span><input class="in" data-k="info.conceito" placeholder="Ex.: Ex-boxeador amador que luta pela honra do distrito"></label>
+      <div class="gang-info span3" id="gangInfo" hidden></div>
+    </div>
+  </div>`;
+
+const WIN = {
+  perfil: {k:'Ficha', t:'Editar perfil', size:'md', body: profileFields,
+    after: ()=>{ $('#gangSel').innerHTML = ''; renderGang(); renderInputs(); renderPhoto(); }},
+
+  xp: {k:'Evolução', t:'Adicionar XP', size:'sm',
+    body: ()=>`
+      <div class="xp-big"><b id="xpNow">0</b><span>/ <span id="xpNeed">50</span> XP para o próximo nível</span></div>
+      <div class="xpbar"><i id="xpFill"></i></div>
+      <div class="xp-quick">${[10,25,50,100].map(n=>`<button class="btn sm" data-xpq="${n}">+${n}</button>`).join('')}</div>
+      <div class="adder" style="margin-top:0"><input class="box num-in" id="xpAdd" type="number" inputmode="numeric" placeholder="XP" aria-label="XP a adicionar"><button class="btn sm" id="btnXp">Adicionar</button></div>`,
+    foot: ()=>`<button class="btn ghost" data-winclose>Fechar</button><button class="btn red" id="btnLvlUp" hidden>Subir de nível</button>`,
+    after: ()=>renderBelt()},
+
+  nivel: {k:'Evolução', t:'Subir de nível', size:'sm',
+    body: ()=>{
+      const b = BELTS[S.belt];
+      const manual = `<details class="adv"><summary>Ajustar faixa e nível manualmente</summary>
+        <div class="grid2"><label class="f"><span>Faixa</span><select class="in" id="selBelt"></select></label><label class="f"><span>Nível na faixa</span><select class="in" id="selLvl"></select></label></div></details>`;
+      if(S.belt === 7 && S.lvl === b.lv) return `<p>Você está no último nível da Faixa Preta.</p>${manual}`;
+      const nextBelt = S.lvl >= b.lv, nb = nextBelt ? BELTS[S.belt+1] : b, nl = nextBelt ? 1 : S.lvl + 1;
+      const slot = nextBelt ? ARCH_SLOTS.findIndex(s=>s.belt === S.belt + 1) : -1;
+      const ok = S.xp >= b.xp;
+      return `
+        <div class="lvl-jump">
+          <div class="lj"><span class="lbl">Agora</span><b>Faixa ${b.n}</b><span>nível ${S.lvl}</span></div>
+          <div class="lj-arrow" aria-hidden="true">→</div>
+          <div class="lj on"><span class="lbl">Depois</span><b>Faixa ${nb.n}</b><span>nível ${nl}</span></div>
+        </div>
+        <ul class="gains">
+          <li><b>+${2 + S.attrs.CON}</b>Q.V máxima</li>
+          <li><b>+${1 + S.attrs.PRE}</b>E.S máxima</li>
+          <li><b>+1</b>Ponto de Combate</li>
+          ${nextBelt ? '<li><b>+1</b>aumento de status para distribuir</li>' : ''}
+          ${slot > 0 ? '<li><b>Novo</b>arquétipo liberado</li>' : ''}
+        </ul>
+        <p class="hint" style="margin:0">${ok ? `Custa ${b.xp} XP. Você tem ${S.xp}.` : `Faltam ${b.xp - S.xp} XP: custa ${b.xp} e você tem ${S.xp}.`}</p>
+        ${manual}`;
+    },
+    foot: ()=>{
+      const b = BELTS[S.belt], atMax = S.belt === 7 && S.lvl === b.lv;
+      if(atMax) return '<button class="btn red" data-winclose>Fechar</button>';
+      return S.xp >= b.xp
+        ? '<button class="btn ghost" data-winclose>Cancelar</button><button class="btn red" id="winLvlGo">Confirmar</button>'
+        : '<button class="btn ghost" data-winclose>Fechar</button><button class="btn red" data-win="xp">Adicionar XP</button>';
+    },
+    after: ()=>renderBelt()},
+
+  status: {k:'Atributos', t:'Distribuir pontos', size:'md',
+    body: ()=>`
+      <p class="hint" style="margin:0">Cada aumento sobe o dado em +2 (de d6 até d18). Você começa com dois aumentos e ganha mais um a cada faixa. <span id="incNote"></span></p>
+      <div class="dice-row" id="attrs"></div>
+      <details class="adv"><summary>Bônus manuais</summary>
+        <div class="grid4">
+          <label class="f"><span>Q.V</span><input class="in mono" type="number" data-k="bonus.qv" data-num></label>
+          <label class="f"><span>E.S</span><input class="in mono" type="number" data-k="bonus.es" data-num></label>
+          <label class="f"><span>C.A</span><input class="in mono" type="number" data-k="bonus.ca" data-num></label>
+          <label class="f"><span>Movimentação</span><input class="in mono" type="number" data-k="bonus.mov" data-num></label>
+        </div>
+      </details>`,
+    after: ()=>{ renderAttrs(); renderInputs(); }},
+
+  classe: {k:'Atributos', t:'Classe e arquétipos', size:'md',
+    body: ()=>`
+      <label class="f"><span>Classe</span><select class="in" data-k="classe" id="selClass"></select></label>
+      <p class="desc" id="classDesc" style="margin:0"></p>
+      <h3 class="subh">Arquétipos</h3>
+      <div id="archSlots"></div>`,
+    after: ()=>{ $('#selClass').innerHTML = ''; renderClass(); renderInputs(); }},
+
+  pc: {k:'Atributos', t:'Pontos de combate', size:'sm',
+    body: ()=>`
+      <div class="pc-panel">
+        <div class="stat"><div class="v" id="pcEarned">0</div><div class="l">Ganhos</div></div>
+        <div class="stat"><div class="v" id="pcSpentV">0</div><div class="l">Em técnicas</div></div>
+        <div class="stat"><div class="v" id="pcConv">0</div><div class="l">Convertidos</div></div>
+        <div class="stat mod"><div class="v" id="pcAvail">0</div><div class="l">Disponíveis</div></div>
+      </div>
+      <p class="hint" style="margin:0">Você ganha 1 PC por nível. Use em técnicas próprias (cada nível da técnica custa 1) ou converta em vida ou estamina.</p>
+      <div class="rest">
+        <button class="qbtn" id="btnPcQV"><b>1 PC → Q.V</b><span>+4 + CON de vida máxima</span></button>
+        <button class="qbtn" id="btnPcES"><b>1 PC → E.S</b><span>+PRE + 6 de estamina máxima</span></button>
+      </div>`,
+    foot: ()=>'<button class="btn ghost" id="btnPcUndo">Desfazer conversão</button><button class="btn red" data-winclose>Pronto</button>',
+    after: ()=>renderTec()},
+
+  vida: {k:'Combate', t:'Dano e cura', size:'sm',
+    body: ()=>`
+      <section class="vw">
+        <div class="vw-h"><span class="lbl">Q.V · Vida</span><b id="wQv"></b></div>
+        <div class="bar qv" id="wQvBar"><i></i></div>
+        <div class="vital-ctrl">
+          <input class="box num-in nonneg" id="qvAmt" type="text" inputmode="numeric" maxlength="5" placeholder="0" aria-label="Valor de vida">
+          <button class="btn sm danger" data-vit="qv" data-op="-">Dano</button>
+          <button class="btn sm green" data-vit="qv" data-op="+">Curar</button>
+          <button class="btn sm ghost" data-vit="qv" data-op="max">Cheia</button>
+        </div>
+      </section>
+      <section class="vw">
+        <div class="vw-h"><span class="lbl">E.S · Estamina</span><b id="wEs"></b></div>
+        <div class="bar es" id="wEsBar"><i></i></div>
+        <div class="vital-ctrl">
+          <input class="box num-in nonneg" id="esAmt" type="text" inputmode="numeric" maxlength="5" placeholder="0" aria-label="Valor de estamina">
+          <button class="btn sm yellow" data-vit="es" data-op="-">Gastar</button>
+          <button class="btn sm green" data-vit="es" data-op="+">Recuperar</button>
+        </div>
+      </section>`,
+    after: ()=>winLive()},
+
+  descanso: {k:'Combate', t:'Descansar', size:'sm',
+    body: ()=>`
+      <div class="rest">
+        <button class="qbtn" id="btnShortRest"><b>Descanso curto</b><span>Recupera 35 de E.S.</span></button>
+        <button class="qbtn" id="btnLongRest"><b>Descanso longo</b><span>Recupera toda a E.S e tira o Ofegante.</span></button>
+      </div>`,
+    foot: ()=>'<button class="btn ghost" data-winclose>Cancelar</button>'},
+
+  efeitos: {k:'Combate', t:'Efeitos', size:'md',
+    body: ()=>`<div class="chips" id="fxChips"></div><div class="active-fx" id="fxActive"></div>`,
+    foot: ()=>'<button class="btn ghost" id="btnClearFx">Limpar todos</button><button class="btn ghost" id="btnTick" title="Aplica Sangrando (−4 Q.V) e Sufocado (−8 E.S)">Aplicar turno</button><button class="btn red" data-winclose>Pronto</button>',
+    after: ()=>renderFx()},
+
+  golpes: {k:'Golpes', t:'Aprender golpes', size:'lg',
+    body: ()=>`
+      <div class="style-head">
+        <label class="f"><span>Estilo de luta</span><select class="in" data-k="estilo" id="selStyle"></select></label>
+        <div class="legend" id="styleDesc"></div>
+      </div>
+      <div class="cap-row" id="capGolpesW"></div>
+      <p class="legend" style="margin:0"><b>SL</b> nível do golpe · <b>HR</b> maior dado · <b>AR</b> soma dos dados · <b>Vigor</b> = CON. Clique nos quadrados para aprender ou subir o nível; clique no 1º de novo para esquecer.</p>
+      <div class="moves" id="moves"></div>`,
+    after: ()=>{ $('#selStyle').innerHTML = ''; renderMoves(); renderInputs(); const c = document.getElementById('capGolpes'), w = document.getElementById('capGolpesW'); if(c && w) w.innerHTML = c.innerHTML; }},
+
+  item: {k:'Inventário', t:'Adicionar item', size:'md',
+    body: ()=>`
+      <h3 class="subh" style="margin-top:0">Arma</h3>
+      <div class="adder" style="margin-top:0"><select class="box" id="weaponCat" aria-label="Arma"></select><button class="btn sm" id="btnAddWeapon">Adicionar</button></div>
+      <button class="btn sm ghost" id="btnAddWeaponBlank" style="justify-self:start">+ Arma própria (em branco)</button>
+      <h3 class="subh">Consumível</h3>
+      <div class="adder" style="margin-top:0"><select class="box" id="consCat" aria-label="Consumível"></select><button class="btn sm" id="btnAddCons">Adicionar</button></div>`,
+    after: ()=>{ $('#weaponCat').innerHTML = ''; $('#consCat').innerHTML = ''; renderInv(); }},
+
+  dados: {k:'Rolagens', t:'Rolar dados', size:'md',
+    body: ()=>`
+      <div class="tray" id="trayStd"></div>
+      <h3 class="subh">Teste combinado</h3>
+      <div class="adder" style="margin-top:0">
+        <select class="box" id="testA" style="min-width:90px; flex:0 1 120px" aria-label="Primeiro atributo"></select>
+        <span class="mono">+</span>
+        <select class="box" id="testB" style="min-width:90px; flex:0 1 120px" aria-label="Segundo atributo"></select>
+        <input class="box num-in" id="testMod" type="number" placeholder="mod" aria-label="Modificador">
+        <button class="btn sm red" id="btnTest">Rolar</button>
+      </div>
+      <h3 class="subh">Expressão livre</h3>
+      <div class="adder" style="margin-top:0"><input class="box" id="expr" placeholder="ex.: 2d6+dFOR+3" style="flex:1; min-width:160px" aria-label="Expressão de dados"><button class="btn sm red" id="btnExpr">Rolar</button></div>
+      <h3 class="subh">Histórico <button class="btn sm ghost" id="btnClearLog" style="margin-left:auto">Limpar</button></h3>
+      <div class="log" id="log" style="margin-top:0; max-height:260px"></div>`,
+    foot: ()=>'<button class="btn red" data-winclose>Fechar</button>',
+    after: ()=>{ $('#trayStd').innerHTML = ''; renderLog(); }},
+};
+
+var WIN_CUR = null;
+const isRO = () => typeof RO !== 'undefined' && RO;   // a versão local não tem modo mestre   // var: pode ser lido antes deste trecho carregar
+function openWin(name){
+  if(!WIN[name]) return;
+  WIN_CUR = name; renderWin();
+  $('#win').hidden = false; document.body.classList.add('modal-open');
+  setTimeout(()=>{ const f = document.querySelector('#winBody input:not([type=checkbox]):not([type=hidden])'); (f || document.getElementById('winClose'))?.focus(); }, 40);
+}
+function closeWin(){
+  if(!WIN_CUR) return;
+  WIN_CUR = null; $('#win').hidden = true;
+  if($('#tecModal').hidden !== false) document.body.classList.remove('modal-open');
+  renderAll();
+}
+function renderWin(){
+  if(!WIN_CUR) return;
+  const w = WIN[WIN_CUR];
+  $('#winKicker').textContent = w.k;
+  $('#winTitle').textContent = w.t;
+  document.querySelector('#win .win').className = 'win ' + (w.size || 'md');
+  $('#winBody').innerHTML = w.body();
+  $('#winFoot').innerHTML = w.foot ? w.foot() : '<button class="btn red" data-winclose>Pronto</button>';
+  if(w.after) w.after();
+}
+/* números ao vivo dentro da janela de dano e cura */
+function winLive(){
+  const q = document.getElementById('wQv'); if(!q) return;
+  q.textContent = `${S.qv} / ${D.qvMax}`;
+  document.getElementById('wEs').textContent = `${S.es} / ${D.esMax}`;
+  const qb = document.querySelector('#wQvBar i'), eb = document.querySelector('#wEsBar i');
+  if(qb) qb.style.width = clamp(S.qv / (D.qvMax || 1) * 100, 0, 100) + '%';
+  if(eb) eb.style.width = clamp(S.es / (D.esMax || 1) * 100, 0, 100) + '%';
+}
+
+/* ---------- visão limpa das abas ---------- */
+function renderSheetViews(){
+  const g = GANGS.find(x=>x.g === S.info.gangue);
+  const fact = (k, v) => `<div><dt>${k}</dt><dd>${v ? esc(v) : '<span class="muted">—</span>'}</dd></div>`;
+  $('#factsPerfil').innerHTML = fact('Nome', S.info.nome) + fact('Apelido', S.info.apelido) + fact('Jogador', S.info.jogador)
+    + fact('Idade', S.info.idade) + fact('Ano escolar', S.info.ano) + fact('Grana', S.info.grana ? '¥ ' + S.info.grana : '')
+    + fact('Gangue', g ? (g.d !== '—' ? `${g.g} · ${g.d}` : g.g) : '') + fact('Conceito', S.info.conceito);
+  const gv = $('#gangView');
+  gv.hidden = !(g && g.d !== '—');
+  if(g && g.d !== '—') gv.innerHTML = `<b>${esc(g.g)}</b> · líder ${esc(g.l)}. ${esc(g.t)}`;
+
+  $('#attrView').innerHTML = ATTRS.map(a=>`<button class="at" data-roll-attr="${a.k}" title="Rolar ${a.n}"><span class="at-k">${a.k}</span><span class="at-d ${S.attrs[a.k] > 6 ? 'up' : ''}">d${S.attrs[a.k]}</span><span class="at-n">${a.n}</span></button>`).join('');
+  const inc = D.incAvail - D.incUsed;
+  $('#incBadge').textContent = inc > 0 ? inc : '';
+
+  const b = BELTS[S.belt], atMax = S.belt === 7 && S.lvl === b.lv, canUp = !atMax && S.xp >= b.xp;
+  $('#beltView').innerHTML = `
+    <div class="bv-strip" style="background:${b.c}"><span class="bv-tip" style="${S.belt===7?'background:#b3241c':''}">${Array.from({length:b.lv},(_,i)=>`<i class="${i < S.lvl ? 'on' : ''}"></i>`).join('')}</span></div>
+    <div class="bv-row"><b>Faixa ${b.n}</b><span>nível ${S.lvl} de ${b.lv} · nível total ${D.N}</span></div>
+    <div class="xpbar"><i style="width:${atMax ? 100 : clamp(S.xp / b.xp * 100, 0, 100)}%"></i></div>
+    <div class="bv-row small"><span>${S.xp} / ${atMax ? '—' : b.xp} XP</span>${canUp ? '<span class="ok">Pode subir de nível</span>' : ''}</div>`;
+  $('#btnNivelWin').classList.toggle('lvlup', canUp);
+
+  const C = CLASSES[S.classe];
+  $('#classView').innerHTML = `
+    <div class="cv"><b>${S.classe && C ? esc(C.n) : 'Sem classe'}</b><p>${S.classe && C ? esc(C.d) : 'Escolha uma classe para ver o bônus.'}</p></div>
+    <ul class="arch-list">${ARCH_SLOTS.map((sl,i)=>{
+      const a = ARCHS.find(x=>x.id === S.arch[i]), locked = S.belt < sl.belt;
+      return `<li><span class="an">${locked ? 'Bloqueado' : a ? esc(a.n) : 'Vazio'}</span><span>${sl.n} · ${sl.f}</span></li>`;
+    }).join('')}</ul>`;
+
+  $('#pcView').innerHTML = `
+    <div><b>${D.pcAvail}</b><span>Disponíveis</span></div>
+    <div><b>${D.pcEarned}</b><span>Ganhos</span></div>
+    <div><b>${D.pcTec}</b><span>Em técnicas</span></div>
+    <div><b>${D.pcConvN}</b><span>Convertidos</span></div>`;
+
+  const nfx = EFFECTS.filter(e=>S.fx[e.id]).length;
+  $('#qFx').textContent = nfx ? `${nfx} ativo${nfx > 1 ? 's' : ''}` : 'nenhum ativo';
+
+  renderMyMoves();
+  const ncons = S.cons.reduce((a,c)=>a + (+c.qtd || 0), 0);
+  $('#invSummary').textContent = `${S.armas.length} arma${S.armas.length === 1 ? '' : 's'} · ${ncons} consumíve${ncons === 1 ? 'l' : 'is'}`;
+}
+function renderMyMoves(){
+  const st = STYLES[S.estilo];
+  $('#styleName').textContent = st ? st.n : 'sem estilo';
+  if(!st){ $('#myMoves').innerHTML = '<div class="empty" style="grid-column:1/-1">Nenhum estilo escolhido. Clique em <b>Aprender golpes</b>.</div>'; return; }
+  const list = st.m.map((m,i)=>({m, i, key:`${S.estilo}:${i}`, sl:S.golpes[`${S.estilo}:${i}`] || 0})).filter(x=>x.sl);
+  $('#myMoves').innerHTML = list.length ? list.map(({m, i, key, sl})=>{
+    const p = parseDmg(m), cost = costOf(m, sl), belt = m.b >= 0 ? BELTS[m.b] : null;
+    const stats = [];
+    if(m.cost !== '') stats.push(`<span><b>GASTO</b>${cost} E.S</span>`);
+    if(p) stats.push(`<span class="dmg"><b>${m.red ? 'REDUÇÃO' : 'DANO'}</b>${fmtDmg(p, sl)}${m.hits ? ` ×${tmpl('{' + m.hits + '}', sl)}` : ''}</span>`);
+    if(m.test) stats.push(`<span><b>TESTE</b>${m.test.replace('+', ' + ')}</span>`);
+    if(m.crit) stats.push(`<span><b>CRÍTICO</b>${m.crit}</span>`);
+    const canUse = m.kind !== 'P' && (p || m.test || m.cost !== '');
+    return `<article class="move learned">
+      <div class="move-h">
+        <div class="move-name"><span class="ix">${String(i+1).padStart(2,'0')}</span>${esc(m.n)}</div>
+        <div class="badges"><span class="badge ${m.kind}">${KIND[m.kind]}</span><span class="badge">SL ${sl}/${m.lv}</span></div>
+      </div>
+      ${stats.length ? `<div class="move-stats">${stats.join('')}</div>` : ''}
+      ${m.eff ? `<div class="move-eff">${esc(tmpl(m.eff, sl))}</div>` : ''}
+      ${canUse ? `<div class="move-f"><span class="hint">${belt ? 'Faixa ' + belt.n : ''}</span><button class="btn sm red" data-use="${key}">Usar</button></div>` : ''}
+    </article>`;
+  }).join('') : '<div class="empty" style="grid-column:1/-1">Nenhum golpe aprendido. Clique em <b>Aprender golpes</b>.</div>';
+}
+
+/* ---------- eventos das janelas ---------- */
+document.addEventListener('click', e=>{
+  const w = e.target.closest('[data-win]');
+  if(w){ if(isRO() && w.dataset.win !== 'dados') return; openWin(w.dataset.win); return; }
+  const b = e.target.closest('button'); if(!b || !WIN_CUR) return;   // a janela pode ter sido redesenhada pelo clique
+  if(b.dataset.winclose !== undefined || b.id === 'winClose'){ closeWin(); return; }
+  if(b.dataset.xpq){ S.xp = Math.max(0, S.xp + (+b.dataset.xpq)); save(); renderBelt(); return; }
+  if(b.id === 'winLvlGo'){ const before = S.belt; levelUp(); if(S.belt > before) openWin('status'); else closeWin(); return; }
+  if(b.id === 'btnShortRest' || b.id === 'btnLongRest'){ closeWin(); return; }
+  if(b.id === 'btnAddWeapon' || b.id === 'btnAddCons' || b.id === 'btnAddWeaponBlank'){ toast('Adicionado ao inventário', 'Veja na aba Inventário.'); return; }
+});
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape' && WIN_CUR && $('#tecModal').hidden !== false){ closeWin(); return; }
+  if(e.key === 'Enter' && WIN_CUR){
+    const id = e.target.id;
+    if(id === 'xpAdd'){ e.preventDefault(); $('#btnXp').click(); }
+    else if(id === 'expr'){ e.preventDefault(); $('#btnExpr').click(); }
+    else if(id === 'qvAmt' || id === 'esAmt'){ e.preventDefault(); changeVital(id === 'qvAmt' ? 'qv' : 'es', '-', e.target.value); e.target.value = ''; }
+  }
+  if((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hero-vit')){ e.preventDefault(); if(!isRO()) openWin('vida'); }
+});
+
 try{ setTab(localStorage.getItem(TAB_KEY) || 'perfil'); }catch(e){ setTab('perfil'); }
 show('inicio');
 initAuth();
