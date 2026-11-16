@@ -1438,13 +1438,44 @@ body{background:#080808}
   .shield > #gmTabs .gtab.on{border-left-color:var(--yellow); background:#161616}
   .shield > .gmpane{grid-column:2; grid-row:2; min-width:0}
 }
+
+/* =====================================================================
+   v2.2 · AJUSTE À TELA
+   A altura vem do script (fitSheet); aqui só tiramos os limites fixos e
+   compactamos a barra do lutador em telas baixas.
+   ===================================================================== */
+.sheet{max-height:none; min-height:0; width:min(1200px, calc(100% - 64px))}
+html:has(#sheetView:not([hidden])) body{overflow-y:hidden}
+@media (max-width:760px){ html:has(#sheetView:not([hidden])) body{overflow-y:auto} }
+@media (max-height:820px) and (min-width:761px){
+  .sheet > .hero{padding:12px 18px 10px; gap:8px 16px}
+  .sheet .hero-pic{width:52px; height:66px; font-size:24px}
+  .sheet .hero-name{font-size:clamp(22px,2.2vw,28px)}
+  .sheet .hero-sub{display:none}
+  .sheet .hero-tags{margin-top:6px}
+  .sheet .hero .vital-val{font-size:19px}
+  .sheet .hero .bar{height:10px}
+  .sheet .hero-stats .stat{padding:5px 4px 4px}
+  .sheet .hero-stats .stat .v{font-size:19px}
+  .sheet > .tabs .tab{padding:9px 12px}
+  .sheet > .sheet-body{padding:16px}
+  .topbar{padding-block:6px}
+}
+@media (max-height:660px) and (min-width:761px){
+  .sheet .hero-tags{display:none}
+  .sheet .hero-pic{width:44px; height:56px}
+  .sheet > .tabs{padding:8px}
+}
+/* mestre editando a ficha de outra pessoa: sempre em modo de edição */
+#btnRoEdit{display:none}
+@media (max-height:480px){ html:has(#sheetView:not([hidden])) body{overflow-y:auto} }
 </style>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.1</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.2</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -2372,8 +2403,7 @@ async function openPlayer(id, edit){
   await flushNow();
   if(!RO && !EDIT_OTHER) STASH = {S, id:CUR.id, dono:CUR.dono, chosen:AUTH.chosen};
   S = merge(blank(), clone(rec.raw)); CUR.id = id; CUR.dono = rec.dono; lastSent = stable(rec.raw);
-  RO = true; EDIT_OTHER = false; setReadonlyInputs(true);
-  if(edit){ RO = false; EDIT_OTHER = true; setReadonlyInputs(false); }
+  RO = false; EDIT_OTHER = true; setReadonlyInputs(false);   // o mestre sempre pode editar
   $('#gangSel').value = S.info.gangue || '';
   if(location.hash.slice(1) === 'ficha') show('ficha'); else location.hash = 'ficha';
 }
@@ -2933,7 +2963,7 @@ function renderMoves(){
   $('#styleDesc').textContent = st ? st.d : 'Escolha um estilo de luta para ver os golpes.';
   if(!st){ $('#moves').innerHTML = ''; return; }
   const only = $('#onlyLearned').checked;
-  const full = !S.npc && golpesAprendidos() >= limGolpes();
+  const full = !semLimite() && golpesAprendidos() >= limGolpes();
   renderCaps();
   const html = st.m.map((m,i)=>{
     const key = `${S.estilo}:${i}`, sl = S.golpes[key]||0, locked = m.b > S.belt;
@@ -3007,6 +3037,8 @@ const LIMITES = {
   golpes:   [1, 2, 3, 4, 5, 6, 7, 8],   // Branca … Preta
   tecnicas: [1, 1, 2, 2, 2, 2, 2, 3],
 };
+/* sem limite para NPCs e quando o mestre edita a ficha de outra pessoa */
+const semLimite = () => !!S.npc || (typeof EDIT_OTHER !== 'undefined' && EDIT_OTHER);
 const limGolpes = () => LIMITES.golpes[S.belt] ?? 1;
 const limTec = () => LIMITES.tecnicas[S.belt] ?? 1;
 function golpesAprendidos(){
@@ -3014,9 +3046,9 @@ function golpesAprendidos(){
   return st ? st.m.filter((m,i)=>S.golpes[`${S.estilo}:${i}`]).length : 0;
 }
 function renderCaps(){
-  const lg = limGolpes(), lt = limTec(), ng = golpesAprendidos(), nt = S.tecs.length, b = BELTS[S.belt].n, npc = !!S.npc;
+  const lg = limGolpes(), lt = limTec(), ng = golpesAprendidos(), nt = S.tecs.length, b = BELTS[S.belt].n, npc = semLimite();
   const capG = $('#capGolpes');
-  if(capG) capG.innerHTML = npc ? '<span class="cap">NPC · sem limite de golpes</span>'
+  if(capG) capG.innerHTML = npc ? '<span class="cap">Sem limite de golpes (NPC ou mestre editando)</span>'
     : `<span class="cap ${ng>=lg?'full':''}">Golpes do estilo <b>${ng}/${lg}</b>${ng>lg?' · acima do limite':''}</span>`
     + `<span class="cap ${nt>=lt?'full':''}">Técnicas próprias <b>${nt}/${lt}</b>${nt>lt?' · acima do limite':''}</span>`
     + `<span class="cap">Faixa ${b}</span>`;
@@ -3163,7 +3195,7 @@ function tecRange(t){
 /* ---------- criador em pop-up ---------- */
 const TM = {idx:null, d:null};
 function openTecModal(idx){
-  if(idx === null && !S.npc && S.tecs.length >= limTec()){ openTecLimit(); return; }
+  if(idx === null && !semLimite() && S.tecs.length >= limTec()){ openTecLimit(); return; }
 
   TM.idx = idx;
   TM.d = normTec(JSON.parse(JSON.stringify(idx === null
@@ -3255,7 +3287,7 @@ function saveTecModal(){
   if(t.rolagem){ const r = evalExpr(t.rolagem); if(!r || r.error){ $('#tmMsg').textContent = 'A fórmula livre está inválida. Use algo como dFOR+dAGI+6.'; return; } }
   t.hits = Math.max(1, +t.hits||1);
   if(TM.idx === null){
-    if(!S.npc && S.tecs.length >= limTec()){ $('#tmMsg').textContent = 'Limite de técnicas da sua faixa.'; return; }
+    if(!semLimite() && S.tecs.length >= limTec()){ $('#tmMsg').textContent = 'Limite de técnicas da sua faixa.'; return; }
     S.tecs.push(t);
   } else S.tecs[TM.idx] = t;
   save(); closeTecModal(); renderAll();
@@ -3551,7 +3583,7 @@ document.addEventListener('click', e=>{
   if(d.insp){ S.insp[d.insp] = Math.max(0, S.insp[d.insp] + (+d.d)); save(); renderCombat(); return; }
   if(d.fx){ if(S.fx[d.fx]) delete S.fx[d.fx]; else S.fx[d.fx] = true; save(); renderAll(); return; }
   if(d.sl){ const cur = S.golpes[d.sl]||0, v = +d.v;
-    if(!cur && !S.npc && golpesAprendidos() >= limGolpes()){ toast('Limite de golpes', `Na faixa ${BELTS[S.belt].n} você pode ter ${limGolpes()} golpe${limGolpes()>1?'s':''} do estilo. Para trocar, clique no 1º quadrado de um golpe aprendido para esquecê-lo.`); return; }
+    if(!cur && !semLimite() && golpesAprendidos() >= limGolpes()){ toast('Limite de golpes', `Na faixa ${BELTS[S.belt].n} você pode ter ${limGolpes()} golpe${limGolpes()>1?'s':''} do estilo. Para trocar, clique no 1º quadrado de um golpe aprendido para esquecê-lo.`); return; }
     S.golpes[d.sl] = cur===v ? v-1 : v; if(!S.golpes[d.sl]) delete S.golpes[d.sl]; save(); renderAll(); return; }
   if(d.use){ useMove(d.use); return; }
   if(d.reroll){ reroll(d.reroll); return; }
@@ -4343,6 +4375,35 @@ document.addEventListener('keydown', e=>{
   scrim.addEventListener('click', close);
   drawer.addEventListener('click', e=>{ if(e.target.closest('#drClose') || e.target.closest('.navbtn')) close(); });
   document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && drawer.classList.contains('open')) close(); });
+})();
+
+/* =====================================================================
+   AJUSTE À TELA (v2.2)
+   A ficha ocupa exatamente a altura que sobra na janela do navegador,
+   em qualquer monitor: a página não rola, só o conteúdo dentro do quadro.
+   Recalcula ao redimensionar, ao trocar de tela e quando o topo muda.
+   ===================================================================== */
+function fitSheet(){
+  const sh = document.getElementById('sheetView');
+  if(!sh || sh.hidden) return;
+  if(window.innerWidth <= 760){ sh.style.height = ''; sh.style.marginTop = ''; sh.style.marginBottom = ''; return; }
+  const gap = Math.round(Math.min(32, Math.max(10, window.innerHeight * 0.03)));
+  sh.style.marginTop = gap + 'px'; sh.style.marginBottom = '0px';
+  const top = sh.getBoundingClientRect().top + window.scrollY;
+  sh.style.height = Math.max(380, Math.floor(window.innerHeight - top - gap)) + 'px';
+}
+(function(){
+  let raf;
+  const later = () => { clearTimeout(raf); raf = setTimeout(fitSheet, 30); };
+  window.addEventListener('resize', later);
+  if(window.visualViewport) window.visualViewport.addEventListener('resize', later);
+  if('ResizeObserver' in window) new ResizeObserver(later).observe(document.documentElement);
+  const watch = new MutationObserver(later);
+  ['sheetView', 'roBanner'].forEach(id=>{ const el = document.getElementById(id); if(el) watch.observe(el, {attributes:true, attributeFilter:['hidden']}); });
+  const topbar = document.querySelector('.topbar');
+  if(topbar && 'ResizeObserver' in window) new ResizeObserver(later).observe(topbar);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(later);
+  later();
 })();
 
 try{ setTab(localStorage.getItem(TAB_KEY) || 'perfil'); }catch(e){ setTab('perfil'); }
