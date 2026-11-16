@@ -1507,13 +1507,38 @@ html:has(#sheetView:not([hidden])) body{overflow-y:hidden}
 .at{position:relative}
 /* na janela "Distribuir pontos" os dados não rolam */
 .win .die{pointer-events:none}
+
+/* =====================================================================
+   v2.4 · MÍDIA NOS POP-UPS
+   ===================================================================== */
+.pop-media{display:grid; grid-template-columns:1fr; gap:14px}
+.pm-col{display:grid; gap:6px; align-content:start; min-width:0}
+.pm-drop{display:flex; flex-wrap:wrap; align-items:center; gap:8px; min-height:64px; padding:12px; background:#0c0c0c; border:1px dashed #333; border-radius:3px; transition:border-color .15s, background .15s}
+.pm-drop.over{border-color:var(--yellow); background:rgba(245,196,0,.05)}
+.pm-file{display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:10px; width:100%}
+.pm-file img{width:64px; height:64px; object-fit:cover; border-radius:2px; border:1px solid #2a2a2a}
+.pm-file.aud{grid-template-columns:minmax(0,1fr) auto; grid-template-rows:auto auto}
+.pm-file.aud audio{grid-column:1 / -1; width:100%; height:36px}
+.pm-file.aud .pm-meta{grid-column:1}
+.pm-meta{display:grid; gap:2px; min-width:0}
+.pm-meta b{font-size:14px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.pm-meta span{font-size:12px; color:var(--ink-3)}
+.pm-rec{display:flex; align-items:center; gap:10px; width:100%}
+.pm-rec b{flex:1; color:#ff8a8a; font-variant-numeric:tabular-nums}
+.rec-dot{display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--red-2); margin-right:4px}
+.pm-rec .rec-dot{animation:blink 1s steps(2) infinite; margin:0}
+/* pop-up do jogador com mídia */
+.popup.has-media{width:min(640px,100%)}
+.pop-img{display:block; margin-top:14px; border:1px solid #2a2a2a; border-radius:2px; overflow:hidden; background:#000}
+.pop-img img{display:block; width:100%; max-height:52vh; object-fit:contain}
+.pop-audio{display:block; width:100%; margin-top:14px; height:40px}
 </style>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.3</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.4</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -1825,7 +1850,19 @@ html:has(#sheetView:not([hidden])) body{overflow-y:hidden}
           <div><span class="lbl">Tipo</span><div class="chips" id="popTipos"></div></div>
           <label class="f"><span>Título</span><input class="in" id="popTitulo" maxlength="120" placeholder="Ex.: Sirenes ao longe"></label>
           <label class="f"><span>Mensagem</span><textarea class="box" id="popTexto" maxlength="2000" placeholder="O que os lutadores veem, ouvem ou sentem…"></textarea></label>
-          <label class="f"><span>Pedir rolagem (opcional)</span><input class="in mono" id="popRolagem" maxlength="80" placeholder="ex.: dAGI+dINT"></label>
+          <div class="pop-media">
+            <div class="pm-col">
+              <span class="lbl">Imagem (opcional)</span>
+              <div class="pm-drop" id="popImgBox"></div>
+              <input type="file" id="popImgFile" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+            </div>
+            <div class="pm-col">
+              <span class="lbl">Áudio (opcional)</span>
+              <div class="pm-drop" id="popAudBox"></div>
+              <input type="file" id="popAudFile" accept="audio/*" hidden>
+              <label class="chk" style="margin-top:2px"><input type="checkbox" id="popAudAuto" checked> Tocar sozinho quando o pop-up abrir</label>
+            </div>
+          </div>          <label class="f"><span>Pedir rolagem (opcional)</span><input class="in mono" id="popRolagem" maxlength="80" placeholder="ex.: dAGI+dINT"></label>
           <div class="chips small-chips" id="popRollChips"></div>
           <div class="npc-btns">
             <button class="btn red" id="btnPopSend">Enviar pop-up</button>
@@ -1892,7 +1929,8 @@ html:has(#sheetView:not([hidden])) body{overflow-y:hidden}
     <div class="pop-kind" id="popKind"></div>
     <h2 id="popTitle"></h2>
     <p id="popText"></p>
-    <div class="pop-roll" id="popRoll" hidden>
+    <a class="pop-img" id="popImgLink" target="_blank" rel="noopener" hidden title="Abrir imagem em tamanho real"><img id="popImg" alt="Imagem enviada pelo mestre"></a>
+    <audio class="pop-audio" id="popAudio" controls preload="auto" hidden></audio>    <div class="pop-roll" id="popRoll" hidden>
       O mestre pediu uma rolagem: <b id="popRollExpr"></b>
       <div class="hint" id="popRollHint" hidden style="margin-top:4px">Abra sua ficha para rolar com os seus dados.</div>
     </div>
@@ -4491,6 +4529,225 @@ document.addEventListener('click', e=>{
     if(e.detail === 0 && Date.now() - lastDown > 600) step(b.dataset.hv, +b.dataset.d);   // pelo teclado (Enter/Espaço)
   }, true);
 })();
+
+/* =====================================================================
+   v2.4 · IMAGENS E ÁUDIOS NOS POP-UPS
+   O mestre anexa uma imagem e/ou um áudio (arquivo ou gravado no
+   microfone). Os arquivos vão para o Storage do Supabase (pasta
+   "popups") e o jogador vê a imagem e ouve o áudio no pop-up.
+   As funções abaixo substituem as versões antigas de mesmo nome.
+   ===================================================================== */
+const BUCKET = 'popups', MEDIA_MAX = 10 * 1024 * 1024;
+const SQL3_HINT = 'Para enviar imagem ou áudio, rode o arquivo supabase/schema-3.sql no SQL Editor do Supabase e recarregue a página.';
+const MEDIA = {img:null, aud:null};
+let REC = null;
+const kb = n => n > 1048576 ? (n / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const mediaUrl = path => path ? sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl : '';
+const extOf = (type, name) => {
+  const m = String(name || '').match(/\.([a-z0-9]{2,4})$/i); if(m) return m[1].toLowerCase();
+  return ({'image/png':'png','image/jpeg':'jpg','image/gif':'gif','image/webp':'webp','audio/mpeg':'mp3','audio/mp4':'m4a','audio/ogg':'ogg','audio/wav':'wav','audio/webm':'webm'})[String(type).split(';')[0]] || 'bin';
+};
+function mediaErr(err){
+  const m = String(err?.message || err || '');
+  if(/bucket not found|imagem|audio_auto|column .*audio|schema cache|row-level security|violates|unauthorized/i.test(m)) return SQL3_HINT;
+  if(/maximum allowed size|too large|payload/i.test(m)) return 'O arquivo é grande demais (máximo 10 MB).';
+  if(/mime|content type|not supported/i.test(m)) return 'Esse tipo de arquivo não é aceito. Use imagem PNG, JPG, GIF ou WEBP e áudio MP3, M4A, OGG, WAV ou WEBM.';
+  return traduz(err);
+}
+
+/* imagem grande é reduzida para no máximo 1600 px antes de enviar (GIF fica como está) */
+async function shrinkImage(file){
+  if(file.type === 'image/gif' || file.size < 1.5 * 1048576) return file;
+  try{
+    const bmp = await createImageBitmap(file);
+    const s = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width * s); c.height = Math.round(bmp.height * s);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise(r=>c.toBlob(r, 'image/jpeg', .86));
+    return blob || file;
+  }catch(e){ return file; }
+}
+async function setImage(file){
+  if(!file || !/^image\//.test(file.type)){ popMsg('Escolha um arquivo de imagem.', 'err'); return; }
+  const blob = await shrinkImage(file);
+  if(blob.size > MEDIA_MAX){ popMsg('A imagem é grande demais (máximo 10 MB).', 'err'); return; }
+  if(MEDIA.img) URL.revokeObjectURL(MEDIA.img.url);
+  MEDIA.img = {blob, url:URL.createObjectURL(blob), name:file.name || 'imagem colada', size:blob.size, ext:extOf(blob.type, blob === file ? file.name : '')};
+  popMsg(''); renderMedia();
+}
+function setAudio(blob, name){
+  if(!blob || !/^audio\//.test(blob.type)){ popMsg('Escolha um arquivo de áudio.', 'err'); return; }
+  if(blob.size > MEDIA_MAX){ popMsg('O áudio é grande demais (máximo 10 MB).', 'err'); return; }
+  if(MEDIA.aud) URL.revokeObjectURL(MEDIA.aud.url);
+  MEDIA.aud = {blob, url:URL.createObjectURL(blob), name:name || 'áudio', size:blob.size, ext:extOf(blob.type, name)};
+  popMsg(''); renderMedia();
+}
+function clearMedia(which){
+  for(const k of which ? [which] : ['img','aud']){ if(MEDIA[k]) URL.revokeObjectURL(MEDIA[k].url); MEDIA[k] = null; }
+  renderMedia();
+}
+function renderMedia(){
+  const ib = document.getElementById('popImgBox'), ab = document.getElementById('popAudBox'); if(!ib || !ab) return;
+  ib.innerHTML = MEDIA.img
+    ? `<div class="pm-file"><img src="${MEDIA.img.url}" alt="Imagem anexada"><div class="pm-meta"><b>${esc(MEDIA.img.name)}</b><span>${kb(MEDIA.img.size)}</span></div><button type="button" class="x" data-pm-clear="img" aria-label="Remover imagem">×</button></div>`
+    : `<button type="button" class="btn sm" id="btnPopImg">Escolher imagem</button><span class="hint">ou arraste aqui, ou cole com Ctrl+V</span>`;
+  ab.innerHTML = REC
+    ? `<div class="pm-rec"><span class="rec-dot" aria-hidden="true"></span><b>Gravando ${mmss((Date.now() - REC.t0) / 1000)}</b><button type="button" class="btn sm danger" id="btnPopRec">Parar</button></div>`
+    : MEDIA.aud
+      ? `<div class="pm-file aud"><audio controls preload="metadata" src="${MEDIA.aud.url}"></audio><div class="pm-meta"><b>${esc(MEDIA.aud.name)}</b><span>${kb(MEDIA.aud.size)}</span></div><button type="button" class="x" data-pm-clear="aud" aria-label="Remover áudio">×</button></div>`
+      : `<button type="button" class="btn sm" id="btnPopAud">Escolher arquivo</button><button type="button" class="btn sm" id="btnPopRec"><span class="rec-dot" aria-hidden="true"></span>Gravar voz</button><span class="hint">MP3, M4A, OGG ou WAV</span>`;
+}
+async function toggleRec(){
+  if(REC){ REC.mr.stop(); return; }
+  if(!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder){ popMsg('Este navegador não grava áudio. Use "Escolher arquivo".', 'err'); return; }
+  let stream;
+  try{ stream = await navigator.mediaDevices.getUserMedia({audio:true}); }
+  catch(e){ popMsg('Sem permissão para usar o microfone. Libere o microfone no navegador e tente de novo.', 'err'); return; }
+  const mime = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'].find(m=>MediaRecorder.isTypeSupported(m)) || '';
+  const mr = new MediaRecorder(stream, mime ? {mimeType:mime} : undefined), chunks = [];
+  mr.ondataavailable = e=>{ if(e.data && e.data.size) chunks.push(e.data); };
+  mr.onstop = ()=>{
+    stream.getTracks().forEach(t=>t.stop());
+    clearInterval(REC.timer); clearTimeout(REC.limit); REC = null;
+    const type = (mr.mimeType || 'audio/webm').split(';')[0];
+    if(chunks.length) setAudio(new Blob(chunks, {type}), `voz-${new Date().toTimeString().slice(0,5).replace(':','h')}.${extOf(type)}`);
+    else renderMedia();
+  };
+  REC = {mr, t0:Date.now(), timer:setInterval(renderMedia, 500), limit:setTimeout(()=>{ if(REC) REC.mr.stop(); }, 3 * 60 * 1000)};
+  mr.start(); popMsg(''); renderMedia();
+}
+async function uploadMedia(blob, ext){
+  const path = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const {error} = await sb.storage.from(BUCKET).upload(path, blob, {contentType:blob.type || undefined, cacheControl:'3600', upsert:false});
+  if(error) throw error;
+  return path;
+}
+
+/* --- substitui as versões antigas --- */
+function popFromForm(){
+  return {
+    para: $('#popPara').value || null, tipo: POP_TIPO,
+    titulo: $('#popTitulo').value.trim(), texto: $('#popTexto').value.trim(), rolagem: $('#popRolagem').value.trim(),
+    audio_auto: !!document.getElementById('popAudAuto')?.checked,
+    _imgUrl: MEDIA.img?.url || '', _audUrl: MEDIA.aud?.url || '',
+  };
+}
+function validPop(p){
+  if(REC){ popMsg('Pare a gravação antes de continuar.', 'err'); return false; }
+  if(!p.titulo && !p.texto && !p._imgUrl && !p._audUrl){ popMsg('Escreva uma mensagem ou anexe uma imagem ou um áudio.', 'err'); return false; }
+  if(p.rolagem){ const t = evalExpr(p.rolagem); if(!t || t.error){ popMsg('Rolagem inválida. Use algo como dAGI+dINT ou 1d20+2.', 'err'); return false; } }
+  return true;
+}
+async function sendPopup(){
+  const p = popFromForm(); if(!validPop(p)) return;
+  const btn = $('#btnPopSend'); btn.disabled = true;
+  popMsg(MEDIA.img || MEDIA.aud ? 'Enviando arquivos…' : 'Enviando…', '');
+  const uploaded = [];
+  try{
+    const row = {para:p.para, tipo:p.tipo, titulo:p.titulo, texto:p.texto, rolagem:p.rolagem};
+    if(MEDIA.img){ row.imagem = await uploadMedia(MEDIA.img.blob, MEDIA.img.ext); uploaded.push(row.imagem); }
+    if(MEDIA.aud){ row.audio = await uploadMedia(MEDIA.aud.blob, MEDIA.aud.ext); uploaded.push(row.audio); row.audio_auto = p.audio_auto; }
+    const {data, error} = await sb.from('avisos').insert(row).select().single();
+    if(error) throw error;
+    if(!AVISOS.some(x=>x.id === data.id)) AVISOS.unshift(data);
+    renderSent();
+    popMsg(`Enviado para ${p.para ? (PERFIS[p.para] || 'o jogador') : 'todos os jogadores'}.`, 'ok');
+    $('#popTitulo').value = ''; $('#popTexto').value = ''; $('#popRolagem').value = '';
+    clearMedia();
+  }catch(err){
+    if(uploaded.length) sb.storage.from(BUCKET).remove(uploaded).catch(()=>{});
+    popMsg(isMissingTable(err) ? SQL2_HINT : mediaErr(err), 'err');
+  }finally{ btn.disabled = false; }
+}
+function renderSent(){
+  const box = $('#popSent'); if(!box || VIEW !== 'mestre') return;
+  if(EXTRAS_OK === false){ box.innerHTML = `<div class="empty">${esc(SQL2_HINT)}</div>`; return; }
+  box.innerHTML = AVISOS.length ? AVISOS.map(a=>{
+    const t = POP_TIPOS[a.tipo] || POP_TIPOS.narracao;
+    const extras = [a.imagem && 'imagem', a.audio && 'áudio', a.rolagem && 'pediu ' + a.rolagem].filter(Boolean).join(' · ');
+    return `<div class="li sent">
+      <span class="dot" style="background:${t.c}" title="${t.n}"></span>
+      <div style="min-width:0"><div style="font-weight:600; overflow-wrap:anywhere">${esc(a.titulo || (a.imagem ? 'Imagem' : a.audio ? 'Áudio' : t.n))}</div>
+        <div class="hint">${a.para ? 'Para ' + esc(PERFIS[a.para] || 'jogador') : 'Para todos'} · ${hhmm(a.criado_em)}${extras ? ' · ' + esc(extras) : ''}</div></div>
+      <button class="x" data-pop-del="${esc(a.id)}" aria-label="Apagar">×</button>
+    </div>`;
+  }).join('') : '<div class="empty">Nenhum pop-up enviado ainda.</div>';
+}
+async function delAviso(id){
+  const a = AVISOS.find(x=>String(x.id) === String(id));
+  const {error} = await sb.from('avisos').delete().eq('id', id);
+  if(error){ toast('Não foi possível apagar', traduz(error)); return; }
+  const files = [a?.imagem, a?.audio].filter(Boolean);
+  if(files.length) sb.storage.from(BUCKET).remove(files).catch(()=>{});
+  AVISOS = AVISOS.filter(x=>String(x.id) !== String(id)); renderSent();
+}
+async function clearAvisos(){
+  const {error} = await sb.from('avisos').delete().gt('id', 0);
+  if(error){ toast('Não foi possível limpar', isMissingTable(error) ? SQL2_HINT : traduz(error)); return; }
+  try{
+    const {data} = await sb.storage.from(BUCKET).list('', {limit:1000});
+    const names = (data || []).map(f=>f.name).filter(n=>n && !n.startsWith('.'));
+    if(names.length) await sb.storage.from(BUCKET).remove(names);
+  }catch(e){}
+  AVISOS = []; renderSent();
+}
+function showNextPopup(){
+  const wrap = $('#popupWrap'), au = document.getElementById('popAudio');
+  if(!POPQ.length){ wrap.hidden = true; if(au){ au.pause(); au.removeAttribute('src'); au.load(); } return; }
+  const a = POPQ[0], t = POP_TIPOS[a.tipo] || POP_TIPOS.narracao;
+  wrap.style.setProperty('--pop', t.c);
+  $('#popKind').textContent = a._preview ? `${t.n} · prévia` : `${t.n} · mensagem do mestre`;
+  $('#popTitle').textContent = a.titulo || (a.imagem || a._imgUrl ? 'Imagem do mestre' : a.audio || a._audUrl ? 'Áudio do mestre' : t.n);
+  $('#popText').textContent = a.texto || '';
+  $('#popText').hidden = !a.texto;
+  const img = a._imgUrl || mediaUrl(a.imagem), aud = a._audUrl || mediaUrl(a.audio);
+  const link = document.getElementById('popImgLink');
+  if(link){ link.hidden = !img; if(img){ link.href = img; document.getElementById('popImg').src = img; } }
+  if(au){
+    au.hidden = !aud;
+    if(aud){ if(au.getAttribute('src') !== aud) au.src = aud; au.currentTime = 0; if(a.audio_auto !== false) au.play().catch(()=>{}); }
+    else { au.pause(); au.removeAttribute('src'); }
+  }
+  document.querySelector('#popupWrap .popup')?.classList.toggle('has-media', !!(img || aud));
+  const canRoll = !!a.rolagem && AUTH.chosen;
+  $('#popRoll').hidden = !a.rolagem;
+  $('#popRollExpr').textContent = a.rolagem || '';
+  $('#popRollHint').hidden = !a.rolagem || canRoll;
+  $('#btnPopRoll').hidden = !canRoll;
+  $('#popQueue').textContent = POPQ.length > 1 ? `mais ${POPQ.length - 1} na fila` : '';
+  wrap.hidden = false;
+  (canRoll ? $('#btnPopRoll') : $('#btnPopOk')).focus();
+}
+function closePopup(){ const au = document.getElementById('popAudio'); if(au) au.pause(); POPQ.shift(); showNextPopup(); }
+
+/* --- eventos do compositor --- */
+document.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.id === 'btnPopImg'){ document.getElementById('popImgFile').click(); return; }
+  if(b.id === 'btnPopAud'){ document.getElementById('popAudFile').click(); return; }
+  if(b.id === 'btnPopRec'){ toggleRec(); return; }
+  if(b.dataset.pmClear){ clearMedia(b.dataset.pmClear); return; }
+});
+document.getElementById('popImgFile')?.addEventListener('change', e=>{ const f = e.target.files[0]; if(f) setImage(f); e.target.value = ''; });
+document.getElementById('popAudFile')?.addEventListener('change', e=>{ const f = e.target.files[0]; if(f) setAudio(f, f.name); e.target.value = ''; });
+['popImgBox', 'popAudBox'].forEach(id=>{
+  const box = document.getElementById(id); if(!box) return;
+  box.addEventListener('dragover', e=>{ e.preventDefault(); box.classList.add('over'); });
+  box.addEventListener('dragleave', ()=>box.classList.remove('over'));
+  box.addEventListener('drop', e=>{
+    e.preventDefault(); box.classList.remove('over');
+    const f = e.dataTransfer.files[0]; if(!f) return;
+    if(/^image\//.test(f.type)) setImage(f); else if(/^audio\//.test(f.type)) setAudio(f, f.name);
+    else popMsg('Arraste uma imagem ou um áudio.', 'err');
+  });
+});
+document.addEventListener('paste', e=>{
+  if(VIEW !== 'mestre' || GMTAB !== 'popups') return;
+  const item = [...(e.clipboardData?.items || [])].find(i=>i.type.startsWith('image/'));
+  if(item){ e.preventDefault(); setImage(item.getAsFile()); }
+});
+renderMedia();
 
 try{ setTab(localStorage.getItem(TAB_KEY) || 'perfil'); }catch(e){ setTab('perfil'); }
 show('inicio');
