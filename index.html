@@ -1157,6 +1157,45 @@ body.modal-open{overflow:hidden}
   .tm-foot #tmDelete{order:5; flex-basis:100%}
 }
 @media (max-width:480px){ .dice-pick{grid-template-columns:repeat(3,minmax(0,1fr))} }
+
+/* =====================================================================
+   QUADRO
+   A ficha inteira fica dentro de um painel centralizado: barra do
+   lutador e abas fixas no topo, o conteúdo rola por dentro. Menos ruído:
+   sem textura, sem vinheta, sem linhas de foco.
+   ===================================================================== */
+.grain, html::after{display:none}
+body{background:#080808}
+.hero::after{display:none}
+.sheet{
+  width:min(1180px, calc(100% - 48px)); max-width:none; margin:28px auto 40px;
+  padding:0; gap:0; display:flex; flex-direction:column;
+  height:calc(100vh - 120px); height:calc(100dvh - 120px); min-height:620px;
+  background:#0d0d0d; border:1px solid #2b2b2b; border-radius:4px; overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 40px 100px rgba(0,0,0,.7);
+}
+.sheet > .hero{flex:0 0 auto; border:0; border-bottom:1px solid var(--line); border-radius:0; background:#101010}
+.sheet > .hero::before{left:0; right:0; top:0}
+.sheet > .tabs{flex:0 0 auto; padding:0 10px; background:#0d0d0d}
+.sheet-body{flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding:22px; scrollbar-width:thin; scrollbar-color:#333 transparent}
+.sheet-body::-webkit-scrollbar{width:8px}
+.sheet-body::-webkit-scrollbar-thumb{background:#2e2e2e; border-radius:4px}
+.sheet-body .card{background:#121212; border-color:#212121}
+.ro-banner{width:min(1180px, calc(100% - 48px)); max-width:none}
+@media (max-width:760px){
+  .sheet{width:100%; margin:0; height:auto; min-height:0; overflow:visible; border-left:0; border-right:0; border-radius:0; box-shadow:none}
+  .sheet-body{overflow:visible; padding:16px}
+  .ro-banner{width:calc(100% - 32px)}
+}
+
+/* pop-up de técnica: aviso de limite */
+.btn.at-limit{opacity:.65}
+.tmodal.limit{width:min(580px,100%)}
+.tmodal.limit .tm-body{grid-template-columns:1fr}
+.tm-limit{display:grid; gap:12px; font-size:16px; line-height:1.5}
+.tm-limit p{margin:0}
+.tm-limit b{color:var(--ink)}
+.tm-limit-list{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
 </style>
 <div class="grain" aria-hidden="true"></div>
 
@@ -1260,6 +1299,8 @@ body.modal-open{overflow:hidden}
     <button class="tab" data-tab="dados" role="tab">Dados</button>
     <button class="tab" data-tab="notas" role="tab">História</button>
   </nav>
+
+  <div class="sheet-body" id="sheetBody">
 
   <!-- PERFIL -->
   <div class="pane" id="pane-perfil" role="tabpanel">
@@ -1563,6 +1604,7 @@ body.modal-open{overflow:hidden}
     </section>
   </div>
 
+  </div>
 </main>
 
 <!-- ================= ESCUDO DO MESTRE ================= -->
@@ -2673,6 +2715,7 @@ function setTab(name){
   if(!document.getElementById('pane-' + name)) name = 'perfil';
   $$('.tab').forEach(x=>{ const on = x.dataset.tab === name; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
   $$('.pane').forEach(p=>p.classList.toggle('on', p.id === 'pane-' + name));
+  const sbody = document.getElementById('sheetBody'); if(sbody) sbody.scrollTop = 0;
   const tb = $('#tabs'), btn = tb.querySelector('.tab.on');
   if(btn) tb.scrollLeft = btn.offsetLeft - tb.clientWidth/2 + btn.offsetWidth/2;
   try{ localStorage.setItem(TAB_KEY, name); }catch(e){}
@@ -2889,7 +2932,7 @@ function renderCaps(){
     + `<span class="cap ${nt>=lt?'full':''}">Técnicas próprias <b>${nt}/${lt}</b>${nt>lt?' · acima do limite':''}</span>`
     + `<span class="cap">Faixa ${b}</span>`;
   const capT = $('#capTec'); if(capT) capT.textContent = npc ? '' : `${nt}/${lt} na faixa ${b}`;
-  const add = $('#btnAddTec'); if(add) add.disabled = !npc && nt >= lt;
+  const add = $('#btnAddTec'); if(add){ add.disabled = false; add.classList.toggle('at-limit', !npc && nt >= lt); }
   const h = $('#tecLimitHint'); if(h) h.textContent = (!npc && nt >= lt) ? `Limite da faixa ${b}. Suba de faixa para criar outra.` : '';
 }
 
@@ -3031,21 +3074,35 @@ function tecRange(t){
 /* ---------- criador em pop-up ---------- */
 const TM = {idx:null, d:null};
 function openTecModal(idx){
-  if(idx === null && !S.npc && S.tecs.length >= limTec()){
-    toast('Limite de técnicas', `Na faixa ${BELTS[S.belt].n} você pode ter ${limTec()} técnica${limTec()>1?'s':''} própria${limTec()>1?'s':''}.`); return;
-  }
+  if(idx === null && !S.npc && S.tecs.length >= limTec()){ openTecLimit(); return; }
+
   TM.idx = idx;
   TM.d = normTec(JSON.parse(JSON.stringify(idx === null
     ? {nome:'', nivel:1, gasto:6, tipo:'A', dados:['FOR','AGI'], modo:'HR', mult:1, fixo:4, slm:2, hits:1, crit:'x2', desc:'', rolagem:''}
     : S.tecs[idx])));
   $('#tmTitle').textContent = idx === null ? 'Nova técnica' : 'Editar técnica';
   $('#tmDelete').hidden = idx === null;
+  $('.tm-side').hidden = false; $('#tmSave').hidden = false; $('#tmCancel').textContent = 'Cancelar'; $('.tmodal').classList.remove('limit');
   $('#tmMsg').textContent = ''; $('#tmTestOut').innerHTML = '';
   renderTmForm(); renderTmSide();
   $('#tecModal').hidden = false; document.body.classList.add('modal-open');
   setTimeout(()=>{ const n = $('#tmForm [data-tm="nome"]'); if(n) n.focus(); }, 30);
 }
-function closeTecModal(){ $('#tecModal').hidden = true; document.body.classList.remove('modal-open'); TM.d = null; TM.idx = null; }
+function openTecLimit(){
+  const lt = limTec(), nt = S.tecs.length, b = BELTS[S.belt].n;
+  const next = LIMITES.tecnicas.findIndex((v,i)=> i > S.belt && v > lt);
+  TM.idx = null; TM.d = null;
+  $('#tmTitle').textContent = 'Limite de técnicas';
+  $('#tmForm').innerHTML = `<div class="tm-limit">
+    <p>Na <b>Faixa ${b}</b> você pode ter <b>${lt}</b> técnica${lt>1?'s':''} própria${lt>1?'s':''} e já tem <b>${nt}</b>.</p>
+    <p class="hint">${next >= 0 ? `A próxima libera na Faixa ${BELTS[next].n}.` : 'Você já tem o máximo de técnicas.'} Até lá, você pode editar ou apagar a que já existe.</p>
+    <div class="tm-limit-list">${S.tecs.map((t,i)=>`<button type="button" class="btn" data-tmopen="${i}">Editar “${esc(t.nome || 'Técnica sem nome')}”</button>`).join('')}</div>
+  </div>`;
+  $('.tm-side').hidden = true; $('#tmSave').hidden = true; $('#tmDelete').hidden = true;
+  $('#tmMsg').textContent = ''; $('#tmCancel').textContent = 'Fechar';
+  $('.tmodal').classList.add('limit');
+  $('#tecModal').hidden = false; document.body.classList.add('modal-open');
+}function closeTecModal(){ $('#tecModal').hidden = true; document.body.classList.remove('modal-open'); TM.d = null; TM.idx = null; }
 function renderTmForm(){
   const t = TM.d;
   const pts = D.pcAvail + (TM.idx === null ? 0 : (+S.tecs[TM.idx].nivel||0));
@@ -3122,7 +3179,10 @@ function deleteTecModal(){
   toast('Técnica apagada', nome);
 }
 document.addEventListener('click', e=>{
-  const b = e.target.closest('#tecModal button'); if(!b || !TM.d) return;
+  const b = e.target.closest('#tecModal button'); if(!b) return;
+  if(b.id === 'tmClose' || b.id === 'tmCancel'){ closeTecModal(); return; }
+  if(b.dataset.tmopen !== undefined){ openTecModal(+b.dataset.tmopen); return; }
+  if(!TM.d) return;
   const d = b.dataset, t = TM.d;
   if(d.tmset){
     const [f,v] = d.tmset.split('|');
@@ -3164,7 +3224,7 @@ document.addEventListener('input', e=>{
   TM.d[el.dataset.tm] = v; $('#tmMsg').textContent = '';
   renderTmSide();
 });
-document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && TM.d) closeTecModal(); });
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && !$('#tecModal').hidden) closeTecModal(); });
 
 function armThen(btn, fn){
   if(btn.dataset.armed){ fn(); return; }
@@ -3476,7 +3536,6 @@ document.addEventListener('click', e=>{
     case 'btnPcES': if(D.pcAvail>0){ S.pcConv.push('es'); save(); renderAll(); } break;
     case 'btnPcUndo': S.pcConv.pop(); save(); renderAll(); break;
     case 'btnAddTec':
-      if(!S.npc && S.tecs.length >= limTec()){ toast('Limite de técnicas', `Na faixa ${BELTS[S.belt].n} você pode ter ${limTec()} técnica${limTec()>1?'s':''} própria${limTec()>1?'s':''}.`); break; }
       openTecModal(null); break;
     case 'btnExport': exportSheet(); break;
     case 'btnCopyExport': {
