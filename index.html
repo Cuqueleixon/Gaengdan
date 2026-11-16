@@ -1749,7 +1749,7 @@ function route(){
   if((RO || EDIT_OTHER) && h !== 'ficha') leaveOther();
   if(AUTH.recovery) show('inicio');
   else if(h === 'mestre' && AUTH.mestre) show('mestre');
-  else if(h === 'ficha' && AUTH.chosen) show('ficha');
+  else if(h === 'ficha' && (AUTH.chosen || RO || EDIT_OTHER)) show('ficha');
   else show('inicio');
 }
 function show(view){
