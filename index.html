@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gaengdan — Mesa</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Black+Han+Sans&family=Dela+Gothic+One&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Black+Han+Sans&family=Dela+Gothic+One&family=Anton&family=Special+Elite&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0e0d0f; --bg-2:#141216;
@@ -721,6 +721,204 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
 .pop-queue:empty{display:none}
 @keyframes fadeIn{from{opacity:0}}
 @keyframes popIn{from{opacity:0; transform:scale(.92) translateY(10px)}}
+
+/* =====================================================================
+   CLIMA: FICHA CRIMINAL
+   Mais sério e mais violento: preto quase puro, concreto e sangue seco.
+   O amarelo vira âmbar de sinalização, usado com parcimônia; o vermelho
+   marca dano, golpes e perigo. Títulos em Anton condensado, cantos
+   cortados, barras de vida segmentadas como em jogo de luta e foto em
+   estilo fichamento policial.
+   ===================================================================== */
+:root{
+  --bg:#060606; --bg-2:#0b0b0b;
+  --panel:#101010; --panel-2:#151515; --panel-3:#1e1e1e;
+  --line:#222222; --line-2:#353535;
+  --ink:#ebe6dc; --ink-2:#a29c92; --ink-3:#6b665f;
+  --yellow:#e8ac00; --yellow-2:#ffc21a; --on-yellow:#0a0a0a;
+  --red:#a8101a; --red-2:#e01e2b; --blood:#3d070a;
+  --display:'Anton', 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --stamp:'Special Elite', 'Courier New', monospace;
+  --hazard:repeating-linear-gradient(-45deg, var(--yellow) 0 9px, #0a0a0a 9px 18px);
+  --top:rgba(5,5,5,.96);
+}
+body{
+  background:
+    radial-gradient(1300px 600px at 50% -18%, rgba(168,16,26,.12), transparent 60%),
+    radial-gradient(900px 500px at 100% 100%, rgba(232,172,0,.035), transparent 60%),
+    #060606;
+}
+html::after{content:""; position:fixed; inset:0; pointer-events:none; z-index:0; box-shadow:inset 0 0 220px 40px rgba(0,0,0,.85)}
+.grain{opacity:.11}
+::selection{background:var(--red-2); color:#fff}
+
+/* tipografia */
+.logo{font-family:var(--display); font-size:30px; letter-spacing:.07em}
+.logo b{color:var(--yellow)}
+.sec{font-family:var(--display); font-size:20px; letter-spacing:.07em; align-items:center}
+.sec::before{content:""; flex:0 0 auto; width:5px; height:18px; background:var(--red-2); transform:skewX(-18deg)}
+.sec .kr{font-size:13px}
+.lbl, label.f > span{letter-spacing:.14em}
+.btn{font-family:var(--display); font-weight:400; font-size:14px; letter-spacing:.08em; border-radius:0}
+.btn.sm{font-size:12.5px; padding:5px 10px}
+.btn.red{box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 6px 18px rgba(232,172,0,.12)}
+.btn.danger{background:var(--red); border-color:var(--red-2)}
+.navbtn{font-family:var(--display); font-size:14px; letter-spacing:.08em}
+.topbar{background:var(--top)}
+.topbar::after{height:3px; bottom:-3px}
+
+/* superfícies: cantos cortados a faca, sem arredondado */
+.btn,.box,.chip,.badge,.stat,.attr,.move,.li,.tec,.tok,.hero,.tabs,.fighter,.photo,.hero-pic,.f-pic,.toast,.popup,.modal-box,.authtabs,.tab,.gtab,.belt,.xpbar,.bar,.cap{border-radius:0}
+.card{
+  background:linear-gradient(180deg,#121212,#0b0b0b); border:1px solid var(--line); border-radius:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03), 0 14px 34px rgba(0,0,0,.5);
+}
+.card::before{width:48px; height:3px; background:var(--red-2); left:10px; transform:skewX(-35deg)}
+.card:not(.gate-card)::after{
+  content:""; position:absolute; top:-1px; right:-1px; width:18px; height:18px; pointer-events:none;
+  background:linear-gradient(225deg, var(--bg) 0 50%, var(--line-2) 50% calc(50% + 1px), transparent calc(50% + 1px));
+}
+.box{background:#0a0a0a; border-color:#2a2a2a}
+.in{border-bottom-color:#303030}
+.stat{background:linear-gradient(180deg,#151515,#0d0d0d); border-color:#262626}
+.stat .v{font-family:var(--display); font-weight:400; font-size:26px; letter-spacing:.02em}
+.stat.mod .v{color:var(--yellow)}
+.stat.neg .v{color:var(--red-2)}
+
+/* abas */
+.tabs{background:#090909; border-color:var(--line); padding:0; gap:0}
+.tab,.gtab{font-family:var(--display); font-size:14px; letter-spacing:.08em; padding:12px 14px; border-right:1px solid #1a1a1a}
+.tab:last-child,.gtab:last-child{border-right:0}
+.tab:hover,.gtab:hover{background:#141414}
+.tab.on,.gtab.on{background:var(--yellow); color:var(--on-yellow); clip-path:polygon(9px 0,100% 0,calc(100% - 9px) 100%,0 100%)}
+.tab #tcFx:not(:empty), .gtab .tc.hot:not(:empty){background:var(--red-2)}
+
+/* barra do lutador: ficha criminal */
+.hero{
+  grid-template-columns:84px minmax(0,1.1fr) minmax(0,1.3fr) auto;
+  background:linear-gradient(90deg, rgba(168,16,26,.10), transparent 45%), linear-gradient(180deg,#141414,#090909);
+  border:1px solid var(--line-2); padding:20px 18px 16px;
+}
+.hero::before{height:4px}
+.hero::after{
+  content:""; position:absolute; right:10px; top:8px; width:200px; height:130px; pointer-events:none; z-index:0; opacity:.13;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 130'><g fill='%23e01e2b'><path d='M38 6 C60 44 66 84 52 126 L46 124 C58 84 50 46 30 9 Z'/><path d='M84 2 C108 42 112 86 98 128 L91 126 C103 86 96 44 75 5 Z'/><path d='M130 6 C152 44 156 84 142 124 L136 122 C148 84 140 46 121 9 Z'/></g></svg>") no-repeat right top / contain;
+}
+.hero > *{position:relative; z-index:1}
+.hero-pic{
+  width:84px; height:110px; color:var(--ink-3); font-size:36px;
+  background:repeating-linear-gradient(0deg, transparent 0 10px, rgba(255,255,255,.07) 10px 11px), #0c0c0c;
+  border:1px solid var(--line-2);
+}
+.hero-pic img{filter:grayscale(1) contrast(1.25) brightness(.92)}
+.photo img{filter:grayscale(.85) contrast(1.15)}
+.f-pic img{filter:grayscale(1) contrast(1.2)}
+.hero-name{font-size:clamp(26px,3vw,40px); text-transform:uppercase; letter-spacing:.02em; line-height:1}
+.hero-sub{font-size:15px}
+.hero-id{position:relative}
+.stamp{
+  position:absolute; right:0; top:-6px; transform:rotate(-8deg); padding:3px 10px;
+  font-family:var(--stamp); font-size:15px; letter-spacing:.12em; color:var(--red-2);
+  border:2px solid var(--red-2); background:rgba(224,30,43,.06); opacity:.9; mix-blend-mode:screen; pointer-events:none;
+}
+.hv-k{font-family:var(--display); font-size:16px; letter-spacing:.08em}
+.vital-val{font-family:var(--display); font-weight:400; letter-spacing:.02em}
+.hero .vital-val{font-size:26px}
+.hero-stats{grid-template-columns:repeat(4,70px)}
+.hero-stats .stat .v{font-size:28px}
+.hero.hit{animation:hit .4s ease-out}
+@keyframes hit{
+  0%{transform:none}
+  15%{transform:translateX(-7px); box-shadow:inset 0 0 70px rgba(224,30,43,.6)}
+  35%{transform:translateX(6px)}
+  55%{transform:translateX(-3px); box-shadow:inset 0 0 30px rgba(224,30,43,.3)}
+  100%{transform:none; box-shadow:none}
+}
+@media (max-width:1100px){
+  .hero{grid-template-columns:84px minmax(0,1fr) minmax(0,1fr)}
+  .hero-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:680px){
+  .hero{grid-template-columns:64px minmax(0,1fr)}
+  .hero-pic{width:64px; height:84px; font-size:28px}
+  .hero::after{width:140px; opacity:.1}
+  .stamp{font-size:12px; top:-14px}
+}
+
+/* barras de vida segmentadas, como em jogo de luta */
+.bar{background:#080808; border:1px solid #2b2b2b; position:relative}
+.bar::after{content:""; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(90deg, transparent 0 calc(10% - 2px), #080808 calc(10% - 2px) 10%)}
+.bar.qv i{background:linear-gradient(180deg,#ff3b47,#a8101a 55%,#6d0910)}
+.bar.es i{background:linear-gradient(180deg,#ffd34d,#e8ac00 55%,#8f6a00)}
+.hero .bar{height:16px}
+
+/* status (dados) */
+.attr{background:linear-gradient(180deg,#151515,#0c0c0c); border-color:#252525}
+.attr .k{font-family:var(--display); font-size:22px; letter-spacing:.06em}
+.die{background:#3a3a3a}
+.die:hover{background:var(--red-2)}
+
+/* golpes */
+.move{background:linear-gradient(180deg,#141414,#0d0d0d); border-color:#242424}
+.move.learned{box-shadow:inset 3px 0 0 var(--red-2)}
+.move.capped{opacity:.5}
+.move-name{font-family:var(--display); font-weight:400; font-size:20px; letter-spacing:.03em; text-transform:uppercase}
+.move-name .ix{color:var(--red-2)}
+.badge{font-size:9.5px}
+.badge.A{background:var(--blood); color:#ffb3b8; border-color:var(--red)}
+.move-stats .dmg{color:var(--ink)}
+.cap-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px}
+.cap{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; background:#0c0c0c; border:1px solid #2a2a2a; font-family:var(--mono); font-size:12px; color:var(--ink-2)}
+.cap b{font-family:var(--display); font-weight:400; font-size:17px; color:var(--ink); letter-spacing:.04em}
+.cap.full{border-color:var(--red); color:#ff9aa1}
+
+/* criador de técnica própria */
+.tec-list .move.editing{grid-column:1/-1; border-color:#3a3a3a}
+.tec-acts{display:flex; gap:6px}
+.tec-builder{display:grid; gap:12px; padding:16px; margin-top:4px; background:#090909; border:1px solid #262626; border-left:3px solid var(--yellow)}
+.tb-step{display:flex; align-items:center; gap:10px; font-family:var(--display); font-size:15px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); margin-top:4px}
+.tb-step:first-child{margin-top:0}
+.tb-step::after{content:""; flex:1; height:1px; background:#222}
+.tb-n{display:grid; place-items:center; width:22px; height:22px; background:var(--red); color:#fff; font-size:13px; transform:skewX(-10deg)}
+.tb-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px 16px; align-items:end}
+.tb-wide{grid-column:span 2}
+@media (max-width:640px){ .tb-wide{grid-column:1/-1} }
+.seg{display:flex; flex-wrap:wrap; gap:4px; margin-top:2px}
+.seg button{background:#131313; border:1px solid #2c2c2c; color:var(--ink-2); padding:7px 11px; font-family:var(--display); font-size:13px; letter-spacing:.06em; text-transform:uppercase; display:inline-flex; align-items:baseline; gap:5px}
+.seg button small{font-family:var(--mono); font-size:10px; opacity:.75; text-transform:none}
+.seg button:hover{border-color:#4a4a4a; color:var(--ink)}
+.seg button.on{background:var(--yellow); border-color:var(--yellow); color:var(--on-yellow)}
+.seg.dice button.on{background:var(--red); border-color:var(--red-2); color:#fff}
+.seg button:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.tb-prev{display:flex; gap:12px; align-items:baseline; flex-wrap:wrap; padding:11px 13px; background:#111; border-left:3px solid var(--red-2); font-family:var(--mono); font-size:13px; color:var(--ink)}
+.tb-prev b{color:var(--ink-3); font-weight:500; margin-right:6px}
+.tb-plbl{font-family:var(--display); font-size:13px; letter-spacing:.1em; color:var(--yellow); text-transform:uppercase}
+.tb-foot{display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap}
+
+/* combate e efeitos */
+.tok{background:linear-gradient(180deg,#151515,#0d0d0d); font-family:var(--display); font-weight:400; letter-spacing:.06em}
+.tok .ico{color:var(--red-2)}
+.tok:not(.spent){border-color:#3a3a3a}
+.chip{font-family:var(--display); font-weight:400; letter-spacing:.06em}
+.chip.on{background:var(--red); border-color:var(--red-2)}
+.hero-fx span{background:var(--red)}
+.banner{border-radius:0; background:rgba(168,16,26,.16); border-color:var(--red-2); font-family:var(--display); font-weight:400; letter-spacing:.06em}
+.banner.info{background:rgba(232,172,0,.08); border-color:var(--yellow)}
+
+/* entrada, escudo e pop-ups */
+.gate-title{font-family:var(--display); font-size:clamp(60px,8.5vw,128px); letter-spacing:.03em; line-height:.92}
+.gate-title b{color:var(--yellow)}
+.shield-title{font-family:var(--display); font-size:clamp(34px,4.6vw,52px); letter-spacing:.03em; text-transform:uppercase}
+.fighter{background:linear-gradient(180deg,#131313,#0b0b0b); border-color:#262626}
+.f-name{font-family:var(--display); font-size:21px; text-transform:uppercase; letter-spacing:.03em}
+.f-pic{background:repeating-linear-gradient(0deg, transparent 0 8px, rgba(255,255,255,.06) 8px 9px), #0c0c0c}
+.f-stats .stat .v{font-size:20px}
+.popup h2{font-family:var(--display); text-transform:uppercase; letter-spacing:.03em}
+.toast{border-left-color:var(--red-2); background:#090909}
+.toast .tv{font-family:var(--display); font-weight:400}
+.toast .tt{font-family:var(--display); font-weight:400; letter-spacing:.05em; font-size:17px}
+.r-tot{font-family:var(--display); font-weight:400}
+.log-i .to{font-family:var(--display); font-weight:400}
 </style>
 <div class="grain" aria-hidden="true"></div>
 
@@ -782,6 +980,7 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
   <section class="hero" aria-label="Resumo do lutador">
     <div class="hero-pic" id="heroPic" aria-hidden="true"></div>
     <div class="hero-id">
+      <span class="stamp" id="heroStamp" hidden></span>
       <div class="hero-name" id="heroName">Sem nome</div>
       <div class="hero-sub" id="heroSub"></div>
       <div class="hero-tags" id="heroTags"></div>
@@ -944,7 +1143,7 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
         <div class="vital">
           <div class="lbl">Q.V · Quantidade de Vida</div>
           <div class="vital-ctrl">
-            <input class="box num-in" id="qvAmt" type="number" inputmode="numeric" placeholder="0" aria-label="Valor de vida">
+            <input class="box num-in nonneg" id="qvAmt" type="text" inputmode="numeric" maxlength="5" placeholder="0" aria-label="Valor de vida">
             <button class="btn sm danger" data-vit="qv" data-op="-">Dano</button>
             <button class="btn sm green" data-vit="qv" data-op="+">Curar</button>
             <button class="btn sm ghost" data-vit="qv" data-op="max" data-tip="Restaurar Q.V máxima">Cheia</button>
@@ -953,7 +1152,7 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
         <div class="vital">
           <div class="lbl">E.S · Estamina</div>
           <div class="vital-ctrl">
-            <input class="box num-in" id="esAmt" type="number" inputmode="numeric" placeholder="0" aria-label="Valor de estamina">
+            <input class="box num-in nonneg" id="esAmt" type="text" inputmode="numeric" maxlength="5" placeholder="0" aria-label="Valor de estamina">
             <button class="btn sm yellow" data-vit="es" data-op="-">Gastar</button>
             <button class="btn sm green" data-vit="es" data-op="+">Recuperar</button>
           </div>
@@ -1026,6 +1225,7 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
         Golpes acima da sua faixa ficam bloqueados.
         <label style="display:inline-flex; gap:6px; align-items:center; margin-left:8px; cursor:pointer"><input type="checkbox" id="onlyLearned"> só aprendidos</label>
       </div>
+      <div class="cap-row" id="capGolpes"></div>
       <div class="moves" id="moves"></div>
     </section>
   </div>
@@ -1048,9 +1248,10 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
       </div>
     </section>
     <section class="card">
-      <h2 class="sec">Técnicas próprias</h2>
-      <div class="list" id="tecs"></div>
-      <div class="adder"><button class="btn sm" id="btnAddTec">+ Nova técnica</button></div>
+      <h2 class="sec">Técnicas próprias<span class="aside" id="capTec"></span></h2>
+      <p class="hint" style="margin:-4px 0 14px">Monte o golpe do seu jeito: quais dados rolar, como somar, o bônus fixo e quanto ele cresce por nível. A prévia mostra a fórmula igual aos golpes do livro.</p>
+      <div class="moves tec-list" id="tecs"></div>
+      <div class="adder"><button class="btn sm red" id="btnAddTec">+ Nova técnica</button><span class="hint" id="tecLimitHint"></span></div>
     </section>
   </div>
 
@@ -1989,7 +2190,7 @@ function fighterCard(r, npc){
     <div class="f-dice">${ATTRS.map(a=>`<div>${a.k}<b class="${s.attrs[a.k]>6?'up':''}">d${s.attrs[a.k]}</b></div>`).join('')}</div>
     ${fx.length ? `<div class="f-fx">${fx.map(e=>`<span title="${esc(e.d)}">${e.n}</span>`).join('')}</div>` : ''}
     ${npc ? `<div class="npc-quick">
-        <input class="box num-in" id="nq-${esc(id)}" type="number" inputmode="numeric" placeholder="0" aria-label="Valor de vida">
+        <input class="box num-in nonneg" id="nq-${esc(id)}" type="text" inputmode="numeric" maxlength="5" placeholder="0" aria-label="Valor de vida">
         <button class="btn sm danger" data-npc-hp="${esc(id)}" data-op="-">Dano</button>
         <button class="btn sm green" data-npc-hp="${esc(id)}" data-op="+">Curar</button>
       </div>` : ''}
@@ -2197,6 +2398,8 @@ function renderHero(){
   $('#tcFx').textContent = fx.length || '';
   $('#tcGolpes').textContent = st ? (st.m.filter((m,i)=>S.golpes[`${S.estilo}:${i}`]).length || '') : '';
   $('#tcInv').textContent = (S.armas.length + S.cons.reduce((a,c)=>a+(+c.qtd||0),0)) || '';
+  const stp = $('#heroStamp');
+  if(stp){ const qp = S.qv / (D.qvMax || 1); const txt = S.tcm >= 3 ? 'MORTO' : S.qv <= 0 ? 'CAÍDO' : qp <= .25 ? 'EM PERIGO' : ''; stp.textContent = txt; stp.hidden = !txt; }
 }
 const TAB_KEY = 'gaengdan.aba';
 function setTab(name){
@@ -2331,6 +2534,8 @@ function renderMoves(){
   $('#styleDesc').textContent = st ? st.d : 'Escolha um estilo de luta para ver os golpes.';
   if(!st){ $('#moves').innerHTML = ''; return; }
   const only = $('#onlyLearned').checked;
+  const full = !S.npc && golpesAprendidos() >= limGolpes();
+  renderCaps();
   const html = st.m.map((m,i)=>{
     const key = `${S.estilo}:${i}`, sl = S.golpes[key]||0, locked = m.b > S.belt;
     if(only && !sl) return '';
@@ -2342,8 +2547,8 @@ function renderMoves(){
     if(m.test) stats.push(`<span><b>TESTE</b>${m.test.replace('+',' + ')}</span>`);
     if(m.crit) stats.push(`<span><b>CRÍTICO</b>${m.crit}</span>`);
     const canUse = m.kind!=='P' && (p || m.test || m.cost!=='');
-    const pips = Array.from({length:m.lv},(_,j)=>`<button class="pip sq ${j<sl?'on':''}" data-sl="${key}" data-v="${j+1}" aria-label="Nível ${j+1}" ${locked?'disabled':''}></button>`).join('');
-    return `<article class="move ${sl?'learned':''} ${locked?'locked':''}">
+    const pips = Array.from({length:m.lv},(_,j)=>`<button class="pip sq ${j<sl?'on':''}" data-sl="${key}" data-v="${j+1}" aria-label="Nível ${j+1}" ${locked||(full&&!sl)?'disabled':''}></button>`).join('');
+    return `<article class="move ${sl?'learned':''} ${locked?'locked':''} ${full&&!sl&&!locked?'capped':''}">
       <div class="move-h">
         <div class="move-name"><span class="ix">${String(i+1).padStart(2,'0')}</span>${esc(m.n)}</div>
         <div class="badges">
@@ -2355,7 +2560,7 @@ function renderMoves(){
       ${m.eff?`<div class="move-eff">${esc(tmpl(m.eff, sl))}</div>`:''}
       <div class="move-f">
         <div class="sl"><span class="lbl">SL ${sl}/${m.lv}</span>${pips}</div>
-        ${locked ? `<span class="hint">🔒 Faixa ${belt.n}</span>` : canUse ? `<button class="btn sm ${sl?'red':''}" data-use="${key}" ${sl?'':'disabled'} title="${sl?'':'Marque o SL para aprender'}">Usar</button>` : ''}
+        ${locked ? `<span class="hint">Bloqueado até a faixa ${belt.n}</span>` : (full && !sl) ? '<span class="hint">Limite da faixa</span>' : canUse ? `<button class="btn sm ${sl?'red':''}" data-use="${key}" ${sl?'':'disabled'} title="${sl?'':'Marque o SL para aprender'}">Usar</button>` : ''}
       </div>
     </article>`;
   }).join('');
@@ -2371,7 +2576,7 @@ function renderInv(){
   $('#weapons').innerHTML = S.armas.length ? S.armas.map((w,i)=>`
     <div class="li weapon">
       <input class="in" data-list="armas" data-i="${i}" data-f="nome" value="${esc(w.nome)}" placeholder="Nome da arma" aria-label="Nome da arma">
-      <input class="in mono" data-list="armas" data-i="${i}" data-f="dano" value="${esc(w.dano)}" placeholder="Dano" aria-label="Dano" inputmode="numeric">
+      <input class="in mono nonneg" data-list="armas" data-i="${i}" data-f="dano" value="${esc(w.dano)}" placeholder="Dano" aria-label="Dano" inputmode="numeric">
       <input class="in" data-list="armas" data-i="${i}" data-f="notas" value="${esc(w.notas)}" placeholder="${esc(w.tipo||'notas')}" aria-label="Notas">
       <button class="btn sm red" data-watk="${i}">Atacar</button>
       <button class="x" data-del="armas" data-i="${i}" aria-label="Remover">×</button>
@@ -2392,25 +2597,181 @@ function renderInv(){
 const consLabel = c => [c.qv?`Q.V ${c.qv==='MAX'?'máxima':'+'+c.qv}`:'', c.es?`E.S ${c.es==='MAX'?'total':'+'+c.es}`:'', c.note||''].filter(Boolean).join(' · ');
 const findCons = n => Object.values(CONSUMABLES).flat().find(c=>c.n===n);
 
+/* =====================================================================
+   LIMITE DE GOLPES POR FAIXA
+   Regra da mesa: na Faixa Branca, 1 golpe do estilo + 1 técnica própria.
+   Depois: +1 golpe do estilo por faixa; técnicas próprias acompanham os
+   arquétipos (2ª na Laranja, 3ª na Preta). Ajuste aqui se a regra mudar.
+   NPCs não têm limite.
+   ===================================================================== */
+const LIMITES = {
+  golpes:   [1, 2, 3, 4, 5, 6, 7, 8],   // Branca … Preta
+  tecnicas: [1, 1, 2, 2, 2, 2, 2, 3],
+};
+const limGolpes = () => LIMITES.golpes[S.belt] ?? 1;
+const limTec = () => LIMITES.tecnicas[S.belt] ?? 1;
+function golpesAprendidos(){
+  const st = STYLES[S.estilo];
+  return st ? st.m.filter((m,i)=>S.golpes[`${S.estilo}:${i}`]).length : 0;
+}
+function renderCaps(){
+  const lg = limGolpes(), lt = limTec(), ng = golpesAprendidos(), nt = S.tecs.length, b = BELTS[S.belt].n, npc = !!S.npc;
+  const capG = $('#capGolpes');
+  if(capG) capG.innerHTML = npc ? '<span class="cap">NPC · sem limite de golpes</span>'
+    : `<span class="cap ${ng>=lg?'full':''}">Golpes do estilo <b>${ng}/${lg}</b>${ng>lg?' · acima do limite':''}</span>`
+    + `<span class="cap ${nt>=lt?'full':''}">Técnicas próprias <b>${nt}/${lt}</b>${nt>lt?' · acima do limite':''}</span>`
+    + `<span class="cap">Faixa ${b}</span>`;
+  const capT = $('#capTec'); if(capT) capT.textContent = npc ? '' : `${nt}/${lt} na faixa ${b}`;
+  const add = $('#btnAddTec'); if(add) add.disabled = !npc && nt >= lt;
+  const h = $('#tecLimitHint'); if(h) h.textContent = (!npc && nt >= lt) ? `Limite da faixa ${b}. Suba de faixa para criar outra.` : '';
+}
+
+/* =====================================================================
+   TÉCNICA PRÓPRIA: criador de golpes
+   ===================================================================== */
+const TEC_OPEN = new Set();
+function normTec(t){
+  if(t.tipo === undefined) t.tipo = 'A';
+  if(!Array.isArray(t.dados)) t.dados = t.rolagem ? [] : ['FOR','AGI'];
+  if(t.modo === undefined) t.modo = 'HR';
+  for(const [k,v] of [['mult',1],['fixo',0],['slm',0],['hits',1],['crit',''],['nivel',1],['gasto',0],['desc',''],['rolagem',''],['nome','']])
+    if(t[k] === undefined || t[k] === null) t[k] = v;
+  return t;
+}
+const tecPattern = t => t.dados.length ? {dice:t.dados, mode:t.modo, mult:+t.mult||1, flat:+t.fixo||0, slm:+t.slm||0} : null;
+function tecFormula(t){
+  const sl = Math.max(1, +t.nivel||1);
+  if(t.rolagem) return `<b>DANO</b>${esc(t.rolagem)} <span class="muted">· fórmula livre</span>`;
+  const p = tecPattern(t);
+  if(!p) return '<b>SEM DADO</b>só efeito';
+  const hits = Math.max(1, +t.hits||1);
+  return `<b>${t.tipo==='R'?'REDUÇÃO':'DANO'}</b>${fmtDmg(p, sl)}${hits>1?` ×${hits} golpes`:''}`;
+}
 function renderTec(){
   $('#pcEarned').textContent = D.pcEarned; $('#pcSpentV').textContent = D.pcTec; $('#pcConv').textContent = D.pcConvN;
   $('#pcAvail').textContent = D.pcAvail; $('#pcAvail').parentElement.classList.toggle('neg', D.pcAvail<0);
   $('#btnPcQV').disabled = $('#btnPcES').disabled = D.pcAvail<=0;
   $('#btnPcUndo').disabled = !S.pcConv.length;
+  renderCaps();
   const leal = activeArchs().some(a=>a.id==='lealdade');
-  $('#tecs').innerHTML = S.tecs.length ? S.tecs.map((t,i)=>`
-    <div class="tec">
-      <div class="tec-top">
-        <label class="f"><span>Nome da técnica</span><input class="in" data-list="tecs" data-i="${i}" data-f="nome" value="${esc(t.nome)}"></label>
-        <label class="f"><span>Nível (PC)</span><input class="in mono" type="number" min="0" data-list="tecs" data-i="${i}" data-f="nivel" data-num value="${esc(t.nivel)}"></label>
-        <label class="f"><span>Gasto E.S</span><input class="in mono" type="number" min="0" data-list="tecs" data-i="${i}" data-f="gasto" data-num value="${esc(t.gasto)}"></label>
-        <button class="x" data-del="tecs" data-i="${i}" aria-label="Remover técnica">×</button>
-      </div>
-      <label class="f"><span>Rolagem de dano${leal?' (+2 Lealdade ao Estilo)':''}</span><input class="in mono" data-list="tecs" data-i="${i}" data-f="rolagem" value="${esc(t.rolagem)}" placeholder="ex.: dFOR+dAGI+6"></label>
-      <label class="f"><span>Descrição / efeito</span><textarea class="box" data-list="tecs" data-i="${i}" data-f="desc" style="min-height:60px">${esc(t.desc)}</textarea></label>
-      <div style="display:flex; gap:6px; justify-content:flex-end"><button class="btn sm red" data-tuse="${i}">Usar</button></div>
-    </div>`).join('') : '<div class="empty">Sua técnica própria é o que te diferencia nas ruas. Crie a primeira com os PCs que ganhar.</div>';
+  $('#tecs').innerHTML = S.tecs.length ? S.tecs.map((t,i)=>tecCard(normTec(t), i, leal)).join('')
+    : '<div class="empty" style="grid-column:1/-1">Sua técnica própria é o que te diferencia nas ruas. Clique em <b>+ Nova técnica</b> para montar a primeira.</div>';
 }
+function tecCard(t, i, leal){
+  const open = TEC_OPEN.has(i), sl = +t.nivel||0;
+  const pips = Array.from({length:5},(_,j)=>`<button class="pip sq ${j<sl?'on':''}" data-tecsl="${i}" data-v="${j+1}" aria-label="Nível ${j+1}"></button>`).join('');
+  const stats = [];
+  if(+t.gasto) stats.push(`<span><b>GASTO</b>${+t.gasto} E.S</span>`);
+  stats.push(`<span class="dmg" id="tecf-${i}">${tecFormula(t)}</span>`);
+  if(t.crit) stats.push(`<span><b>CRÍTICO</b>${esc(t.crit)}</span>`);
+  if(leal) stats.push('<span><b>LEALDADE</b>+2</span>');
+  return `<article class="move tecmove learned ${open?'editing':''}">
+    <div class="move-h">
+      <div class="move-name"><span class="ix">TP</span><span id="tecn-${i}">${esc(t.nome || 'Técnica sem nome')}</span></div>
+      <div class="badges"><span class="badge ${t.tipo}">${KIND[t.tipo] || 'Ataque'}</span><span class="badge">Técnica própria</span></div>
+    </div>
+    <div class="move-stats">${stats.join('')}</div>
+    ${t.desc && !open ? `<div class="move-eff">${esc(t.desc)}</div>` : ''}
+    ${open ? tecBuilder(t, i) : ''}
+    <div class="move-f">
+      <div class="sl"><span class="lbl">Nível ${sl}/5 · PC</span>${pips}</div>
+      <span class="tec-acts">
+        <button class="btn sm ghost" data-tecedit="${i}">${open ? 'Fechar' : 'Editar'}</button>
+        ${t.tipo !== 'P' ? `<button class="btn sm red" data-tuse="${i}">Usar</button>` : ''}
+      </span>
+    </div>
+  </article>`;
+}
+function tecBuilder(t, i){
+  const seg = (field, opts, cls='') => `<div class="seg ${cls}">${opts.map(([v,l])=>`<button type="button" class="${String(t[field])===String(v)?'on':''}" data-tecset="${i}|${field}|${v}" aria-pressed="${String(t[field])===String(v)}">${l}</button>`).join('')}</div>`;
+  return `<div class="tec-builder">
+    <div class="tb-step"><span class="tb-n">1</span>Identidade</div>
+    <div class="tb-row">
+      <label class="f tb-wide"><span>Nome da técnica</span><input class="in" data-list="tecs" data-i="${i}" data-f="nome" value="${esc(t.nome)}" maxlength="60" placeholder="Ex.: Mordida do Cão de Ferro"></label>
+      <div class="tb-wide"><span class="lbl">Tipo</span>${seg('tipo', [['A','Ataque'],['R','Reação'],['T','Manobra'],['B','Técnica'],['S','Sustentada'],['P','Passiva']])}</div>
+    </div>
+    <div class="tb-step"><span class="tb-n">2</span>Dados do golpe</div>
+    <div class="tb-row">
+      <div class="tb-wide"><span class="lbl">Quais dados rola (até 3)</span><div class="seg dice">${ATTRS.map(a=>`<button type="button" class="${t.dados.includes(a.k)?'on':''}" data-tecdie="${i}|${a.k}" aria-pressed="${t.dados.includes(a.k)}" title="${a.n}">${a.k}<small>d${S.attrs[a.k]}</small></button>`).join('')}</div></div>
+      <div><span class="lbl">Como conta</span>${seg('modo', [['HR','Maior'],['AR','Soma'],['LR','Menor']])}</div>
+      <div><span class="lbl">Multiplicador</span>${seg('mult', [[1,'×1'],[2,'×2'],[3,'×3']])}</div>
+    </div>
+    <div class="tb-step"><span class="tb-n">3</span>Força e custo</div>
+    <div class="tb-row">
+      <label class="f"><span>Bônus fixo</span><input class="in mono nonneg" inputmode="numeric" maxlength="3" data-list="tecs" data-i="${i}" data-f="fixo" data-num value="${esc(t.fixo)}"></label>
+      <label class="f"><span>+ por nível (× SL)</span><input class="in mono nonneg" inputmode="numeric" maxlength="2" data-list="tecs" data-i="${i}" data-f="slm" data-num value="${esc(t.slm)}"></label>
+      <label class="f"><span>Golpes por uso</span><input class="in mono nonneg" inputmode="numeric" maxlength="1" data-list="tecs" data-i="${i}" data-f="hits" data-num value="${esc(t.hits)}"></label>
+      <label class="f"><span>Gasto de E.S</span><input class="in mono nonneg" inputmode="numeric" maxlength="3" data-list="tecs" data-i="${i}" data-f="gasto" data-num value="${esc(t.gasto)}"></label>
+      <div><span class="lbl">Crítico</span>${seg('crit', [['','—'],['x2','x2'],['x3','x3']])}</div>
+    </div>
+    <div class="tb-step"><span class="tb-n">4</span>Efeito</div>
+    <label class="f"><span>O que acontece quando acerta</span><textarea class="box" data-list="tecs" data-i="${i}" data-f="desc" style="min-height:70px" placeholder="Empurra, derruba, atordoa, deixa sangrando…">${esc(t.desc)}</textarea></label>
+    <details ${t.rolagem ? 'open' : ''}>
+      <summary class="lbl" style="cursor:pointer; display:list-item">Fórmula livre (avançado)</summary>
+      <input class="in mono" style="margin-top:6px" data-list="tecs" data-i="${i}" data-f="rolagem" value="${esc(t.rolagem)}" placeholder="ex.: dFOR+dAGI+6 · se preencher, substitui a fórmula montada">
+    </details>
+    <div class="tb-prev"><span class="tb-plbl">Prévia</span><span id="tecp-${i}">${tecFormula(t)}</span></div>
+    <div class="tb-foot">
+      <button class="btn sm ghost" data-tecdel="${i}">Apagar técnica</button>
+      <button class="btn sm red" data-tecedit="${i}">Pronto</button>
+    </div>
+  </div>`;
+}
+function updateTecPreview(i){
+  const t = S.tecs[i]; if(!t) return; normTec(t);
+  const f = tecFormula(t);
+  const a = document.getElementById('tecp-' + i), b = document.getElementById('tecf-' + i), n = document.getElementById('tecn-' + i);
+  if(a) a.innerHTML = f; if(b) b.innerHTML = f; if(n) n.textContent = t.nome || 'Técnica sem nome';
+}
+function useTec(i){
+  const t = normTec(S.tecs[i]); if(!t) return;
+  const g = +t.gasto||0, sl = Math.max(1, +t.nivel||1), nome = t.nome || 'Técnica própria';
+  if(g > S.es){ toast('E.S insuficiente', `${nome} custa ${g} E.S — você tem ${S.es}.`); return; }
+  S.es -= g; renderDerived();
+  const leal = activeArchs().some(a=>a.id==='lealdade');
+  const title = `${nome}${g ? ` (−${g} E.S)` : ''}`;
+  if(t.rolagem){
+    const test = evalExpr(t.rolagem);
+    if(!test || test.error){ toast('Fórmula inválida', test?.error || ''); save(); return; }
+    doRoll(title, ()=>{
+      const r = evalExpr(t.rolagem), p = [r.detail]; let tot = r.total;
+      if(leal){ tot += 2; p.push('Lealdade +2'); }
+      if(t.tipo !== 'R') tot += dmgBonuses(p);
+      return {total:Math.max(0,tot), detail:p.join(' + ') + (t.crit ? ` · crítico ${t.crit}` : '')};
+    });
+  } else if(tecPattern(t)){
+    const p = tecPattern(t), hits = Math.max(1, +t.hits||1);
+    doRoll(title, ()=>{
+      let total = 0; const segs = [];
+      for(let h = 0; h < hits; h++){
+        const rolls = p.dice.map(k=>rollDie(S.attrs[k]));
+        const base = p.mode==='HR' ? Math.max(...rolls) : p.mode==='LR' ? Math.min(...rolls) : rolls.reduce((a,b)=>a+b,0);
+        const fixed = p.flat + p.slm*sl, v = base*p.mult + fixed; total += v;
+        segs.push(`${hits>1?`#${h+1} `:''}${p.mode}[${rolls.join(',')}]=${base}${p.mult>1?'×'+p.mult:''}${fixed?' + '+fixed:''} = ${v}`);
+      }
+      const parts = [];
+      if(leal){ total += 2; parts.push('Lealdade +2'); }
+      if(t.tipo !== 'R') total += dmgBonuses(parts);
+      return {total:Math.max(0,total), detail:segs.join(' | ') + (parts.length ? ' | ' + parts.join(' + ') : '') + (t.crit ? ` · crítico ${t.crit}` : '')};
+    });
+  } else {
+    log(nome, t.desc || '', null); toast(nome + (g ? ` · −${g} E.S` : ''), t.desc || ''); save();
+  }
+}
+function armThen(btn, fn){
+  if(btn.dataset.armed){ fn(); return; }
+  btn.dataset.armed = '1'; const old = btn.textContent; btn.textContent = 'Confirmar?'; btn.classList.add('danger');
+  setTimeout(()=>{ if(btn.isConnected){ delete btn.dataset.armed; btn.textContent = old; btn.classList.remove('danger'); } }, 3000);
+}
+function hitFx(){
+  const h = document.querySelector('.hero'); if(!h) return;
+  h.classList.remove('hit'); void h.offsetWidth; h.classList.add('hit');
+}
+/* números de vida, dano, XP e técnicas: só dígitos, nunca negativos */
+document.addEventListener('input', e=>{
+  const el = e.target;
+  if(el.classList && el.classList.contains('nonneg')){ const v = el.value.replace(/\D+/g, ''); if(v !== el.value) el.value = v; }
+}, true);
 
 function renderLog(){
   const tray = $('#trayStd');
@@ -2520,12 +2881,13 @@ function changeVital(k, op, amt){
   const max = D[k+'Max'];
   if(op==='max'){ S[k] = max; }
   else {
-    amt = Math.abs(parseInt(amt)||0); if(!amt) return;
+    amt = parseInt(String(amt).replace(/\D+/g,''))||0; if(amt <= 0) return;
     if(k==='qv' && op==='-'){
       if(amt >= 3*D.qvMax){ S.tcm = Math.min(3, S.tcm+2); toast('Dano massivo!', `${amt} de dano ≥ dobro da vida + vida: perde 2 testes contra morte.`); }
       else if(amt >= 2*D.qvMax){ toast('Dano brutal!', `${amt} de dano ≥ dobro da vida: o mestre escolhe uma penalidade.`); }
     }
-    S[k] = clamp(S[k] + (op==='+'?amt:-amt), 0, max);
+    S[k] = clamp((S[k] ?? max) + (op==='+'?amt:-amt), 0, max);
+    if(k==='qv' && op==='-') hitFx();
   }
   save(); renderDerived(); renderCombat();
 }
@@ -2563,6 +2925,7 @@ document.addEventListener('input', e=>{
   } else if(el.dataset.list){
     let v = el.value; if('num' in el.dataset) v = v==='' ? 0 : +v;
     S[el.dataset.list][+el.dataset.i][el.dataset.f] = v; save();
+    if(el.dataset.list==='tecs') updateTecPreview(+el.dataset.i);
     if(el.dataset.list==='tecs' && el.dataset.f==='nivel'){ D = calc(); renderDerived(); $('#pcSpentV').textContent=D.pcTec; $('#pcAvail').textContent=D.pcAvail; }
   }
 });
@@ -2630,7 +2993,9 @@ document.addEventListener('click', e=>{
   if(d.tcm!==undefined){ const i=+d.tcm; S.tcm = S.tcm>i ? i : i+1; save(); renderCombat(); renderDerived(); return; }
   if(d.insp){ S.insp[d.insp] = Math.max(0, S.insp[d.insp] + (+d.d)); save(); renderCombat(); return; }
   if(d.fx){ if(S.fx[d.fx]) delete S.fx[d.fx]; else S.fx[d.fx] = true; save(); renderAll(); return; }
-  if(d.sl){ const cur = S.golpes[d.sl]||0, v = +d.v; S.golpes[d.sl] = cur===v ? v-1 : v; if(!S.golpes[d.sl]) delete S.golpes[d.sl]; save(); renderAll(); return; }
+  if(d.sl){ const cur = S.golpes[d.sl]||0, v = +d.v;
+    if(!cur && !S.npc && golpesAprendidos() >= limGolpes()){ toast('Limite de golpes', `Na faixa ${BELTS[S.belt].n} você pode ter ${limGolpes()} golpe${limGolpes()>1?'s':''} do estilo. Para trocar, clique no 1º quadrado de um golpe aprendido para esquecê-lo.`); return; }
+    S.golpes[d.sl] = cur===v ? v-1 : v; if(!S.golpes[d.sl]) delete S.golpes[d.sl]; save(); renderAll(); return; }
   if(d.use){ useMove(d.use); return; }
   if(d.reroll){ reroll(d.reroll); return; }
   if(d.die){ const n=+d.die; doRoll(`d${n}`, ()=>{ const r=rollDie(n); return {total:r, detail:`d${n} → ${r}`}; }); return; }
@@ -2657,19 +3022,12 @@ document.addEventListener('click', e=>{
     doRoll(`Ataque · ${w.nome||'arma'}`, ()=>{ const p=[...parts]; const extra = dmgBonuses(p); return {total:Math.max(0,dmg+extra), detail:p.join(' + ')}; });
     return;
   }
-  if(d.tuse!==undefined){
-    const tc = S.tecs[+d.tuse], g = +tc.gasto||0;
-    if(g > S.es){ toast('E.S insuficiente', `${tc.nome||'Técnica'} custa ${g} E.S — você tem ${S.es}.`); return; }
-    S.es -= g; renderDerived();
-    const leal = activeArchs().some(a=>a.id==='lealdade');
-    if(tc.rolagem){
-      const test = evalExpr(tc.rolagem);
-      if(!test || test.error){ toast('Rolagem inválida', test?.error||''); save(); return; }
-      doRoll(`${tc.nome||'Técnica própria'}${g?` (−${g} E.S)`:''}`, ()=>{ const r = evalExpr(tc.rolagem); const p=[r.detail]; let tot=r.total + (leal?2:0); if(leal) p.push('Lealdade +2'); tot += dmgBonuses(p); return {total:Math.max(0,tot), detail:p.join(' + ')}; });
-    } else { log(tc.nome||'Técnica própria', tc.desc||'', null); toast((tc.nome||'Técnica própria') + (g?` · −${g} E.S`:''), tc.desc||''); save(); }
-    return;
-  }
-
+  if(d.tuse!==undefined){ useTec(+d.tuse); return; }
+  if(d.tecedit!==undefined){ const i = +d.tecedit; if(TEC_OPEN.has(i)) TEC_OPEN.delete(i); else TEC_OPEN.add(i); renderTec(); return; }
+  if(d.tecset){ const [i,f,v] = d.tecset.split('|'); S.tecs[+i][f] = f==='mult' ? +v : v; save(); renderTec(); return; }
+  if(d.tecdie){ const [i,k] = d.tecdie.split('|'), tc = normTec(S.tecs[+i]); tc.dados = tc.dados.includes(k) ? tc.dados.filter(x=>x!==k) : [...tc.dados, k].slice(-3); save(); renderTec(); return; }
+  if(d.tecsl){ const tc = S.tecs[+d.tecsl], v = +d.v; tc.nivel = (+tc.nivel === v) ? v-1 : v; save(); renderAll(); return; }
+  if(d.tecdel!==undefined){ armThen(t, ()=>{ S.tecs.splice(+d.tecdel, 1); TEC_OPEN.clear(); save(); renderAll(); }); return; }
   switch(t.id){
     case 'btnXp': { const v = parseInt($('#xpAdd').value)||0; if(v){ S.xp = Math.max(0, S.xp+v); $('#xpAdd').value=''; save(); renderBelt(); } break; }
     case 'btnLvlUp': levelUp(); break;
@@ -2712,7 +3070,9 @@ document.addEventListener('click', e=>{
     case 'btnPcQV': if(D.pcAvail>0){ S.pcConv.push('qv'); save(); renderAll(); } break;
     case 'btnPcES': if(D.pcAvail>0){ S.pcConv.push('es'); save(); renderAll(); } break;
     case 'btnPcUndo': S.pcConv.pop(); save(); renderAll(); break;
-    case 'btnAddTec': S.tecs.push({nome:'', nivel:1, gasto:0, rolagem:'', desc:''}); save(); renderAll(); break;
+    case 'btnAddTec':
+      if(!S.npc && S.tecs.length >= limTec()){ toast('Limite de técnicas', `Na faixa ${BELTS[S.belt].n} você pode ter ${limTec()} técnica${limTec()>1?'s':''} própria${limTec()>1?'s':''}.`); break; }
+      S.tecs.push(normTec({nome:'', nivel:1, gasto:0, rolagem:'', desc:''})); TEC_OPEN.add(S.tecs.length-1); save(); renderAll(); break;
     case 'btnExport': exportSheet(); break;
     case 'btnCopyExport': {
       const ta = $('#exportText');
@@ -2905,6 +3265,7 @@ function randomNpc(tipo, faixa){
     if(b <= s.belt && Math.random() < T.learn) s.golpes[`${s.estilo}:${i}`] = clamp(rint(Math.ceil(m.lv * (T.boss ? .6 : .25)), m.lv), 1, m.lv);
   });
   if(!Object.keys(s.golpes).length){ const i0 = st.m.findIndex(m=>m.kind === 'A' && m.b <= s.belt); if(i0 >= 0) s.golpes[`${s.estilo}:${i0}`] = 1; }
+  Object.keys(s.golpes).sort((a,b)=> (st.m[+b.split(':')[1]].kind==='A') - (st.m[+a.split(':')[1]].kind==='A')).slice(LIMITES.golpes[s.belt] ?? 1).forEach(k=>delete s.golpes[k]);
   if(Math.random() < (T.boss ? .5 : .4)){
     const grupo = T.boss && Math.random() < .4 ? 'Armas de fogo' : pick(['Armas brancas','Improvisadas']);
     const [n, dn] = pick(WEAPONS[grupo]); s.armas.push({nome:n, dano:dn, tipo:grupo, notas:''});
