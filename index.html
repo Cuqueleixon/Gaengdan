@@ -640,6 +640,87 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
   .in,.box{color:#000; border-color:#999}
   .muted,.hint,.lbl,.desc,.move-eff{color:#333 !important}
 }
+
+/* =====================================================================
+   ESCUDO EM ABAS, NPCs, ROLAGENS AO VIVO E POP-UPS
+   ===================================================================== */
+.shield{display:flex; flex-direction:column; align-items:stretch; gap:16px; max-width:1400px}
+.gtab{
+  flex:1 0 auto; justify-content:center; background:transparent;
+  border:0; border-radius:3px; margin:0; padding:9px 12px;
+  font-family:var(--display); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); white-space:nowrap;
+  display:inline-flex; align-items:center; gap:6px; transition:background .15s, color .15s;
+}
+.gtab:hover{color:var(--ink); background:var(--panel-2)}
+.gtab.on{background:var(--yellow); color:var(--on-yellow)}
+.gtab:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.gtab .tc{font-family:var(--mono); font-size:10px; letter-spacing:0; padding:1px 6px; border-radius:8px; background:var(--panel-3); color:var(--ink-2)}
+.gtab .tc:empty{display:none}
+.gtab .tc.hot{background:var(--red); color:#fff}
+.gtab.on .tc{background:rgba(0,0,0,.2); color:var(--on-yellow)}
+.gmpane{display:none}
+.gmpane.on{display:grid; gap:16px; animation:paneIn .18s ease-out}
+
+/* NPCs */
+.npc-form{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)) 110px auto; gap:12px 14px; align-items:end}
+@media (max-width:1000px){ .npc-form{grid-template-columns:1fr 1fr} .npc-btns{grid-column:1/-1} }
+.npc-btns{display:flex; gap:8px; flex-wrap:wrap}
+.npc-quick{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+.f-actions{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; margin-left:auto}
+.fighter.boss{border-color:rgba(255,201,22,.7); padding-top:20px}
+.fighter.boss::before{content:""; position:absolute; left:-1px; right:-1px; top:-1px; height:6px; background:var(--hazard); border-radius:3px 3px 0 0}
+.badge.boss{background:var(--yellow); color:var(--on-yellow); border-color:var(--yellow)}
+
+/* rolagens ao vivo */
+.rolls-grid{display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:16px; align-items:start}
+@media (max-width:1000px){ .rolls-grid{grid-template-columns:1fr} }
+.feed-tools{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px}
+.feed-tools select{width:auto; min-width:200px; flex:0 1 260px}
+.feed{display:grid; gap:6px; max-height:640px; overflow:auto}
+.roll{display:grid; grid-template-columns:170px minmax(0,1fr) auto; gap:12px; align-items:center; padding:9px 12px; background:var(--panel-2); border:1px solid var(--line); border-left:3px solid var(--line-2); border-radius:3px}
+.roll.gm{border-left-color:var(--yellow)}
+.roll.new{animation:rollIn 1s ease-out}
+@keyframes rollIn{0%{background:rgba(255,201,22,.28); transform:translateX(-6px)} 100%{background:var(--panel-2); transform:none}}
+.r-who{min-width:0}
+.r-who b{display:block; font-size:15.5px; overflow-wrap:anywhere}
+.r-who span{font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+.r-t{font-weight:600; font-size:15px; overflow-wrap:anywhere}
+.r-d{font-family:var(--mono); font-size:11.5px; color:var(--ink-3); overflow-wrap:anywhere; margin-top:2px}
+.r-tot{font-family:var(--mono); font-size:28px; font-weight:700; color:var(--yellow); min-width:48px; text-align:right; font-variant-numeric:tabular-nums}
+@media (max-width:600px){ .roll{grid-template-columns:minmax(0,1fr) auto} .r-what{grid-column:1/-1; grid-row:2} }
+.chk{display:flex; gap:8px; align-items:center; margin-top:12px; font-size:14px; color:var(--ink-2); cursor:pointer}
+
+/* compositor de pop-up */
+.popform{display:grid; gap:12px}
+.chip.pt{border-color:color-mix(in srgb, var(--pt) 55%, transparent); color:var(--pt)}
+.chip.pt.on{background:var(--pt); border-color:var(--pt); color:#0b0b0a}
+.small-chips .chip{font-family:var(--mono); font-size:12px; padding:4px 8px; letter-spacing:0}
+.sent{grid-template-columns:10px minmax(0,1fr) auto}
+.sent .dot{width:10px; height:10px; border-radius:50%}
+
+/* pop-up na tela do jogador */
+.popup-wrap{
+  --pop:var(--yellow);
+  position:fixed; inset:0; z-index:95; display:grid; place-items:center;
+  padding:max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background:rgba(0,0,0,.72); backdrop-filter:blur(3px); animation:fadeIn .2s ease-out;
+}
+.popup{
+  position:relative; width:min(540px,100%); max-height:100%; overflow-x:hidden; overflow-y:auto;
+  background:#121210; border:1px solid var(--pop); border-radius:4px; padding:28px 22px 20px;
+  box-shadow:0 30px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(0,0,0,.6); animation:popIn .3s cubic-bezier(.2,.9,.3,1.15);
+}
+.popup::before{content:""; position:absolute; left:0; right:0; top:0; height:8px; background:repeating-linear-gradient(-45deg, var(--pop) 0 12px, #0b0b0a 12px 24px)}
+.pop-kind{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--pop)}
+.popup h2{margin:6px 0 10px; font-family:var(--display); font-weight:400; font-size:clamp(22px,4vw,30px); line-height:1.1; text-wrap:balance; overflow-wrap:anywhere}
+.popup p{margin:0; font-size:17px; line-height:1.5; color:var(--ink-2); white-space:pre-wrap; overflow-wrap:anywhere}
+.pop-roll{margin-top:14px; padding:10px 12px; border:1px dashed var(--line-2); border-radius:3px; font-size:15px}
+.pop-roll b{font-family:var(--mono); color:var(--pop)}
+.pop-actions{display:flex; gap:8px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap}
+.pop-queue{font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:10px; text-align:right}
+.pop-queue:empty{display:none}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes popIn{from{opacity:0; transform:scale(.92) translateY(10px)}}
 </style>
 <div class="grain" aria-hidden="true"></div>
 
@@ -1047,68 +1128,168 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
 
 <!-- ================= ESCUDO DO MESTRE ================= -->
 <section class="shield" id="shieldView" hidden>
-  <div class="col">
-    <div class="shield-head">
-      <div>
-        <p class="eyebrow">Só o mestre vê esta página</p>
-        <h1 class="shield-title">Escudo do Mestre</h1>
-      </div>
-      <div class="shield-sum" id="shieldSum"></div>
+  <div class="shield-head">
+    <div>
+      <p class="eyebrow">Só o mestre vê esta página</p>
+      <h1 class="shield-title">Escudo do Mestre</h1>
     </div>
+    <div class="shield-sum" id="shieldSum"></div>
+  </div>
+
+  <nav class="tabs" id="gmTabs" aria-label="Partes do escudo">
+    <button class="gtab" data-gmtab="lutadores">Lutadores</button>
+    <button class="gtab" data-gmtab="npcs">NPCs &amp; Bosses <span class="tc" id="tcNpcs"></span></button>
+    <button class="gtab" data-gmtab="rolagens">Rolagens ao vivo <span class="tc hot" id="tcRolls"></span></button>
+    <button class="gtab" data-gmtab="popups">Pop-ups</button>
+    <button class="gtab" data-gmtab="mesa">Notas &amp; regras</button>
+  </nav>
+
+  <!-- LUTADORES -->
+  <div class="gmpane" id="gm-lutadores">
     <div class="fighters" id="fighters"><div class="empty">Carregando as fichas…</div></div>
   </div>
 
-  <aside class="col">
+  <!-- NPCs & BOSSES -->
+  <div class="gmpane" id="gm-npcs">
     <section class="card">
-      <h2 class="sec">Dados do mestre<span class="kr">주사위</span></h2>
-      <div class="tray" id="gmTray"></div>
-      <div class="adder">
-        <input class="box" id="gmExpr" placeholder="ex.: 3d6+4" style="flex:1; min-width:140px" aria-label="Expressão de dados">
-        <button class="btn sm red" id="btnGmExpr">Rolar</button>
+      <h2 class="sec">Criar NPC<span class="kr">악당</span></h2>
+      <div class="npc-form">
+        <label class="f"><span>Tipo</span>
+          <select class="in" id="npcTipo">
+            <option value="capanga">Capanga</option>
+            <option value="lutador">Lutador</option>
+            <option value="veterano">Veterano</option>
+            <option value="chefe">Chefe (boss)</option>
+          </select>
+        </label>
+        <label class="f"><span>Faixa</span><select class="in" id="npcFaixa"></select></label>
+        <label class="f"><span>Nome (opcional)</span><input class="in" id="npcNome" maxlength="60" placeholder="Gerado se ficar vazio"></label>
+        <label class="f"><span>Quantidade</span><input class="in mono" id="npcQtd" type="number" min="1" max="8" value="1"></label>
+        <div class="npc-btns">
+          <button class="btn red" id="btnNpcRandom">Gerar aleatório</button>
+          <button class="btn" id="btnNpcBlank">Criar em branco</button>
+        </div>
       </div>
-      <div class="log" id="gmLog" style="max-height:220px"></div>
+      <p class="hint" style="margin:12px 0 0">O aleatório sorteia nome, vulgo, gangue, estilo, classe, arquétipos, dados e golpes de acordo com a faixa. Chefes ganham +50% de Q.V e +2 de C.A. Abra a ficha do NPC para ajustar qualquer coisa.</p>
     </section>
+    <div class="fighters" id="npcs"></div>
+  </div>
 
-    <section class="card">
-      <h2 class="sec">Anotações<span class="kr">메모</span><span class="aside" id="gmNotesState"></span></h2>
-      <textarea class="box" id="gmNotes" style="min-height:140px" placeholder="NPCs, ganchos, quem deve favor a quem…"></textarea>
-    </section>
+  <!-- ROLAGENS AO VIVO -->
+  <div class="gmpane" id="gm-rolagens">
+    <div class="rolls-grid">
+      <section class="card">
+        <h2 class="sec">Rolagens da mesa<span class="aside"><span class="live off" id="rollsLive">conectando…</span></span></h2>
+        <div class="feed-tools">
+          <select class="box" id="rollFilter" aria-label="Filtrar por personagem"><option value="">Todos os personagens</option></select>
+          <button class="btn sm ghost" id="btnRollsClear">Limpar histórico</button>
+          <span class="confirm" id="rollsConfirm" hidden>Apagar todas as rolagens?
+            <button class="btn sm danger" id="btnRollsClearYes">Apagar</button>
+            <button class="btn sm ghost" id="btnRollsClearNo">Cancelar</button>
+          </span>
+        </div>
+        <div class="feed" id="rollFeed"></div>
+      </section>
+      <section class="card">
+        <h2 class="sec">Dados do mestre<span class="kr">주사위</span></h2>
+        <div class="tray" id="gmTray"></div>
+        <div class="adder">
+          <input class="box" id="gmExpr" placeholder="ex.: 3d6+4" style="flex:1; min-width:140px" aria-label="Expressão de dados">
+          <button class="btn sm red" id="btnGmExpr">Rolar</button>
+        </div>
+        <label class="chk"><input type="checkbox" id="gmSecret"> Rolagem secreta (não entra no histórico)</label>
+      </section>
+    </div>
+  </div>
 
-    <section class="card ref">
-      <h2 class="sec">Referência<span class="kr">규칙</span></h2>
-      <details open>
-        <summary>Faixas e XP</summary>
-        <table class="tbl"><thead><tr><th>Faixa</th><th>Níveis</th><th>XP / nível</th></tr></thead><tbody id="refBelts"></tbody></table>
-        <p class="hint">Arquétipos: 1º na Branca, 2º na Laranja, 3º na Preta. Cada nova faixa: +1 aumento de status (+2 no dado, máx. d18).</p>
-      </details>
-      <details>
-        <summary>Fórmulas</summary>
-        <table class="tbl"><tbody>
-          <tr><th>Q.V</th><td>7 × CON + Nível</td></tr>
-          <tr><th>E.S</th><td>4 × PRE + Nível</td></tr>
-          <tr><th>C.A</th><td>CON + AGI</td></tr>
-          <tr><th>Movim.</th><td>(AGI + INT) ÷ 1,5, para baixo</td></tr>
-          <tr><th>Por nível</th><td>+2 + CON Q.V · +1 + PRE E.S · +1 PC</td></tr>
-          <tr><th>1 PC</th><td>técnica própria, ou +4 + CON Q.V, ou +PRE + 6 E.S</td></tr>
-        </tbody></table>
-      </details>
-      <details>
-        <summary>Combate e morte</summary>
-        <ul class="ref-list">
-          <li><b>4 ações por combate:</b> movimento, combate, bloqueio e contra-ataque. Gastou, só volta no próximo combate.</li>
-          <li><b>Inspiração:</b> comum +4 no reroll; de combate +1d8.</li>
-          <li><b>Caiu:</b> sem estabilização, testes contra morte. 3 falhas = morte.</li>
-          <li><b>Dano ≥ 2× a vida:</b> penalidade à escolha do mestre.</li>
-          <li><b>Dano ≥ 2× a vida + a vida:</b> perde 2 testes contra morte na hora.</li>
-        </ul>
-      </details>
-      <details>
-        <summary>Efeitos</summary>
-        <ul class="ref-list" id="refFx"></ul>
-      </details>
-    </section>
-  </aside>
+  <!-- POP-UPS -->
+  <div class="gmpane" id="gm-popups">
+    <div class="pane-grid">
+      <section class="card">
+        <h2 class="sec">Novo pop-up</h2>
+        <div class="popform">
+          <label class="f"><span>Para</span><select class="in" id="popPara"></select></label>
+          <div><span class="lbl">Tipo</span><div class="chips" id="popTipos"></div></div>
+          <label class="f"><span>Título</span><input class="in" id="popTitulo" maxlength="120" placeholder="Ex.: Sirenes ao longe"></label>
+          <label class="f"><span>Mensagem</span><textarea class="box" id="popTexto" maxlength="2000" placeholder="O que os lutadores veem, ouvem ou sentem…"></textarea></label>
+          <label class="f"><span>Pedir rolagem (opcional)</span><input class="in mono" id="popRolagem" maxlength="80" placeholder="ex.: dAGI+dINT"></label>
+          <div class="chips small-chips" id="popRollChips"></div>
+          <div class="npc-btns">
+            <button class="btn red" id="btnPopSend">Enviar pop-up</button>
+            <button class="btn ghost" id="btnPopPreview">Ver prévia</button>
+          </div>
+          <p class="form-msg" id="popMsg" hidden></p>
+          <p class="hint" style="margin:0">O pop-up aparece na hora para quem estiver com o site aberto. Se pedir rolagem, o jogador rola com um clique e o resultado chega em Rolagens ao vivo.</p>
+        </div>
+      </section>
+      <section class="card">
+        <h2 class="sec">Enviados<span class="aside"><button class="btn sm ghost" id="btnPopClear">Limpar</button></span></h2>
+        <div class="list" id="popSent"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- NOTAS & REGRAS -->
+  <div class="gmpane" id="gm-mesa">
+    <div class="pane-grid">
+      <section class="card">
+        <h2 class="sec">Anotações<span class="kr">메모</span><span class="aside" id="gmNotesState"></span></h2>
+        <textarea class="box" id="gmNotes" style="min-height:260px" placeholder="NPCs, ganchos, quem deve favor a quem…"></textarea>
+      </section>
+      <section class="card ref">
+        <h2 class="sec">Referência<span class="kr">규칙</span></h2>
+        <details open>
+          <summary>Faixas e XP</summary>
+          <table class="tbl"><thead><tr><th>Faixa</th><th>Níveis</th><th>XP / nível</th></tr></thead><tbody id="refBelts"></tbody></table>
+          <p class="hint">Arquétipos: 1º na Branca, 2º na Laranja, 3º na Preta. Cada nova faixa: +1 aumento de status (+2 no dado, máx. d18).</p>
+        </details>
+        <details>
+          <summary>Fórmulas</summary>
+          <table class="tbl"><tbody>
+            <tr><th>Q.V</th><td>7 × CON + Nível</td></tr>
+            <tr><th>E.S</th><td>4 × PRE + Nível</td></tr>
+            <tr><th>C.A</th><td>CON + AGI</td></tr>
+            <tr><th>Movim.</th><td>(AGI + INT) ÷ 1,5, para baixo</td></tr>
+            <tr><th>Por nível</th><td>+2 + CON Q.V · +1 + PRE E.S · +1 PC</td></tr>
+            <tr><th>1 PC</th><td>técnica própria, ou +4 + CON Q.V, ou +PRE + 6 E.S</td></tr>
+          </tbody></table>
+        </details>
+        <details>
+          <summary>Combate e morte</summary>
+          <ul class="ref-list">
+            <li><b>4 ações por combate:</b> movimento, combate, bloqueio e contra-ataque. Gastou, só volta no próximo combate.</li>
+            <li><b>Inspiração:</b> comum +4 no reroll; de combate +1d8.</li>
+            <li><b>Caiu:</b> sem estabilização, testes contra morte. 3 falhas = morte.</li>
+            <li><b>Dano ≥ 2× a vida:</b> penalidade à escolha do mestre.</li>
+            <li><b>Dano ≥ 2× a vida + a vida:</b> perde 2 testes contra morte na hora.</li>
+          </ul>
+        </details>
+        <details>
+          <summary>Efeitos</summary>
+          <ul class="ref-list" id="refFx"></ul>
+        </details>
+      </section>
+    </div>
+  </div>
 </section>
+
+<!-- POP-UP NA TELA DO JOGADOR -->
+<div class="popup-wrap" id="popupWrap" hidden>
+  <div class="popup" role="alertdialog" aria-modal="true" aria-labelledby="popTitle" aria-describedby="popText">
+    <div class="pop-kind" id="popKind"></div>
+    <h2 id="popTitle"></h2>
+    <p id="popText"></p>
+    <div class="pop-roll" id="popRoll" hidden>
+      O mestre pediu uma rolagem: <b id="popRollExpr"></b>
+      <div class="hint" id="popRollHint" hidden style="margin-top:4px">Abra sua ficha para rolar com os seus dados.</div>
+    </div>
+    <div class="pop-actions">
+      <button class="btn red" id="btnPopRoll" hidden>Rolar agora</button>
+      <button class="btn" id="btnPopOk">Entendi</button>
+    </div>
+    <div class="pop-queue" id="popQueue"></div>
+  </div>
+</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="modal" id="exportModal" hidden>
@@ -1598,17 +1779,18 @@ function setReadonlyInputs(on){ $$('#sheetView :is(input,textarea)').forEach(el=
 function playerName(dono){ return dono === AUTH.user?.id ? 'você (mestre)' : (PERFIS[dono] || 'Jogador'); }
 function updateRoBanner(){
   const rec = SHEETS[CUR.id];
-  $('#roName').textContent = (S.info.nome || 'lutador sem nome') + (rec ? ` · ${playerName(rec.dono)}` : '');
-  $('#roMode').textContent = EDIT_OTHER ? 'editando: o jogador vê cada mudança na hora' : 'somente leitura, atualiza ao vivo';
+  $('#roName').textContent = (S.info.nome || 'lutador sem nome') + (rec ? ` · ${rec.sheet.npc ? (NPC_TIPOS[rec.sheet.npc.tipo]?.n || 'NPC') : playerName(rec.dono)}` : '');
+  $('#roMode').textContent = EDIT_OTHER ? (rec?.sheet.npc ? 'editando NPC: salva sozinho' : 'editando: o jogador vê cada mudança na hora') : 'somente leitura, atualiza ao vivo';
   $('#btnRoEdit').textContent = EDIT_OTHER ? 'Parar de editar' : 'Editar ficha';
   $('#roBanner').classList.toggle('editing', EDIT_OTHER);
 }
-async function openPlayer(id){
+async function openPlayer(id, edit){
   const rec = SHEETS[id]; if(!rec) return;
   await flushNow();
   if(!RO && !EDIT_OTHER) STASH = {S, id:CUR.id, dono:CUR.dono, chosen:AUTH.chosen};
   S = merge(blank(), clone(rec.raw)); CUR.id = id; CUR.dono = rec.dono; lastSent = stable(rec.raw);
   RO = true; EDIT_OTHER = false; setReadonlyInputs(true);
+  if(edit){ RO = false; EDIT_OTHER = true; setReadonlyInputs(false); }
   $('#gangSel').value = S.info.gangue || '';
   if(location.hash.slice(1) === 'ficha') show('ficha'); else location.hash = 'ficha';
 }
@@ -1636,8 +1818,9 @@ function startRealtime(){
   channel = sb.channel('fichas-' + AUTH.user.id)
     .on('postgres_changes', {event:'*', schema:'public', table:'fichas'}, onFichaChange)
     .subscribe(status=>{ LIVE = status === 'SUBSCRIBED'; if(VIEW === 'mestre') scheduleShield(); });
+  startExtrasRealtime();
 }
-function stopRealtime(){ if(channel){ sb.removeChannel(channel); channel = null; LIVE = false; } }
+function stopRealtime(){ if(channel){ sb.removeChannel(channel); channel = null; LIVE = false; } stopExtrasRealtime(); }
 function onFichaChange(p){
   if(p.eventType === 'DELETE'){
     const id = p.old?.id;
@@ -1708,7 +1891,7 @@ function renderGate(){
   const acts = [];
   if(AUTH.chosen && !CUR.id) acts.push(`<button class="btn" data-nav="ficha">Voltar para a ficha deste navegador<small>${esc(S.info.nome || 'Lutador sem nome')}</small></button>`);
   if(AUTH.mestre) acts.push(`<button class="btn yellow" data-nav="mestre">Abrir o Escudo do Mestre<small>Todas as fichas dos jogadores, ao vivo</small></button>`);
-  const list = MY_FICHAS.map(f=>{
+  const list = MY_FICHAS.filter(f=>!f.dados?.npc).map(f=>{
     const d = f.dados || {}, b = BELTS[d.belt||0] || BELTS[0];
     return `<button class="btn mine ${f.id===CUR.id?'red':''}" data-openmine="${esc(f.id)}">
       <span class="preview"><span class="sw" style="background:${b.c}"></span><span>${esc(d.info?.nome || 'Lutador sem nome')}<small>Faixa ${b.n} · nível ${d.lvl||1}${STYLES[d.estilo] ? ' · ' + STYLES[d.estilo].n : ''} · ${esc(ago(f.atualizado_em))}</small></span></span>
@@ -1722,7 +1905,7 @@ function renderGate(){
     ${msg}
     <div class="gate-actions">
       ${acts.join('')}
-      <div class="lbl" style="margin-top:6px">${AUTH.mestre ? 'Suas fichas (NPCs e lutadores)' : 'Seus lutadores'}</div>
+      <div class="lbl" style="margin-top:6px">${AUTH.mestre ? 'Suas fichas de lutador' : 'Seus lutadores'}</div>
       ${list || '<p class="hint" style="margin:0">Você ainda não tem nenhum lutador.</p>'}
       <button class="btn ${MY_FICHAS.length?'':'red'}" data-enter="fresh">+ Criar novo lutador<small>Começa na faixa branca, nível 1</small></button>
       ${hasLocal() ? `<button class="btn ghost" data-enter="bring">Trazer a ficha deste navegador<small>Copia para a sua conta o lutador salvo aqui</small></button>` : ''}
@@ -1743,7 +1926,8 @@ async function loadPerfis(){
   scheduleShield();
 }
 async function startShield(){
-  renderRef();
+  renderRef(); renderPopForm(); fillNpcFaixa();
+  setGmTab(GMTAB_LOADED ? GMTAB : (()=>{ GMTAB_LOADED = true; try{ return localStorage.getItem(GMTAB_KEY) || 'lutadores'; }catch(e){ return 'lutadores'; } })());
   try{ if(document.activeElement !== $('#gmNotes')) $('#gmNotes').value = localStorage.getItem(GM_NOTES) || ''; }catch(e){}
   if(!AUTH.mestre || !sb){ renderShield(); return; }
   const [f, p] = await Promise.all([
@@ -1753,7 +1937,8 @@ async function startShield(){
   SHIELD_ERR = f.error ? traduz(f.error) : '';
   SHEETS = {}; (f.data || []).forEach(setSheet);
   PERFIS = Object.fromEntries((p.data || []).map(x=>[x.id, x.nome]));
-  renderShield();
+  renderShield(); fillPopPara();
+  loadMesaExtras();
 }
 function scheduleShield(){ clearTimeout(shieldT); shieldT = setTimeout(renderShield, 120); }
 function ago(iso){
@@ -1762,63 +1947,84 @@ function ago(iso){
   if(m < 1) return 'agora'; if(m < 60) return `há ${m} min`;
   const h = Math.round(m/60); if(h < 24) return `há ${h} h`; return `há ${Math.round(h/24)} d`;
 }
+function rowFor(id){
+  const x = SHEETS[id], s = x.sheet, d = calcFor(s);
+  return {id, s, d, qv: s.qv ?? d.qvMax, es: s.es ?? d.esMax, dono: x.dono, savedAt: x.savedAt};
+}
+const byName = (a,b)=> (a.s.info.nome||'~').localeCompare(b.s.info.nome||'~', 'pt');
+function fighterCard(r, npc){
+  const {id, s, d, qv, es, dono} = r;
+  const b = BELTS[s.belt] || BELTS[0], C = CLASSES[s.classe], st = STYLES[s.estilo], g = GANGS.find(x=>x.g===s.info.gangue);
+  const dead = s.tcm >= 3, isDown = qv <= 0, danger = !isDown && qv/d.qvMax <= .25;
+  const state = dead ? ['bad','morto'] : isDown ? ['bad','caído'] : danger ? ['warn','em perigo'] : ['ok','de pé'];
+  const fx = EFFECTS.filter(e=>s.fx?.[e.id]);
+  const pct = (a,m)=> clamp(m ? a/m*100 : 0, 0, 100);
+  const tipo = npc ? (NPC_TIPOS[s.npc.tipo] || NPC_TIPOS.capanga) : null;
+  const boss = npc && s.npc.tipo === 'chefe';
+  return `<article class="fighter ${boss?'boss':''} ${dead?'dead':isDown?'down':danger?'danger':''}">
+    <div class="f-top">
+      <div class="f-pic">${s.photo ? `<img src="${esc(s.photo)}" alt="">` : esc((s.info.nome||'?').trim().charAt(0).toUpperCase() || '?')}</div>
+      <div style="min-width:0">
+        <div class="f-name">${esc(s.info.nome || 'Lutador sem nome')}</div>
+        <div class="f-sub">${esc([s.info.apelido && `“${s.info.apelido}”`, g && g.g!=='Sem gangue' ? g.g : '', s.info.ano].filter(Boolean).join(' · ') || 'Sem gangue')}</div>
+        <div class="f-player">${npc ? `<span class="badge ${boss?'boss':''}">${tipo.n}</span>` : `<span>${esc(playerName(dono))}</span>`}</div>
+      </div>
+      <span class="f-state ${state[0]}">${state[1]}</span>
+    </div>
+    <div class="f-tags">
+      <span class="badge"><span class="dot" style="background:${b.c}"></span>${b.n} · nv ${s.lvl}</span>
+      ${C && s.classe ? `<span class="badge">${esc(C.n)}</span>` : ''}
+      ${st ? `<span class="badge A">${esc(st.n)}</span>` : ''}
+    </div>
+    <div class="f-vit">
+      <div class="f-vrow"><span>Q.V</span><div class="bar qv"><i style="width:${pct(qv,d.qvMax)}%"></i></div><span>${qv} / ${d.qvMax}</span></div>
+      <div class="f-vrow"><span>E.S</span><div class="bar es"><i style="width:${pct(es,d.esMax)}%"></i></div><span>${es} / ${d.esMax}</span></div>
+    </div>
+    <div class="f-stats">
+      <div class="stat"><div class="v">${fmt(d.ca)}</div><div class="l">C.A</div></div>
+      <div class="stat"><div class="v">${fmt(d.mov)}</div><div class="l">Movim.</div></div>
+      <div class="stat"><div class="v">${(s.actions||[]).filter(x=>!x).length}</div><div class="l">Ações</div></div>
+      <div class="stat"><div class="v">${npc ? Object.keys(s.golpes||{}).length : (s.xp||0)}</div><div class="l">${npc ? 'Golpes' : 'XP'}</div></div>
+    </div>
+    <div class="f-dice">${ATTRS.map(a=>`<div>${a.k}<b class="${s.attrs[a.k]>6?'up':''}">d${s.attrs[a.k]}</b></div>`).join('')}</div>
+    ${fx.length ? `<div class="f-fx">${fx.map(e=>`<span title="${esc(e.d)}">${e.n}</span>`).join('')}</div>` : ''}
+    ${npc ? `<div class="npc-quick">
+        <input class="box num-in" id="nq-${esc(id)}" type="number" inputmode="numeric" placeholder="0" aria-label="Valor de vida">
+        <button class="btn sm danger" data-npc-hp="${esc(id)}" data-op="-">Dano</button>
+        <button class="btn sm green" data-npc-hp="${esc(id)}" data-op="+">Curar</button>
+      </div>` : ''}
+    <div class="f-foot">
+      <span class="pips" title="Testes contra morte">${[0,1,2].map(i=>`<span class="pip ${i<s.tcm?'on':''}"></span>`).join('')}</span>
+      ${npc ? `<span class="f-actions">
+          <button class="btn sm ghost" data-npc-dup="${esc(id)}">Duplicar</button>
+          <button class="btn sm ghost" data-npc-del="${esc(id)}">Apagar</button>
+          <button class="btn sm" data-npc-open="${esc(id)}">Abrir ficha</button>
+        </span>`
+      : `<span>${esc(ago(r.savedAt))}</span><button class="btn sm" data-open="${esc(id)}">Abrir ficha</button>`}
+    </div>
+  </article>`;
+}
 function renderShield(){
   if(VIEW !== 'mestre') return;
-  const ids = Object.keys(SHEETS);
-  const rows = ids.map(id=>{ const s = SHEETS[id].sheet, d = calcFor(s); const qv = s.qv ?? d.qvMax, es = s.es ?? d.esMax; return {id, s, d, qv, es, dono:SHEETS[id].dono}; })
-    .sort((a,b)=> playerName(a.dono).localeCompare(playerName(b.dono), 'pt') || (a.s.info.nome||'~').localeCompare(b.s.info.nome||'~', 'pt'));
-  const down = rows.filter(r=>r.qv<=0).length, players = new Set(rows.map(r=>r.dono)).size;
+  const all = Object.keys(SHEETS);
+  const players = all.filter(id=>!SHEETS[id].sheet.npc).map(rowFor)
+    .sort((a,b)=> playerName(a.dono).localeCompare(playerName(b.dono), 'pt') || byName(a,b));
+  const npcs = all.filter(id=>SHEETS[id].sheet.npc).map(rowFor)
+    .sort((a,b)=> (b.s.npc.tipo==='chefe') - (a.s.npc.tipo==='chefe') || byName(a,b));
+  const down = players.filter(r=>r.qv<=0).length, accounts = new Set(players.map(r=>r.dono)).size;
   $('#shieldSum').innerHTML = `
-    <div class="stat"><div class="v">${rows.length}</div><div class="l">Lutadores</div></div>
-    <div class="stat"><div class="v">${players}</div><div class="l">Contas</div></div>
+    <div class="stat"><div class="v">${players.length}</div><div class="l">Lutadores</div></div>
+    <div class="stat"><div class="v">${accounts}</div><div class="l">Jogadores</div></div>
     <div class="stat ${down?'neg':''}"><div class="v">${down}</div><div class="l">Caídos</div></div>
+    <div class="stat"><div class="v">${npcs.length}</div><div class="l">NPCs</div></div>
     <span class="live ${LIVE?'':'off'}" style="align-self:center">${LIVE?'ao vivo':'conectando…'}</span>`;
+  $('#tcNpcs').textContent = npcs.length || '';
   if(!AUTH.mestre){ $('#fighters').innerHTML = '<div class="empty">Só o mestre vê esta página.</div>'; return; }
   if(SHIELD_ERR){ $('#fighters').innerHTML = `<div class="empty">${esc(SHIELD_ERR)}</div>`; return; }
-  if(!rows.length){
-    $('#fighters').innerHTML = `<div class="empty" style="grid-column:1/-1; text-align:left; line-height:1.5">Nenhum lutador ainda.<br>Mande o link do site para os jogadores: cada um cria a conta, confirma o e-mail e clica em <b>Criar novo lutador</b>. As fichas aparecem aqui sozinhas.</div>`;
-    return;
-  }
-  $('#fighters').innerHTML = rows.map(({id, s, d, qv, es, dono})=>{
-    const b = BELTS[s.belt] || BELTS[0], C = CLASSES[s.classe], st = STYLES[s.estilo], g = GANGS.find(x=>x.g===s.info.gangue);
-    const dead = s.tcm >= 3, isDown = qv <= 0, danger = !isDown && qv/d.qvMax <= .25;
-    const state = dead ? ['bad','morto'] : isDown ? ['bad','caído'] : danger ? ['warn','em perigo'] : ['ok','de pé'];
-    const fx = EFFECTS.filter(e=>s.fx?.[e.id]);
-    const pct = (a,m)=> clamp(m ? a/m*100 : 0, 0, 100);
-    return `<article class="fighter ${dead?'dead':isDown?'down':danger?'danger':''}">
-      <div class="f-top">
-        <div class="f-pic">${s.photo ? `<img src="${esc(s.photo)}" alt="">` : esc((s.info.nome||'?').trim().charAt(0).toUpperCase() || '?')}</div>
-        <div style="min-width:0">
-          <div class="f-name">${esc(s.info.nome || 'Lutador sem nome')}</div>
-          <div class="f-sub">${esc([s.info.apelido && `“${s.info.apelido}”`, g && g.g!=='Sem gangue' ? g.g : '', s.info.ano].filter(Boolean).join(' · ') || 'Sem gangue')}</div>
-          <div class="f-player"><span>${esc(playerName(dono))}</span></div>
-        </div>
-        <span class="f-state ${state[0]}">${state[1]}</span>
-      </div>
-      <div class="f-tags">
-        <span class="badge"><span class="dot" style="background:${b.c}"></span>${b.n} · nv ${s.lvl}</span>
-        ${C && s.classe ? `<span class="badge">${esc(C.n)}</span>` : ''}
-        ${st ? `<span class="badge A">${esc(st.n)}</span>` : ''}
-      </div>
-      <div class="f-vit">
-        <div class="f-vrow"><span>Q.V</span><div class="bar qv"><i style="width:${pct(qv,d.qvMax)}%"></i></div><span>${qv} / ${d.qvMax}</span></div>
-        <div class="f-vrow"><span>E.S</span><div class="bar es"><i style="width:${pct(es,d.esMax)}%"></i></div><span>${es} / ${d.esMax}</span></div>
-      </div>
-      <div class="f-stats">
-        <div class="stat"><div class="v">${fmt(d.ca)}</div><div class="l">C.A</div></div>
-        <div class="stat"><div class="v">${fmt(d.mov)}</div><div class="l">Movim.</div></div>
-        <div class="stat"><div class="v">${(s.actions||[]).filter(x=>!x).length}</div><div class="l">Ações</div></div>
-        <div class="stat"><div class="v">${s.xp||0}</div><div class="l">XP</div></div>
-      </div>
-      <div class="f-dice">${ATTRS.map(a=>`<div>${a.k}<b class="${s.attrs[a.k]>6?'up':''}">d${s.attrs[a.k]}</b></div>`).join('')}</div>
-      ${fx.length ? `<div class="f-fx">${fx.map(e=>`<span title="${esc(e.d)}">${e.n}</span>`).join('')}</div>` : ''}
-      <div class="f-foot">
-        <span class="pips" title="Testes contra morte">${[0,1,2].map(i=>`<span class="pip ${i<s.tcm?'on':''}"></span>`).join('')}</span>
-        <span>${esc(ago(SHEETS[id].savedAt))}</span>
-        <button class="btn sm" data-open="${esc(id)}">Abrir ficha</button>
-      </div>
-    </article>`;
-  }).join('');
+  $('#fighters').innerHTML = players.length ? players.map(r=>fighterCard(r, false)).join('')
+    : `<div class="empty" style="grid-column:1/-1; text-align:left; line-height:1.5">Nenhum lutador ainda.<br>Mande o link do site para os jogadores: cada um cria a conta, confirma o e-mail e clica em <b>Criar novo lutador</b>. As fichas aparecem aqui sozinhas.</div>`;
+  $('#npcs').innerHTML = npcs.length ? npcs.map(r=>fighterCard(r, true)).join('')
+    : `<div class="empty" style="grid-column:1/-1">Nenhum NPC ainda. Escolha o tipo e clique em <b>Gerar aleatório</b> para criar um na hora.</div>`;
 }
 function renderRef(){
   if(!$('#refBelts').children.length){
@@ -1831,8 +2037,9 @@ function renderRef(){
 function gmRoll(label, r){
   GM_LOG.unshift({t:new Date().toTimeString().slice(0,5), ti:label, de:r.detail, to:r.total}); GM_LOG.length = Math.min(GM_LOG.length, 20);
   toast(label, r.detail, r.total); renderGmLog();
+  if(!$('#gmSecret')?.checked) shareRoll(label, r, {mestre:true});
 }
-function renderGmLog(){
+function renderGmLog(){ if(!$('#gmLog')) return;
   $('#gmLog').innerHTML = GM_LOG.length ? GM_LOG.map(l=>`<div class="log-i"><span class="t">${l.t}</span><div><div class="ti">${esc(l.ti)}</div><div class="de">${esc(l.de)}</div></div><span class="to">${l.to}</span></div>`).join('') : '<div class="hint">As rolagens do mestre aparecem aqui e não são salvas.</div>';
 }
 function bindGmNotes(){
@@ -2238,6 +2445,7 @@ function doRoll(title, fn, opts={}){
   const r = fn();
   lastRoll = {title, fn};
   log(title, r.detail, r.total); save(); renderLog();
+  if(CUR.id && !RO) shareRoll(title, r);
   const insp = (S.insp.comum||S.insp.combate) && !opts.noInsp
     ? `${S.insp.comum?`<button class="btn sm ghost" data-reroll="comum">Inspiração +4</button>`:''}${S.insp.combate?`<button class="btn sm ghost" data-reroll="combate">Inspiração +1d8</button>`:''}` : '';
   toast(title, r.detail, r.total, insp);
@@ -2360,6 +2568,7 @@ document.addEventListener('input', e=>{
 });
 document.addEventListener('change', e=>{
   const el = e.target;
+  if(el.id==='rollFilter'){ ROLL_FILTER = el.value; renderFeed(); return; }
   if(RO && el.id!=='onlyLearned'){ renderAll(); return; }
   if(el.id==='gangSel'){ renderGang(); }
   else if(el.id==='selClass'){ S.classe = el.value; S.classUsed = 0; save(); renderAll(); }
@@ -2375,6 +2584,27 @@ document.addEventListener('click', e=>{
   const d = t.dataset;
 
   if(d.nav){ go(d.nav); return; }
+  if(d.gmtab){ setGmTab(d.gmtab); renderFeed(); return; }
+  if(d.npcOpen){ openPlayer(d.npcOpen, true); return; }
+  if(d.npcDup){ dupNpc(d.npcDup); return; }
+  if(d.npcDel){ armOrRun(t, ()=>delNpc(d.npcDel)); return; }
+  if(d.npcHp){ npcHp(d.npcHp, d.op); return; }
+  if(d.poptype){ POP_TIPO = d.poptype; renderPopForm(); return; }
+  if(d.poproll){ $('#popRolagem').value = d.poproll; return; }
+  if(d.popDel){ delAviso(d.popDel); return; }
+  const gmIds = {
+    btnNpcRandom: ()=>createNpcs(true),
+    btnNpcBlank: ()=>createNpcs(false),
+    btnPopSend: sendPopup,
+    btnPopPreview: ()=>{ const p = popFromForm(); if(validPop(p)){ popMsg(''); POPQ.push({...p, _preview:true}); showNextPopup(); } },
+    btnPopOk: closePopup,
+    btnPopRoll: rollFromPopup,
+    btnPopClear: ()=>armOrRun(t, clearAvisos),
+    btnRollsClear: ()=>{ $('#btnRollsClear').hidden = true; $('#rollsConfirm').hidden = false; },
+    btnRollsClearNo: ()=>{ $('#btnRollsClear').hidden = false; $('#rollsConfirm').hidden = true; },
+    btnRollsClearYes: ()=>{ $('#btnRollsClear').hidden = false; $('#rollsConfirm').hidden = true; clearRolls(); },
+  };
+  if(gmIds[t.id]){ gmIds[t.id](); return; }
   if(d.amode){ AUTH.mode = d.amode; AUTH.msg = ''; AUTH.email = ($('#aEmail')?.value || AUTH.email).trim(); renderGate(); $('#aEmail')?.focus(); return; }
   if(d.openmine){ enterSheet('mine', d.openmine); return; }
   if(t.id==='btnLogout'){ logout(); return; }
@@ -2521,6 +2751,306 @@ $('#photoFile').addEventListener('change', e=>{
 $('#xpAdd').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#btnXp').click(); });
 $('#expr').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#btnExpr').click(); });
 ['qv','es'].forEach(k=> $('#'+k+'Amt').addEventListener('keydown', e=>{ if(e.key==='Enter'){ changeVital(k, '-', e.target.value); e.target.value=''; } }));
+
+/* =====================================================================
+   MESA AO VIVO: abas do escudo, rolagens, NPCs/bosses e pop-ups
+   ===================================================================== */
+let ROLLS = [], ROLL_UNSEEN = 0, ROLL_FILTER = '', AVISOS = [], EXTRAS_OK = null, extraChannel = null;
+let GMTAB = 'lutadores', GMTAB_LOADED = false, POP_TIPO = 'narracao', POPQ = [];
+const GMTAB_KEY = 'gaengdan.mestre.aba';
+const SQL2_HINT = 'Para ativar esta parte, rode o arquivo supabase/schema-2.sql no SQL Editor do Supabase e recarregue a página.';
+const POP_TIPOS = {
+  narracao:   {n:'Narração',   c:'#ffc916'},
+  alerta:     {n:'Alerta',     c:'#ff8a1f'},
+  perigo:     {n:'Perigo',     c:'#e5372b'},
+  recompensa: {n:'Recompensa', c:'#47c28a'},
+};
+const POP_ROLLS = ['dFOR','dCON','dAGI','dINT','dPRE','dFOR+dAGI','dAGI+dINT','dCON+dFOR','dPRE+dINT','1d20'];
+const NPC_TIPOS = {
+  capanga:  {n:'Capanga',  belts:[0,1], learn:.55},
+  lutador:  {n:'Lutador',  belts:[1,3], learn:.75},
+  veterano: {n:'Veterano', belts:[3,5], learn:.85},
+  chefe:    {n:'Chefe',    belts:[5,7], learn:.95, boss:true},
+};
+const NOMES = ['Kenji','Takeshi','Ryo','Daisuke','Hiro','Shota','Yuto','Kaito','Ren','Akira','Haruto','Riku','Yuki','Aiko','Mei','Hana','Rin','Sakura','Nao','Kaede','Miyu','Tetsuo','Goro','Jiro','Tomás','Diego','Rafael','Thiago','Bruno','Caio','Luana','Dandara','Igor','Viktor','Dmitri','Marco','Kwame','Chen','Min-jun','Ji-ho','Sung-woo','Nikos'];
+const SOBRENOMES = ['Arai','Sato','Tanaka','Kurosawa','Inoue','Fujita','Hayashi','Mori','Ishida','Kondo','Nakamura','Okada','Sakamoto','Yamada','Kimura','Ogawa','Shimizu','Matsuda','Kaneda','Shiba','Silva','Souza','Costa','Ferreira','Park','Kim','Volkov','Okafor','Petrakis'];
+const VULGOS = ['Martelo','Navalha','Cão Louco','Corvo','Tigre','Sombra','Trovão','Ferrugem','Lâmina','Muralha','Fumaça','Cicatriz','Raposa','Touro','Neon','Ratazana','Faísca','Granito','Chacal','Víbora','Sucata','Demônio','Rei do Beco','Dente de Ouro'];
+const PERSONALIDADES = ['Fala pouco e bate muito.','Provoca o tempo todo, mas foge quando sangra.','Leal à gangue até o fim.','Quer subir de posição a qualquer custo.','Só luta por dinheiro.','Respeita quem o derrota.','Cruel com os fracos, servil com os fortes.','Calmo demais. Ninguém sabe o que pensa.','Esquentado: perde a cabeça com uma palavra.','Estrategista; prefere emboscadas.'];
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const rint = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const hhmm = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toTimeString().slice(0,5); };
+const isMissingTable = e => /rolagens|avisos|relation|schema cache|PGRST205|42P01/i.test(String(e?.message||'') + ' ' + String(e?.code||''));
+
+/* ---------- abas do escudo ---------- */
+function setGmTab(name){
+  if(!document.getElementById('gm-' + name)) name = 'lutadores';
+  GMTAB = name;
+  $$('.gtab').forEach(x=>{ const on = x.dataset.gmtab === name; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
+  $$('.gmpane').forEach(p=>p.classList.toggle('on', p.id === 'gm-' + name));
+  if(name === 'rolagens'){ ROLL_UNSEEN = 0; }
+  $('#tcRolls').textContent = ROLL_UNSEEN || '';
+  try{ localStorage.setItem(GMTAB_KEY, name); }catch(e){}
+}
+
+/* ---------- tempo real das tabelas extras ---------- */
+function startExtrasRealtime(){
+  if(!sb || extraChannel || !AUTH.user) return;
+  extraChannel = sb.channel('mesa-' + AUTH.user.id)
+    .on('postgres_changes', {event:'INSERT', schema:'public', table:'rolagens'}, p=>onRollInsert(p.new))
+    .on('postgres_changes', {event:'DELETE', schema:'public', table:'rolagens'}, p=>{ ROLLS = ROLLS.filter(r=>r.id !== p.old?.id); renderFeed(); })
+    .on('postgres_changes', {event:'INSERT', schema:'public', table:'avisos'}, p=>onAvisoInsert(p.new))
+    .on('postgres_changes', {event:'DELETE', schema:'public', table:'avisos'}, p=>{ AVISOS = AVISOS.filter(a=>a.id !== p.old?.id); renderSent(); })
+    .subscribe(status=>{
+      const el = $('#rollsLive'); if(!el) return;
+      const ok = status === 'SUBSCRIBED';
+      el.textContent = ok ? 'ao vivo' : 'conectando…'; el.classList.toggle('off', !ok);
+    });
+}
+function stopExtrasRealtime(){ if(extraChannel){ sb.removeChannel(extraChannel); extraChannel = null; } POPQ = []; $('#popupWrap').hidden = true; }
+async function loadMesaExtras(){
+  const [r, a] = await Promise.all([
+    sb.from('rolagens').select('*').order('criado_em', {ascending:false}).limit(150),
+    sb.from('avisos').select('*').order('criado_em', {ascending:false}).limit(40),
+  ]);
+  EXTRAS_OK = !(r.error && isMissingTable(r.error)) && !(a.error && isMissingTable(a.error));
+  ROLLS = r.data || []; AVISOS = a.data || [];
+  renderFeed(); renderSent();
+}
+
+/* ---------- rolagens ---------- */
+function shareRoll(title, r, opts={}){
+  if(!sb || !AUTH.user || EXTRAS_OK === false) return;
+  const row = {
+    ficha_id: opts.mestre ? null : (CUR.id || null),
+    personagem: (opts.mestre ? 'Mestre' : (S.info.nome || 'Lutador sem nome')).slice(0,120),
+    titulo: String(title).slice(0,160),
+    detalhe: String(r.detail || '').slice(0,800),
+    total: Number.isFinite(+r.total) ? +r.total : null,
+  };
+  sb.from('rolagens').insert(row).then(({error})=>{
+    if(!error) return;
+    if(isMissingTable(error)) EXTRAS_OK = false;
+    if(opts.mestre) onRollInsert({...row, id:'local-' + Date.now(), dono:AUTH.user.id, criado_em:new Date().toISOString()});
+  });
+}
+function onRollInsert(r){
+  if(!r || !AUTH.mestre) return;
+  if(ROLLS.some(x=>x.id === r.id)) return;
+  r._new = true; setTimeout(()=>{ r._new = false; }, 1200);
+  ROLLS.unshift(r); ROLLS.length = Math.min(ROLLS.length, 200);
+  if(!(VIEW === 'mestre' && GMTAB === 'rolagens')) ROLL_UNSEEN++;
+  renderFeed();
+}
+function renderFeed(){
+  const tc = $('#tcRolls'); if(tc) tc.textContent = ROLL_UNSEEN || '';
+  const feed = $('#rollFeed'); if(!feed || VIEW !== 'mestre') return;
+  if(EXTRAS_OK === false){ feed.innerHTML = `<div class="empty">${esc(SQL2_HINT)}</div>`; return; }
+  const sel = $('#rollFilter'), names = [...new Set(ROLLS.map(r=>r.personagem).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt'));
+  sel.innerHTML = '<option value="">Todos os personagens</option>' + names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  sel.value = names.includes(ROLL_FILTER) ? ROLL_FILTER : '';
+  const list = (sel.value ? ROLLS.filter(r=>r.personagem === sel.value) : ROLLS).slice(0,120);
+  feed.innerHTML = list.length ? list.map(r=>`
+    <div class="roll ${r.dono === AUTH.user?.id ? 'gm' : ''} ${r._new ? 'new' : ''}">
+      <div class="r-who"><b>${esc(r.personagem || '—')}</b><span>${esc(playerName(r.dono))} · ${hhmm(r.criado_em)}</span></div>
+      <div class="r-what"><div class="r-t">${esc(r.titulo)}</div><div class="r-d">${esc(r.detalhe)}</div></div>
+      <div class="r-tot">${r.total ?? '—'}</div>
+    </div>`).join('')
+    : '<div class="empty">Nenhuma rolagem ainda. Quando um jogador rolar dados na ficha, aparece aqui na hora.</div>';
+}
+async function clearRolls(){
+  const {error} = await sb.from('rolagens').delete().gt('id', 0);
+  if(error){ toast('Não foi possível limpar', isMissingTable(error) ? SQL2_HINT : traduz(error)); return; }
+  ROLLS = []; ROLL_UNSEEN = 0; renderFeed(); toast('Histórico limpo', '');
+}
+
+/* ---------- NPCs e bosses ---------- */
+function fillNpcFaixa(){
+  const sel = $('#npcFaixa'); if(sel.options.length) return;
+  sel.innerHTML = '<option value="auto">Pelo tipo</option>' + BELTS.map((b,i)=>`<option value="${i}">${b.n}</option>`).join('');
+}
+function blankNpc(tipo, faixa){
+  const T = NPC_TIPOS[tipo] || NPC_TIPOS.capanga, s = blank();
+  s.npc = {tipo}; s.estilo = '';
+  s.belt = faixa === 'auto' ? T.belts[0] : +faixa;
+  s.info.nome = `${T.n} sem nome`;
+  return s;
+}
+function randomNpc(tipo, faixa){
+  const T = NPC_TIPOS[tipo] || NPC_TIPOS.capanga, s = blank();
+  s.npc = {tipo};
+  s.belt = faixa === 'auto' ? rint(T.belts[0], T.belts[1]) : +faixa;
+  s.lvl = rint(1, BELTS[s.belt].lv);
+  s.info.nome = `${pick(NOMES)} ${pick(SOBRENOMES)}`;
+  s.info.apelido = Math.random() < (T.boss ? .9 : .45) ? pick(VULGOS) : '';
+  const gangs = GANGS.filter(g=>g.g !== 'Sem gangue');
+  s.info.gangue = Math.random() < .85 ? pick(gangs).g : 'Sem gangue';
+  s.info.ano = tipo === 'capanga' ? pick(['1º ano','2º ano','3º ano']) : pick(['2º ano','3º ano','Fora da escola']);
+  s.info.idade = String(T.boss ? rint(18,28) : rint(15,19));
+  s.estilo = pick(Object.keys(STYLES));
+  s.classe = Math.random() < (tipo === 'capanga' ? .5 : 1) ? pick(Object.keys(CLASSES).filter(Boolean)) : '';
+  const pool = ARCHS.map(a=>a.id).sort(()=>Math.random() - .5);
+  ARCH_SLOTS.forEach((sl,i)=>{ if(s.belt >= sl.belt) s.arch[i] = pool[i]; });
+  // dados: 2 iniciais + 1 por faixa + arquétipos que aumentam dado, puxando para os dados do estilo
+  const st = STYLES[s.estilo], w = {FOR:3, CON:2, AGI:3, INT:1, PRE:1};
+  st.m.forEach(m=>{ const p = parseDmg(m); if(p) p.dice.forEach(k=>w[k]++); });
+  let inc = 2 + s.belt + s.arch.filter(id=>ARCHS.find(a=>a.id===id)?.inc).length;
+  while(inc-- > 0){
+    const avail = Object.keys(w).filter(k=>s.attrs[k] < 18); if(!avail.length) break;
+    let r = Math.random() * avail.reduce((a,k)=>a + w[k], 0), k = avail[0];
+    for(const x of avail){ r -= w[x]; if(r <= 0){ k = x; break; } }
+    s.attrs[k] += 2;
+  }
+  st.m.forEach((m,i)=>{
+    const b = m.b < 0 ? 5 : m.b;
+    if(b <= s.belt && Math.random() < T.learn) s.golpes[`${s.estilo}:${i}`] = clamp(rint(Math.ceil(m.lv * (T.boss ? .6 : .25)), m.lv), 1, m.lv);
+  });
+  if(!Object.keys(s.golpes).length){ const i0 = st.m.findIndex(m=>m.kind === 'A' && m.b <= s.belt); if(i0 >= 0) s.golpes[`${s.estilo}:${i0}`] = 1; }
+  if(Math.random() < (T.boss ? .5 : .4)){
+    const grupo = T.boss && Math.random() < .4 ? 'Armas de fogo' : pick(['Armas brancas','Improvisadas']);
+    const [n, dn] = pick(WEAPONS[grupo]); s.armas.push({nome:n, dano:dn, tipo:grupo, notas:''});
+  }
+  if(T.boss){
+    const d = calcFor(s); s.bonus.qv = Math.round(d.qvMax * .5); s.bonus.ca = 2;
+    s.notas.sessao = 'Chefe: +50% de Q.V e +2 de C.A (em Status → Bônus manuais).';
+  }
+  s.notas.personalidade = pick(PERSONALIDADES);
+  return s;
+}
+async function createNpcs(random){
+  if(!sb || !AUTH.mestre) return;
+  const tipo = $('#npcTipo').value, faixa = $('#npcFaixa').value, nomeBase = $('#npcNome').value.trim();
+  const qtd = random ? clamp(parseInt($('#npcQtd').value) || 1, 1, 8) : 1;
+  const rows = [];
+  for(let i = 0; i < qtd; i++){
+    const s = random ? randomNpc(tipo, faixa) : blankNpc(tipo, faixa);
+    if(nomeBase) s.info.nome = qtd > 1 ? `${nomeBase} ${i+1}` : nomeBase;
+    rows.push({dados: s});
+  }
+  const btns = [$('#btnNpcRandom'), $('#btnNpcBlank')]; btns.forEach(b=>b.disabled = true);
+  const {data, error} = await sb.from('fichas').insert(rows).select('id,dono,dados,atualizado_em');
+  btns.forEach(b=>b.disabled = false);
+  if(error){ toast('Não foi possível criar', traduz(error)); return; }
+  data.forEach(r=>{ setSheet(r); if(!MY_FICHAS.some(f=>f.id === r.id)) MY_FICHAS.unshift(r); });
+  $('#npcNome').value = '';
+  renderShield();
+  toast(data.length > 1 ? `${data.length} NPCs criados` : `${data[0].dados.info.nome} criado`, random ? 'Gerado aleatoriamente.' : 'Abra a ficha para preencher.');
+}
+async function dupNpc(id){
+  const x = SHEETS[id]; if(!x) return;
+  const s = clone(x.raw);
+  s.info.nome = (s.info.nome || 'NPC') + ' (cópia)';
+  s.qv = null; s.es = null; s.last = {qv:null, es:null}; s.fx = {}; s.tcm = 0; s.actions = [false,false,false,false]; s.classUsed = 0;
+  const {data, error} = await sb.from('fichas').insert({dados:s}).select('id,dono,dados,atualizado_em').single();
+  if(error){ toast('Não foi possível duplicar', traduz(error)); return; }
+  setSheet(data); MY_FICHAS.unshift(data); renderShield();
+}
+async function delNpc(id){
+  const {error} = await sb.from('fichas').delete().eq('id', id);
+  if(error){ toast('Não foi possível apagar', traduz(error)); return; }
+  delete SHEETS[id]; MY_FICHAS = MY_FICHAS.filter(f=>f.id !== id); renderShield();
+}
+async function npcHp(id, op){
+  const x = SHEETS[id], input = document.getElementById('nq-' + id); if(!x || !input) return;
+  const amt = Math.abs(parseInt(input.value) || 0); if(!amt) return;
+  const s = clone(x.raw), d = calcFor(merge(blank(), clone(s)));
+  s.qv = clamp((s.qv ?? d.qvMax) + (op === '+' ? amt : -amt), 0, d.qvMax);
+  setSheet({id, dono:x.dono, dados:s, atualizado_em:new Date().toISOString()}); renderShield();
+  const {error} = await sb.from('fichas').update({dados:s}).eq('id', id);
+  if(error) toast('Não salvou', traduz(error));
+}
+function armOrRun(btn, fn){
+  if(btn.dataset.armed){ fn(); return; }
+  btn.dataset.armed = '1'; const old = btn.textContent; btn.textContent = 'Confirmar?'; btn.classList.add('danger');
+  setTimeout(()=>{ if(btn.isConnected){ delete btn.dataset.armed; btn.textContent = old; btn.classList.remove('danger'); } }, 3000);
+}
+
+/* ---------- pop-ups ---------- */
+function renderPopForm(){
+  $('#popTipos').innerHTML = Object.entries(POP_TIPOS).map(([k,t])=>`<button class="chip pt ${k===POP_TIPO?'on':''}" style="--pt:${t.c}" data-poptype="${k}" aria-pressed="${k===POP_TIPO}">${t.n}</button>`).join('');
+  if(!$('#popRollChips').children.length) $('#popRollChips').innerHTML = POP_ROLLS.map(r=>`<button class="chip" data-poproll="${r}">${r}</button>`).join('');
+}
+function fillPopPara(){
+  const sel = $('#popPara'), cur = sel.value;
+  const ids = Object.keys(PERFIS).filter(id=>id !== AUTH.user?.id).sort((a,b)=>(PERFIS[a]||'').localeCompare(PERFIS[b]||'','pt'));
+  sel.innerHTML = '<option value="">Todos os jogadores</option>' + ids.map(id=>`<option value="${esc(id)}">${esc(PERFIS[id] || 'Jogador sem nome')}</option>`).join('');
+  sel.value = ids.includes(cur) ? cur : '';
+}
+function popMsg(txt, kind){ const el = $('#popMsg'); el.textContent = txt; el.className = 'form-msg ' + (kind || ''); el.hidden = !txt; }
+function popFromForm(){
+  return {para: $('#popPara').value || null, tipo: POP_TIPO, titulo: $('#popTitulo').value.trim(), texto: $('#popTexto').value.trim(), rolagem: $('#popRolagem').value.trim()};
+}
+function validPop(p){
+  if(!p.titulo && !p.texto){ popMsg('Escreva um título ou uma mensagem.', 'err'); return false; }
+  if(p.rolagem){ const t = evalExpr(p.rolagem); if(!t || t.error){ popMsg('Rolagem inválida. Use algo como dAGI+dINT ou 1d20+2.', 'err'); return false; } }
+  return true;
+}
+async function sendPopup(){
+  const p = popFromForm(); if(!validPop(p)) return;
+  const btn = $('#btnPopSend'); btn.disabled = true;
+  const {data, error} = await sb.from('avisos').insert(p).select().single();
+  btn.disabled = false;
+  if(error){ popMsg(isMissingTable(error) ? SQL2_HINT : traduz(error), 'err'); return; }
+  if(!AVISOS.some(x=>x.id === data.id)) AVISOS.unshift(data);
+  renderSent();
+  popMsg(`Enviado para ${p.para ? (PERFIS[p.para] || 'o jogador') : 'todos os jogadores'}.`, 'ok');
+  $('#popTitulo').value = ''; $('#popTexto').value = ''; $('#popRolagem').value = '';
+}
+function renderSent(){
+  const box = $('#popSent'); if(!box || VIEW !== 'mestre') return;
+  if(EXTRAS_OK === false){ box.innerHTML = `<div class="empty">${esc(SQL2_HINT)}</div>`; return; }
+  box.innerHTML = AVISOS.length ? AVISOS.map(a=>{
+    const t = POP_TIPOS[a.tipo] || POP_TIPOS.narracao;
+    return `<div class="li sent">
+      <span class="dot" style="background:${t.c}" title="${t.n}"></span>
+      <div style="min-width:0"><div style="font-weight:600; overflow-wrap:anywhere">${esc(a.titulo || t.n)}</div>
+        <div class="hint">${a.para ? 'Para ' + esc(PERFIS[a.para] || 'jogador') : 'Para todos'} · ${hhmm(a.criado_em)}${a.rolagem ? ' · pediu ' + esc(a.rolagem) : ''}</div></div>
+      <button class="x" data-pop-del="${esc(a.id)}" aria-label="Apagar">×</button>
+    </div>`;
+  }).join('') : '<div class="empty">Nenhum pop-up enviado ainda.</div>';
+}
+async function delAviso(id){
+  const {error} = await sb.from('avisos').delete().eq('id', id);
+  if(error){ toast('Não foi possível apagar', traduz(error)); return; }
+  AVISOS = AVISOS.filter(a=>String(a.id) !== String(id)); renderSent();
+}
+async function clearAvisos(){
+  const {error} = await sb.from('avisos').delete().gt('id', 0);
+  if(error){ toast('Não foi possível limpar', isMissingTable(error) ? SQL2_HINT : traduz(error)); return; }
+  AVISOS = []; renderSent();
+}
+function onAvisoInsert(a){
+  if(!a) return;
+  if(AUTH.mestre){ if(!AVISOS.some(x=>x.id === a.id)) AVISOS.unshift(a); renderSent(); }
+  if(a.autor === AUTH.user?.id) return;
+  POPQ.push(a); showNextPopup();
+}
+function showNextPopup(){
+  const wrap = $('#popupWrap');
+  if(!POPQ.length){ wrap.hidden = true; return; }
+  const a = POPQ[0], t = POP_TIPOS[a.tipo] || POP_TIPOS.narracao;
+  wrap.style.setProperty('--pop', t.c);
+  $('#popKind').textContent = a._preview ? `${t.n} · prévia` : `${t.n} · mensagem do mestre`;
+  $('#popTitle').textContent = a.titulo || t.n;
+  $('#popText').textContent = a.texto || '';
+  $('#popText').hidden = !a.texto;
+  const canRoll = !!a.rolagem && AUTH.chosen;
+  $('#popRoll').hidden = !a.rolagem;
+  $('#popRollExpr').textContent = a.rolagem || '';
+  $('#popRollHint').hidden = !a.rolagem || canRoll;
+  $('#btnPopRoll').hidden = !canRoll;
+  $('#popQueue').textContent = POPQ.length > 1 ? `mais ${POPQ.length - 1} na fila` : '';
+  wrap.hidden = false;
+  (canRoll ? $('#btnPopRoll') : $('#btnPopOk')).focus();
+}
+function closePopup(){ POPQ.shift(); showNextPopup(); }
+function rollFromPopup(){
+  const a = POPQ[0]; if(!a?.rolagem) return;
+  const t = evalExpr(a.rolagem);
+  if(!t || t.error){ toast('Rolagem inválida', a.rolagem); return; }
+  doRoll(`Pedido do mestre: ${a.titulo || a.rolagem}`, ()=>evalExpr(a.rolagem));
+  closePopup();
+}
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && !$('#popupWrap').hidden) closePopup(); });
 
 function exportSheet(){
   const json = JSON.stringify(S, null, 2);
