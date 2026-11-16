@@ -1335,13 +1335,116 @@ body{background:#080808}
 .rest{display:grid; gap:8px}
 .win .dice-row{margin-top:2px}
 .win .chips{gap:8px}
+
+/* =====================================================================
+   v2.1 · TOPO CENTRAL, MENU LATERAL E ABAS NA LATERAL
+   ===================================================================== */
+/* topo: botão de menu à esquerda, nome no centro, status à direita */
+.topbar{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; padding-block:10px}
+.topbar .brand{justify-self:center; align-items:center; gap:10px}
+.topbar .tagline, .topbar .ver{display:none}
+.topbar .logo{font-size:28px}
+.top-right{justify-self:end; display:flex; align-items:center}
+.top-right .saved{margin:0; min-width:0}
+.menu-btn{
+  justify-self:start; width:40px; height:36px; display:grid; place-content:center; gap:5px;
+  background:transparent; border:1px solid #2c2c2c; border-radius:3px; padding:0;
+}
+.menu-btn span{display:block; width:18px; height:2px; background:var(--ink); transition:transform .2s, opacity .2s}
+.menu-btn:hover{border-color:var(--yellow)}
+.menu-btn:hover span{background:var(--yellow)}
+.menu-btn:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* menu lateral que se esconde */
+.drawer{
+  position:fixed; top:0; left:0; bottom:0; z-index:70; width:288px; max-width:86vw;
+  display:flex; flex-direction:column; gap:6px; overflow-y:auto;
+  padding:max(14px, env(safe-area-inset-top, 0px)) 14px max(18px, env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px));
+  background:#0d0d0d; border-right:1px solid #262626;
+  transform:translateX(-102%); transition:transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s;
+}
+.drawer.open{transform:none; box-shadow:24px 0 70px rgba(0,0,0,.7)}
+.drawer-edge{position:fixed; left:0; top:0; bottom:0; width:10px; z-index:69}
+.drawer-scrim{position:fixed; inset:0; z-index:68; background:rgba(0,0,0,.45); opacity:0; pointer-events:none; transition:opacity .2s}
+.drawer.open ~ .drawer-scrim{opacity:1; pointer-events:auto}
+.dr-head{display:flex; align-items:center; gap:10px; padding:4px 2px 14px; border-bottom:1px solid #222; margin-bottom:6px}
+.dr-head .logo{font-size:22px}
+.dr-head .ver{display:inline-block}
+.dr-head .x{margin-left:auto; font-size:20px; width:32px; height:32px}
+.dr-sec{display:grid; gap:6px; padding:10px 0; border-bottom:1px solid #1c1c1c}
+.dr-sec:last-child{border-bottom:0}
+.dr-sec:has(> #userBox[hidden]), .dr-sec:has(> #fichaTools[hidden]){display:none}
+.dr-sec > .lbl{padding:0 4px}
+.drawer .nav{display:flex; flex-direction:column; margin:0; gap:2px}
+.drawer .navbtn{text-align:left; width:100%; padding:11px 12px; border-bottom:0; border-left:2px solid transparent; border-radius:2px; font-size:12.5px}
+.drawer .navbtn:hover{background:#151515}
+.drawer .navbtn.on{border-left-color:var(--yellow); background:#161616; color:var(--ink)}
+.drawer .userbox{max-width:none; justify-content:space-between; padding:2px 4px; font-size:15px; color:var(--ink)}
+.drawer .toolbar{display:flex; flex-direction:column; align-items:stretch; gap:6px}
+.drawer .toolbar .btn{justify-content:flex-start; width:100%; padding:9px 12px}
+.drawer .confirm{flex-wrap:wrap; padding:8px 10px}
+@media (prefers-reduced-motion: reduce){ .drawer, .drawer-scrim{transition:none} }
+
+/* ---------- FICHA: abas na lateral e quadro menor ---------- */
+.sheet{
+  width:min(1080px, calc(100% - 64px)); margin:36px auto 40px;
+  height:calc(100vh - 150px); height:calc(100dvh - 150px); max-height:860px; min-height:560px;
+  display:grid; grid-template-columns:188px minmax(0,1fr); grid-template-rows:auto minmax(0,1fr);
+}
+.sheet > .hero{grid-column:1 / -1; padding:16px 20px 14px; grid-template-columns:64px minmax(0,1.1fr) minmax(0,1.2fr) auto; gap:10px 18px}
+.sheet .hero-pic{width:64px; height:82px; font-size:30px}
+.sheet .hero-name{font-size:clamp(24px,2.4vw,34px)}
+.sheet .hero .vital-val{font-size:22px}
+.sheet .hero-stats{grid-template-columns:repeat(4,58px)}
+.sheet .hero-stats .stat .v{font-size:22px}
+.sheet .hero-stats .stat{padding:7px 4px 6px}
+.sheet > .tabs{
+  grid-column:1; grid-row:2; flex-direction:column; align-items:stretch; gap:2px;
+  padding:14px 10px; overflow-y:auto; overflow-x:hidden;
+  background:#0b0b0b; border-bottom:0; border-right:1px solid var(--line);
+}
+.sheet > .tabs .tab{flex:0 0 auto; justify-content:space-between; text-align:left; padding:11px 12px; margin:0; border-bottom:0; border-left:2px solid transparent; border-radius:2px}
+.sheet > .tabs .tab:hover{background:#131313}
+.sheet > .tabs .tab.on{border-left-color:var(--yellow); background:#161616; border-bottom-color:transparent}
+.sheet > .tabs .tabs-act{margin:auto 0 0; width:100%; text-align:center; padding:10px}
+.sheet > .sheet-body{grid-column:2; grid-row:2; padding:22px}
+@media (max-width:1100px){
+  .sheet > .hero{grid-template-columns:64px minmax(0,1fr) minmax(0,1fr)}
+  .sheet .hero-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .sheet{display:flex; flex-direction:column; width:100%; margin:0; height:auto; max-height:none; min-height:0}
+  .sheet > .hero{grid-template-columns:64px minmax(0,1fr)}
+  .sheet > .tabs{flex-direction:row; padding:0 8px; border-right:0; border-bottom:1px solid var(--line); overflow-x:auto}
+  .sheet > .tabs .tab{flex:1 0 auto; border-left:0; border-bottom:2px solid transparent; padding:13px 12px 11px}
+  .sheet > .tabs .tab.on{background:transparent; border-bottom-color:var(--yellow)}
+  .sheet > .tabs .tabs-act{margin:0 0 0 auto; width:auto; padding:7px 12px}
+}
+
+/* ---------- ESCUDO DO MESTRE: abas na lateral ---------- */
+@media (min-width:761px){
+  .shield{display:grid; grid-template-columns:200px minmax(0,1fr); column-gap:22px; row-gap:18px; align-items:start; max-width:1320px}
+  .shield > .shield-head{grid-column:1 / -1}
+  .shield > #gmTabs{
+    grid-column:1; grid-row:2; position:sticky; top:84px;
+    flex-direction:column; align-items:stretch; gap:2px; padding:4px 12px 4px 0;
+    border-bottom:0; border-right:1px solid var(--line); overflow:visible;
+  }
+  .shield > #gmTabs .gtab{flex:0 0 auto; justify-content:space-between; text-align:left; padding:11px 12px; margin:0; border-bottom:0; border-left:2px solid transparent; border-radius:2px}
+  .shield > #gmTabs .gtab:hover{background:#131313}
+  .shield > #gmTabs .gtab.on{border-left-color:var(--yellow); background:#161616}
+  .shield > .gmpane{grid-column:2; grid-row:2; min-width:0}
+}
 </style>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.0</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.1</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -4189,6 +4292,58 @@ document.addEventListener('keydown', e=>{
   }
   if((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hero-vit')){ e.preventDefault(); if(!isRO()) openWin('vida'); }
 });
+
+/* =====================================================================
+   MENU LATERAL (v2.1)
+   O topo fica só com o nome no centro. Navegação, conta e ferramentas
+   da ficha vão para uma barra à esquerda que se esconde sozinha, como a
+   barra do Windows: abre ao encostar o mouse na borda esquerda ou no
+   botão de menu, e some ao sair dela.
+   ===================================================================== */
+(function(){
+  const top = document.querySelector('.topbar'); if(!top) return;
+  const brand = top.querySelector('.brand');
+  const nav = top.querySelector('.nav'), user = top.querySelector('#userBox'), tools = top.querySelector('.toolbar');
+  const saved = document.getElementById('saved'), ver = top.querySelector('.ver');
+
+  const drawer = document.createElement('aside');
+  drawer.className = 'drawer'; drawer.id = 'drawer'; drawer.setAttribute('aria-label', 'Menu'); drawer.inert = true;
+  drawer.innerHTML = `<div class="dr-head"><div class="logo">GAENG<b>DAN</b></div>${ver ? `<span class="ver">${ver.textContent}</span>` : ''}<button class="x" id="drClose" aria-label="Fechar menu">×</button></div>`;
+  const sec = (label, el)=>{
+    if(!el) return;
+    const s = document.createElement('div'); s.className = 'dr-sec';
+    s.innerHTML = `<div class="lbl">${label}</div>`; s.appendChild(el); drawer.appendChild(s);
+  };
+  sec('Navegação', nav); sec('Conta', user); sec('Ficha', tools);
+
+  const edge = document.createElement('div'); edge.className = 'drawer-edge'; edge.setAttribute('aria-hidden', 'true');
+  const scrim = document.createElement('div'); scrim.className = 'drawer-scrim'; scrim.setAttribute('aria-hidden', 'true');
+  document.body.append(drawer, scrim, edge);
+
+  const btn = document.createElement('button');
+  btn.className = 'menu-btn'; btn.id = 'menuBtn'; btn.type = 'button';
+  btn.setAttribute('aria-label', 'Abrir menu'); btn.setAttribute('aria-controls', 'drawer'); btn.setAttribute('aria-expanded', 'false');
+  btn.innerHTML = '<span></span><span></span><span></span>';
+  const right = document.createElement('div'); right.className = 'top-right';
+  if(saved) right.appendChild(saved);
+  top.innerHTML = ''; top.append(btn, brand, right);
+
+  let pinned = false, hideT;
+  const open = pin => {
+    clearTimeout(hideT); if(pin) pinned = true;
+    drawer.inert = false; drawer.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
+  };
+  const close = () => {
+    pinned = false; drawer.classList.remove('open'); drawer.inert = true; btn.setAttribute('aria-expanded', 'false');
+  };
+  btn.addEventListener('click', ()=> drawer.classList.contains('open') ? close() : (open(true), drawer.querySelector('button')?.focus()));
+  edge.addEventListener('mouseenter', ()=>open(false));
+  drawer.addEventListener('mouseenter', ()=>clearTimeout(hideT));
+  drawer.addEventListener('mouseleave', ()=>{ if(!pinned) hideT = setTimeout(close, 280); });
+  scrim.addEventListener('click', close);
+  drawer.addEventListener('click', e=>{ if(e.target.closest('#drClose') || e.target.closest('.navbtn')) close(); });
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && drawer.classList.contains('open')) close(); });
+})();
 
 try{ setTab(localStorage.getItem(TAB_KEY) || 'perfil'); }catch(e){ setTab('perfil'); }
 show('inicio');
