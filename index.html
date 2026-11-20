@@ -1560,13 +1560,29 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
 .carga-tog input{accent-color:#f2c230; width:15px; height:15px; margin:0}
 .carga-over{color:#ff5a4e; font-weight:700}
 .gang-rule{display:block; margin-top:8px; padding-top:8px; border-top:1px solid #222; color:var(--ink-2); font-size:13.5px; line-height:1.5}
-.gang-rule > b:first-child{display:block; font-family:var(--ui); font-weight:700; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--yellow); margin-bottom:3px}</style>
+.gang-rule > b:first-child{display:block; font-family:var(--ui); font-weight:700; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--yellow); margin-bottom:3px}
+/* v2.8 · vídeo e cinemática nos pop-ups */
+.pm-file.vid video{width:96px; height:64px; object-fit:cover; border-radius:2px; border:1px solid #2a2a2a; background:#000}
+.cine-chk{align-items:flex-start}
+.cine-chk b{color:var(--yellow)}
+.pop-video{position:relative; margin-top:14px; border:1px solid #2a2a2a; border-radius:2px; overflow:hidden; background:#000}
+.pop-video video{display:block; width:100%; max-height:52vh; background:#000}
+.pop-video.yt{aspect-ratio:16 / 9}
+.pop-video.yt iframe{display:block; width:100%; height:100%; border:0}
+.vid-play{position:absolute; inset:0; margin:auto; width:170px; height:54px; background:var(--yellow); color:#0b0b0b; border:0; border-radius:2px; font-family:var(--ui); font-weight:800; letter-spacing:.12em; text-transform:uppercase; cursor:pointer}
+.cine-wrap{position:fixed; inset:0; z-index:120; background:#000; display:grid; place-items:center; animation:fadeIn .3s ease-out}
+.cine-box{position:absolute; inset:56px 0 0 0; display:grid; place-items:center}
+.cine-box video{width:100%; height:100%; object-fit:contain; background:#000}
+.cine-box iframe{width:100%; height:100%; border:0}
+.cine-title{position:absolute; left:24px; right:140px; top:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--display); font-weight:800; font-stretch:80%; font-size:clamp(18px,2.4vw,30px); letter-spacing:.14em; text-transform:uppercase; color:#fff; text-shadow:0 2px 10px #000; pointer-events:none}
+.cine-close{position:absolute; top:10px; right:16px; background:rgba(0,0,0,.6); color:#fff; border:1px solid #444; border-radius:2px; font-family:var(--ui); font-weight:700; font-size:12px; letter-spacing:.12em; text-transform:uppercase; padding:9px 14px; cursor:pointer}
+.cine-close:hover{border-color:var(--yellow); color:var(--yellow)}</style>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.7</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.8</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -1905,7 +1921,7 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
           <label class="f"><span>Mensagem</span><textarea class="box" id="popTexto" maxlength="2000" placeholder="O que os lutadores veem, ouvem ou sentem…"></textarea></label>
           <div class="pop-media">
             <div class="pm-col">
-              <span class="lbl">Imagem (opcional)</span>
+              <span class="lbl">Imagem ou GIF (opcional)</span>
               <div class="pm-drop" id="popImgBox"></div>
               <input type="file" id="popImgFile" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
             </div>
@@ -1913,7 +1929,14 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
               <span class="lbl">Áudio (opcional)</span>
               <div class="pm-drop" id="popAudBox"></div>
               <input type="file" id="popAudFile" accept="audio/*" hidden>
-              <label class="chk" style="margin-top:2px"><input type="checkbox" id="popAudAuto" checked> Tocar sozinho quando o pop-up abrir</label>
+              <label class="chk" style="margin-top:2px"><input type="checkbox" id="popAudAuto" checked> Tocar áudio e vídeo sozinhos quando o pop-up abrir</label>
+            </div>
+            <div class="pm-col">
+              <span class="lbl">Vídeo ou cinemática (opcional)</span>
+              <div class="pm-drop" id="popVidBox"></div>
+              <input type="file" id="popVidFile" accept="video/mp4,video/webm,video/quicktime" hidden>
+              <label class="f" id="popVidLinkWrap"><span>Ou link do vídeo (YouTube ou .mp4)</span><input class="in" id="popVidLink" maxlength="500" placeholder="https://youtu.be/…"></label>
+              <label class="chk cine-chk"><input type="checkbox" id="popCine"> <span><b>Cinemática</b>: o vídeo abre em tela cheia para todos</span></label>
             </div>
           </div>          <label class="f"><span>Pedir rolagem (opcional)</span><input class="in mono" id="popRolagem" maxlength="80" placeholder="ex.: dAGI+dINT"></label>
           <div class="chips small-chips" id="popRollChips"></div>
@@ -1976,6 +1999,12 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
   </div>
 </section>
 
+<!-- CINEMÁTICA NA TELA DO JOGADOR (v2.8) -->
+<div class="cine-wrap" id="cineWrap" hidden>
+  <div class="cine-box" id="cineBox"></div>
+  <div class="cine-title" id="cineTitle"></div>
+  <button class="cine-close" id="btnCineClose" aria-label="Fechar cinemática">✕ Fechar</button>
+</div>
 <!-- POP-UP NA TELA DO JOGADOR -->
 <div class="popup-wrap" id="popupWrap" hidden>
   <div class="popup" role="alertdialog" aria-modal="true" aria-labelledby="popTitle" aria-describedby="popText">
@@ -1983,7 +2012,9 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
     <h2 id="popTitle"></h2>
     <p id="popText"></p>
     <a class="pop-img" id="popImgLink" target="_blank" rel="noopener" hidden title="Abrir imagem em tamanho real"><img id="popImg" alt="Imagem enviada pelo mestre"></a>
-    <audio class="pop-audio" id="popAudio" controls preload="auto" hidden></audio>    <div class="pop-roll" id="popRoll" hidden>
+    <audio class="pop-audio" id="popAudio" controls preload="auto" hidden></audio>
+    <div class="pop-video" id="popVideo" hidden></div>
+    <div class="pop-roll" id="popRoll" hidden>
       O mestre pediu uma rolagem: <b id="popRollExpr"></b>
       <div class="hint" id="popRollHint" hidden style="margin-top:4px">Abra sua ficha para rolar com os seus dados.</div>
     </div>
@@ -4929,6 +4960,184 @@ document.addEventListener('paste', e=>{
   const item = [...(e.clipboardData?.items || [])].find(i=>i.type.startsWith('image/'));
   if(item){ e.preventDefault(); setImage(item.getAsFile()); }
 });
+renderMedia();
+
+/* =====================================================================
+   v2.8 · VÍDEOS, CINEMÁTICAS E GIFS NOS POP-UPS
+   O mestre anexa um vídeo (MP4/WEBM/MOV, até 50 MB) ou cola um link
+   (YouTube ou .mp4). "Cinemática" abre o vídeo em tela cheia.
+   Precisa do supabase/schema-4.sql. GIF entra pelo campo de imagem.
+   As funções abaixo substituem as versões da v2.4 de mesmo nome.
+   (var em vez de const: renderMedia() roda antes deste bloco.)
+   ===================================================================== */
+var VIDEO_MAX = 50 * 1048576;
+var SQL4_HINT = 'Para enviar vídeo e cinemática, rode o arquivo supabase/schema-4.sql no SQL Editor do Supabase e recarregue a página.';
+function ytEmbed(url, auto){
+  try{
+    const u = new URL(url), host = u.hostname.replace(/^www\.|^m\./, '');
+    let id = '';
+    if(host === 'youtu.be') id = u.pathname.slice(1);
+    else if(host === 'youtube.com' || host === 'youtube-nocookie.com') id = u.searchParams.get('v') || (u.pathname.match(/^\/(?:embed|shorts|live)\/([^/?]+)/) || [])[1] || '';
+    return /^[\w-]{6,20}$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=${auto ? 1 : 0}&rel=0&playsinline=1` : '';
+  }catch(e){ return ''; }
+}
+function linkOk(url){ try{ const u = new URL(url); return u.protocol === 'https:' || u.protocol === 'http:'; }catch(e){ return false; } }
+
+function setVideo(file){
+  if(!file || !/^video\//.test(file.type)){ popMsg('Escolha um arquivo de vídeo (MP4, WEBM ou MOV).', 'err'); return; }
+  if(file.size > VIDEO_MAX){ popMsg('O vídeo é grande demais (máximo 50 MB). Para vídeos maiores, suba no YouTube e cole o link.', 'err'); return; }
+  if(MEDIA.vid) URL.revokeObjectURL(MEDIA.vid.url);
+  MEDIA.vid = {blob:file, url:URL.createObjectURL(file), name:file.name || 'vídeo', size:file.size, ext:extOf(file.type, file.name) === 'bin' ? ({'video/mp4':'mp4','video/webm':'webm','video/quicktime':'mov'})[file.type] || 'mp4' : extOf(file.type, file.name)};
+  const l = document.getElementById('popVidLink'); if(l) l.value = '';
+  popMsg(''); renderMedia();
+}
+function clearMedia(which){
+  for(const k of which ? [which] : ['img','aud','vid']){ if(MEDIA[k]) URL.revokeObjectURL(MEDIA[k].url); MEDIA[k] = null; }
+  if(!which){ const l = document.getElementById('popVidLink'), c = document.getElementById('popCine'); if(l) l.value = ''; if(c) c.checked = false; }
+  renderMedia();
+}
+function renderMedia(){
+  const ib = document.getElementById('popImgBox'), ab = document.getElementById('popAudBox'); if(!ib || !ab) return;
+  ib.innerHTML = MEDIA.img
+    ? `<div class="pm-file"><img src="${MEDIA.img.url}" alt="Imagem anexada"><div class="pm-meta"><b>${esc(MEDIA.img.name)}</b><span>${kb(MEDIA.img.size)}</span></div><button type="button" class="x" data-pm-clear="img" aria-label="Remover imagem">×</button></div>`
+    : `<button type="button" class="btn sm" id="btnPopImg">Escolher imagem ou GIF</button><span class="hint">ou arraste aqui, ou cole com Ctrl+V</span>`;
+  ab.innerHTML = REC
+    ? `<div class="pm-rec"><span class="rec-dot" aria-hidden="true"></span><b>Gravando ${mmss((Date.now() - REC.t0) / 1000)}</b><button type="button" class="btn sm danger" id="btnPopRec">Parar</button></div>`
+    : MEDIA.aud
+      ? `<div class="pm-file aud"><audio controls preload="metadata" src="${MEDIA.aud.url}"></audio><div class="pm-meta"><b>${esc(MEDIA.aud.name)}</b><span>${kb(MEDIA.aud.size)}</span></div><button type="button" class="x" data-pm-clear="aud" aria-label="Remover áudio">×</button></div>`
+      : `<button type="button" class="btn sm" id="btnPopAud">Escolher arquivo</button><button type="button" class="btn sm" id="btnPopRec"><span class="rec-dot" aria-hidden="true"></span>Gravar voz</button><span class="hint">MP3, M4A, OGG ou WAV</span>`;
+  const vb = document.getElementById('popVidBox'); if(!vb) return;
+  vb.innerHTML = MEDIA.vid
+    ? `<div class="pm-file vid"><video src="${MEDIA.vid.url}" muted preload="metadata"></video><div class="pm-meta"><b>${esc(MEDIA.vid.name)}</b><span>${kb(MEDIA.vid.size)}</span></div><button type="button" class="x" data-pm-clear="vid" aria-label="Remover vídeo">×</button></div>`
+    : `<button type="button" class="btn sm" id="btnPopVid">Escolher vídeo</button><span class="hint">MP4, WEBM ou MOV · até 50 MB · ou arraste aqui</span>`;
+  const l = document.getElementById('popVidLink'); if(l) l.disabled = !!MEDIA.vid;
+  const lw = document.getElementById('popVidLinkWrap'); if(lw) lw.hidden = !!MEDIA.vid;
+}
+function mediaErr(err){
+  const m = String(err?.message || err || '');
+  if(/video|cinematica/i.test(m) && /column|schema cache/i.test(m)) return SQL4_HINT;
+  if(/bucket not found|imagem|audio_auto|column .*audio|schema cache|row-level security|violates|unauthorized/i.test(m)) return SQL3_HINT;
+  if(/maximum allowed size|too large|payload|exceeded/i.test(m)) return 'O arquivo é grande demais para o Supabase. Se for vídeo, rode o schema-4.sql (sobe o limite para 50 MB) ou use um link do YouTube.';
+  if(/mime|content type|not supported/i.test(m)) return 'Esse tipo de arquivo não é aceito. Vídeo precisa do schema-4.sql. Use imagem PNG, JPG, GIF ou WEBP; áudio MP3, M4A, OGG, WAV ou WEBM; vídeo MP4, WEBM ou MOV.';
+  return traduz(err);
+}
+function popFromForm(){
+  const link = (document.getElementById('popVidLink')?.value || '').trim();
+  return {
+    para: $('#popPara').value || null, tipo: POP_TIPO,
+    titulo: $('#popTitulo').value.trim(), texto: $('#popTexto').value.trim(), rolagem: $('#popRolagem').value.trim(),
+    audio_auto: !!document.getElementById('popAudAuto')?.checked,
+    video_url: MEDIA.vid ? '' : link,
+    cinematica: !!document.getElementById('popCine')?.checked && !!(MEDIA.vid || link),
+    _imgUrl: MEDIA.img?.url || '', _audUrl: MEDIA.aud?.url || '', _vidUrl: MEDIA.vid?.url || '',
+  };
+}
+function validPop(p){
+  if(REC){ popMsg('Pare a gravação antes de continuar.', 'err'); return false; }
+  if(!p.titulo && !p.texto && !p._imgUrl && !p._audUrl && !p._vidUrl && !p.video_url){ popMsg('Escreva uma mensagem ou anexe uma imagem, um áudio ou um vídeo.', 'err'); return false; }
+  if(p.video_url && !linkOk(p.video_url)){ popMsg('O link do vídeo não parece válido. Cole o endereço completo (https://…).', 'err'); return false; }
+  if(p.rolagem){ const t = evalExpr(p.rolagem); if(!t || t.error){ popMsg('Rolagem inválida. Use algo como dAGI+dINT ou 1d20+2.', 'err'); return false; } }
+  return true;
+}
+async function sendPopup(){
+  const p = popFromForm(); if(!validPop(p)) return;
+  const btn = $('#btnPopSend'); btn.disabled = true;
+  popMsg(MEDIA.img || MEDIA.aud || MEDIA.vid ? 'Enviando arquivos…' : 'Enviando…', '');
+  const uploaded = [];
+  try{
+    const row = {para:p.para, tipo:p.tipo, titulo:p.titulo, texto:p.texto, rolagem:p.rolagem};
+    if(MEDIA.img){ row.imagem = await uploadMedia(MEDIA.img.blob, MEDIA.img.ext); uploaded.push(row.imagem); }
+    if(MEDIA.aud){ row.audio = await uploadMedia(MEDIA.aud.blob, MEDIA.aud.ext); uploaded.push(row.audio); }
+    if(MEDIA.vid){ row.video = await uploadMedia(MEDIA.vid.blob, MEDIA.vid.ext); uploaded.push(row.video); }
+    else if(p.video_url) row.video_url = p.video_url;
+    if(MEDIA.aud || MEDIA.vid || p.video_url) row.audio_auto = p.audio_auto;
+    if(p.cinematica) row.cinematica = true;
+    const {data, error} = await sb.from('avisos').insert(row).select().single();
+    if(error) throw error;
+    if(!AVISOS.some(x=>x.id === data.id)) AVISOS.unshift(data);
+    renderSent();
+    popMsg(`${p.cinematica ? 'Cinemática enviada' : 'Enviado'} para ${p.para ? (PERFIS[p.para] || 'o jogador') : 'todos os jogadores'}.`, 'ok');
+    $('#popTitulo').value = ''; $('#popTexto').value = ''; $('#popRolagem').value = '';
+    clearMedia();
+  }catch(err){
+    if(uploaded.length) sb.storage.from(BUCKET).remove(uploaded).catch(()=>{});
+    popMsg(isMissingTable(err) ? SQL2_HINT : mediaErr(err), 'err');
+  }finally{ btn.disabled = false; }
+}
+
+/* vídeo dentro de uma caixa (pop-up ou cinemática) */
+function putVideo(box, src, auto, onEnd){
+  box.innerHTML = '';
+  if(!src){ box.hidden = true; return; }
+  box.hidden = false;
+  const yt = ytEmbed(src, auto);
+  box.classList.toggle('yt', !!yt);
+  if(yt){ box.innerHTML = `<iframe src="${esc(yt)}" title="Vídeo do mestre" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`; return; }
+  const v = document.createElement('video');
+  v.src = src; v.controls = true; v.playsInline = true; v.preload = 'auto';
+  if(onEnd) v.addEventListener('ended', onEnd);
+  box.appendChild(v);
+  if(auto) v.play().catch(()=>{
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vid-play'; b.textContent = '▶ Assistir';
+    b.onclick = ()=>{ v.play(); b.remove(); }; box.appendChild(b);
+  });
+}
+function stopVideos(){
+  for(const id of ['popVideo', 'cineBox']){ const b = document.getElementById(id); if(b){ b.querySelectorAll('video').forEach(v=>v.pause()); b.innerHTML = ''; } }
+}
+function showNextPopup(){
+  const wrap = $('#popupWrap'), au = document.getElementById('popAudio'), cine = document.getElementById('cineWrap');
+  stopVideos(); if(cine) cine.hidden = true;
+  if(!POPQ.length){ wrap.hidden = true; if(au){ au.pause(); au.removeAttribute('src'); au.load(); } return; }
+  const a = POPQ[0], t = POP_TIPOS[a.tipo] || POP_TIPOS.narracao;
+  const vid = a._vidUrl || mediaUrl(a.video) || a.video_url || '';
+  if(a.cinematica && vid && cine){
+    wrap.hidden = true; if(au) au.pause();
+    cine.hidden = false;
+    document.getElementById('cineTitle').textContent = a.titulo || '';
+    putVideo(document.getElementById('cineBox'), vid, true, closePopup);
+    document.getElementById('btnCineClose').focus();
+    return;
+  }
+  wrap.style.setProperty('--pop', t.c);
+  $('#popKind').textContent = a._preview ? `${t.n} · prévia` : `${t.n} · mensagem do mestre`;
+  $('#popTitle').textContent = a.titulo || (vid ? 'Vídeo do mestre' : a.imagem || a._imgUrl ? 'Imagem do mestre' : a.audio || a._audUrl ? 'Áudio do mestre' : t.n);
+  $('#popText').textContent = a.texto || '';
+  $('#popText').hidden = !a.texto;
+  const img = a._imgUrl || mediaUrl(a.imagem), aud = a._audUrl || mediaUrl(a.audio);
+  const link = document.getElementById('popImgLink');
+  if(link){ link.hidden = !img; if(img){ link.href = img; document.getElementById('popImg').src = img; } }
+  const vbox = document.getElementById('popVideo'); if(vbox) putVideo(vbox, vid, a.audio_auto !== false);
+  if(au){
+    au.hidden = !aud;
+    if(aud){ if(au.getAttribute('src') !== aud) au.src = aud; au.currentTime = 0; if(a.audio_auto !== false) au.play().catch(()=>{}); }
+    else { au.pause(); au.removeAttribute('src'); }
+  }
+  document.querySelector('#popupWrap .popup')?.classList.toggle('has-media', !!(img || aud || vid));
+  const canRoll = !!a.rolagem && AUTH.chosen;
+  $('#popRoll').hidden = !a.rolagem;
+  $('#popRollExpr').textContent = a.rolagem || '';
+  $('#popRollHint').hidden = !a.rolagem || canRoll;
+  $('#btnPopRoll').hidden = !canRoll;
+  $('#popQueue').textContent = POPQ.length > 1 ? `mais ${POPQ.length - 1} na fila` : '';
+  wrap.hidden = false;
+  (canRoll ? $('#btnPopRoll') : $('#btnPopOk')).focus();
+}
+function closePopup(){ const au = document.getElementById('popAudio'); if(au) au.pause(); stopVideos(); POPQ.shift(); showNextPopup(); }
+
+document.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.id === 'btnPopVid'){ document.getElementById('popVidFile').click(); return; }
+  if(b.id === 'btnCineClose'){ closePopup(); return; }
+});
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && document.getElementById('cineWrap') && !document.getElementById('cineWrap').hidden) closePopup(); });
+document.getElementById('popVidFile')?.addEventListener('change', e=>{ const f = e.target.files[0]; if(f) setVideo(f); e.target.value = ''; });
+(function(){
+  const box = document.getElementById('popVidBox'); if(!box) return;
+  box.addEventListener('dragover', e=>{ e.preventDefault(); box.classList.add('over'); });
+  box.addEventListener('dragleave', ()=>box.classList.remove('over'));
+  box.addEventListener('drop', e=>{ e.preventDefault(); box.classList.remove('over'); const f = e.dataTransfer.files[0]; if(f) setVideo(f); });
+})();
 renderMedia();
 
 /* =====================================================================
