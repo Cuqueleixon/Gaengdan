@@ -1,0 +1,15 @@
+{
+  "name": "Gaengdan",
+  "version": "0.3.0",
+  "manifest_version": 1,
+  "description": "Fichas do RPG Gaengdan no Owlbear: vida, combate, rolagens e pop-ups do mestre.",
+  "icon": "/Gaengdan/owlbear/icon.svg",
+  "background_url": "/Gaengdan/owlbear/background.html",
+  "action": {
+    "title": "Gaengdan",
+    "icon": "/Gaengdan/owlbear/icon.svg",
+    "popover": "/Gaengdan/owlbear/",
+    "width": 380,
+    "height": 600
+  }
+}
