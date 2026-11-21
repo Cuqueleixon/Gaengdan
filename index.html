@@ -1576,13 +1576,38 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
 .cine-box iframe{width:100%; height:100%; border:0}
 .cine-title{position:absolute; left:24px; right:140px; top:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--display); font-weight:800; font-stretch:80%; font-size:clamp(18px,2.4vw,30px); letter-spacing:.14em; text-transform:uppercase; color:#fff; text-shadow:0 2px 10px #000; pointer-events:none}
 .cine-close{position:absolute; top:10px; right:16px; background:rgba(0,0,0,.6); color:#fff; border:1px solid #444; border-radius:2px; font-family:var(--ui); font-weight:700; font-size:12px; letter-spacing:.12em; text-transform:uppercase; padding:9px 14px; cursor:pointer}
-.cine-close:hover{border-color:var(--yellow); color:var(--yellow)}</style>
+.cine-close:hover{border-color:var(--yellow); color:var(--yellow)}
+
+/* celular (o mesmo da extensão do Owlbear, aberto por cima do site) */
+.cel-fab{
+  position:fixed; right:calc(16px + env(safe-area-inset-right, 0px)); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); z-index:85;
+  width:56px; height:56px; border-radius:50%; border:1px solid var(--line-2); background:#0a090b; color:var(--yellow);
+  display:grid; place-items:center; cursor:pointer; box-shadow:0 12px 32px rgba(0,0,0,.65); transition:transform .15s, border-color .15s;
+}
+.cel-fab:hover, .cel-fab[aria-expanded="true"]{border-color:var(--yellow); transform:translateY(-2px)}
+.cel-fab:focus-visible{outline:2px solid var(--yellow); outline-offset:3px}
+.cel-fab svg{width:26px; height:26px}
+.cel-fab .cel-n{
+  position:absolute; top:-3px; right:-3px; min-width:21px; height:21px; padding:0 6px; border-radius:11px;
+  background:var(--red); color:#fff; font:700 12px/21px var(--mono); text-align:center; box-shadow:0 0 0 2px var(--bg);
+}
+.cel-janela{
+  position:fixed; right:calc(10px + env(safe-area-inset-right, 0px)); bottom:calc(80px + env(safe-area-inset-bottom, 0px)); z-index:86;
+  width:min(340px, calc(100vw - 20px)); height:min(740px, calc(100vh - 96px)); height:min(740px, calc(100dvh - 96px));
+  border:0; background:transparent; color-scheme:dark;
+}
+body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
+@media print{ .cel-fab, .cel-janela{display:none !important} }</style>
 <div class="grain" aria-hidden="true"></div>
+<button class="cel-fab" id="celFab" hidden aria-expanded="false" aria-label="Abrir o celular" title="Celular: conversas entre personagens">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 1.5h8A2.5 2.5 0 0 1 18.5 4v16a2.5 2.5 0 0 1-2.5 2.5H8A2.5 2.5 0 0 1 5.5 20V4A2.5 2.5 0 0 1 8 1.5Zm0 2a.5.5 0 0 0-.5.5v7h9V4a.5.5 0 0 0-.5-.5H8Zm-.5 9.5v7c0 .28.22.5.5.5h8a.5.5 0 0 0 .5-.5v-7h-9Zm1.5 1.5h1.6v1.4H9V14.5Zm2.7 0h1.6v1.4h-1.6V14.5Zm2.7 0H16v1.4h-1.6V14.5ZM9 17h1.6v1.4H9V17Zm2.7 0h1.6v1.4h-1.6V17Zm2.7 0H16v1.4h-1.6V17ZM10 5.5h4V6.6h-4V5.5Z"/></svg>
+  <span class="cel-n" id="celN" hidden></span>
+</button>
 
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.8</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v2.9</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -2556,7 +2581,61 @@ function renderUser(){
   const box = $('#userBox');
   box.hidden = !AUTH.user;
   if(AUTH.user) $('#userName').textContent = AUTH.perfil?.nome || AUTH.user.email;
+  celRender();
 }
+
+/* ---------------- Celular ----------------
+   É o mesmo celular da extensão do Owlbear (owlbear/celular.html), aberto aqui
+   numa janelinha com o mesmo login. Ele carrega escondido logo depois do login
+   para contar as mensagens novas no botão. */
+const CEL = {frame:null, uid:null, aberto:false};
+function celRender(){
+  const uid = AUTH.user?.id || null;
+  $('#celFab').hidden = !uid;
+  document.body.classList.toggle('com-cel', !!uid);
+  if(uid === CEL.uid) return;
+  if(CEL.frame){ CEL.frame.remove(); CEL.frame = null; }
+  CEL.uid = uid; CEL.aberto = false; celNovas(0); celBotao();
+  if(uid) setTimeout(()=>{ if(CEL.uid === uid && !CEL.frame) celCriar(false); }, 2500);
+}
+function celCriar(visivel){
+  const f = document.createElement('iframe');
+  f.className = 'cel-janela'; f.title = 'Celular'; f.hidden = !visivel;
+  f.allow = 'clipboard-write; microphone';   // microfone: áudios do celular
+  f.src = 'owlbear/celular.html?site' + (visivel ? '' : '&oculto');
+  document.body.appendChild(f);
+  CEL.frame = f;
+}
+function celBotao(){
+  $('#celFab').setAttribute('aria-expanded', CEL.aberto ? 'true' : 'false');
+  $('#celFab').setAttribute('aria-label', CEL.aberto ? 'Guardar o celular' : 'Abrir o celular');
+}
+function celAbrir(){
+  if(!CEL.frame) celCriar(true);
+  else { CEL.frame.hidden = false; CEL.frame.contentWindow?.postMessage({gaengdan:'celular', abrir:true}, location.origin); }
+  CEL.aberto = true; celBotao();
+}
+function celFechar(){
+  if(CEL.frame) CEL.frame.hidden = true;
+  CEL.aberto = false; celBotao();
+}
+function celNovas(n){
+  const el = $('#celN'); n = Number(n) || 0;
+  el.hidden = !n; el.textContent = n > 9 ? '9+' : String(n);
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest?.('#celFab')) return;
+  if(!CEL.aberto) celAbrir();
+  else if(CEL.frame) CEL.frame.contentWindow?.postMessage({gaengdan:'celular', guardar:true}, location.origin);
+  else celFechar();
+});
+window.addEventListener('message', e=>{
+  if(e.origin !== location.origin || !CEL.frame || e.source !== CEL.frame.contentWindow) return;
+  const d = e.data;
+  if(!d || d.gaengdan !== 'celular') return;
+  if(d.fechar) celFechar();
+  if('novas' in d) celNovas(d.novas);
+});
 
 document.addEventListener('submit', async e=>{
   if(e.target.id !== 'authForm') return;
