@@ -1597,6 +1597,13 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
   border:0; background:transparent; color-scheme:dark;
 }
 body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
+
+/* animação dos dados (a mesma do Owlbear: gravação VHS de 1994) */
+.dado-janela{
+  position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); z-index:110;
+  width:min(460px, calc(100vw - 16px)); height:min(320px, calc((100vw - 16px) * .7));
+  border:0; background:transparent; color-scheme:dark;
+}
 @media print{ .cel-fab, .cel-janela{display:none !important} }</style>
 <div class="grain" aria-hidden="true"></div>
 <button class="cel-fab" id="celFab" hidden aria-expanded="false" aria-label="Abrir o celular" title="Celular: conversas entre personagens">
@@ -1930,6 +1937,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
           <button class="btn sm red" id="btnGmExpr">Rolar</button>
         </div>
         <label class="chk"><input type="checkbox" id="gmSecret"> Rolagem secreta (não entra no histórico)</label>
+        <label class="chk"><input type="checkbox" data-anim-dado checked> Animação dos dados na tela</label>
       </section>
     </div>
   </div>
@@ -2996,7 +3004,8 @@ function renderRef(){
 }
 function gmRoll(label, r){
   GM_LOG.unshift({t:new Date().toTimeString().slice(0,5), ti:label, de:r.detail, to:r.total}); GM_LOG.length = Math.min(GM_LOG.length, 20);
-  toast(label, r.detail, r.total); renderGmLog();
+  const anim = dadoAnim('Mestre', label, r);
+  setTimeout(()=>toast(label, r.detail, r.total), anim ? 2300 : 0); renderGmLog();
   if(!$('#gmSecret')?.checked) shareRoll(label, r, {mestre:true});
 }
 function renderGmLog(){ if(!$('#gmLog')) return;
@@ -3754,6 +3763,44 @@ function log(ti, de, to){
   S.log.unshift({t:`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`, ti, de, to});
   S.log = S.log.slice(0,40);
 }
+/* ---------------- Animação dos dados ----------------
+   A mesma do Owlbear (owlbear/dado.html), aberta por cima do site. O resultado
+   escrito (toast) vem logo depois, para não estragar a surpresa. */
+const DADO_PREF = 'gaengdan.site.animDado';
+const dadoLigado = ()=>{ try{ return localStorage.getItem(DADO_PREF) !== '0'; }catch(e){ return true; } };
+let DADO_FRAME = null, DADO_T = null;
+function dadoAnim(personagem, titulo, r){
+  if(!dadoLigado() || !/^https?:$/.test(location.protocol)) return false;   // a animação mora na pasta owlbear publicada
+  dadoFechar();
+  const dados = {
+    personagem: String(personagem || 'Alguém').slice(0,60), titulo: String(titulo || '').slice(0,80),
+    detalhe: String(r.detail || '').slice(0,300), total: Number.isFinite(+r.total) ? +r.total : null,
+  };
+  const f = document.createElement('iframe');
+  f.className = 'dado-janela'; f.title = `Rolagem: ${dados.titulo}`;
+  f.src = 'owlbear/dado.html?r=' + encodeURIComponent(JSON.stringify(dados)) + '&n=' + Date.now().toString(36);
+  document.body.appendChild(f);
+  DADO_FRAME = f;
+  DADO_T = setTimeout(dadoFechar, 7000);   // garantia, caso a página não avise que fechou
+  return true;
+}
+function dadoFechar(){
+  clearTimeout(DADO_T);
+  if(DADO_FRAME){ DADO_FRAME.remove(); DADO_FRAME = null; }
+}
+window.addEventListener('message', e=>{
+  if(e.origin !== location.origin || !DADO_FRAME || e.source !== DADO_FRAME.contentWindow) return;
+  if(e.data?.gaengdan === 'dado' && e.data.fechar) dadoFechar();
+});
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && DADO_FRAME) dadoFechar(); });
+document.addEventListener('change', e=>{
+  if(!e.target.matches?.('[data-anim-dado]')) return;
+  try{ localStorage.setItem(DADO_PREF, e.target.checked ? '1' : '0'); }catch(err){}
+  document.querySelectorAll('[data-anim-dado]').forEach(c=>{ c.checked = e.target.checked; });
+});
+document.querySelectorAll('[data-anim-dado]').forEach(c=>{ c.checked = dadoLigado(); });
+const dadoOpcao = ()=>`<label class="chk"><input type="checkbox" data-anim-dado ${dadoLigado()?'checked':''}> Animação dos dados na tela</label>`;
+
 /* fn() → {total, detail}. Guarda para permitir reroll com inspiração. */
 function doRoll(title, fn, opts={}){
   const r = fn();
@@ -3762,7 +3809,8 @@ function doRoll(title, fn, opts={}){
   if(CUR.id && !RO) shareRoll(title, r);
   const insp = (S.insp.comum||S.insp.combate) && !opts.noInsp
     ? `${S.insp.comum?`<button class="btn sm ghost" data-reroll="comum">Inspiração +4</button>`:''}${S.insp.combate?`<button class="btn sm ghost" data-reroll="combate">Inspiração +1d8</button>`:''}` : '';
-  toast(title, r.detail, r.total, insp);
+  const anim = dadoAnim(S.info.nome || 'Lutador sem nome', title, r);
+  setTimeout(()=>toast(title, r.detail, r.total, insp), anim ? 2300 : 0);
 }
 function reroll(kind){
   if(!lastRoll || !S.insp[kind]) return;
@@ -4562,6 +4610,7 @@ const WIN = {
       </div>
       <h3 class="subh">Expressão livre</h3>
       <div class="adder" style="margin-top:0"><input class="box" id="expr" placeholder="ex.: 2d6+dFOR+3" style="flex:1; min-width:160px" aria-label="Expressão de dados"><button class="btn sm red" id="btnExpr">Rolar</button></div>
+      ${dadoOpcao()}
       <h3 class="subh">Histórico <button class="btn sm ghost" id="btnClearLog" style="margin-left:auto">Limpar</button></h3>
       <div class="log" id="log" style="margin-top:0; max-height:260px"></div>`,
     foot: ()=>'<button class="btn red" data-winclose>Fechar</button>',
