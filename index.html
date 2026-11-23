@@ -675,25 +675,73 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
 .f-pasta select:focus{outline:2px solid var(--yellow); outline-offset:0}
 .f-tok{display:flex; gap:6px; margin-left:auto}
 /* v3.1 · pastas */
-.pastas-area{display:grid; gap:14px}
-.pastas-bar{display:flex; flex-wrap:wrap; align-items:center; gap:6px}
-.pasta-chip{display:inline-flex; align-items:center; gap:7px; padding:7px 11px; background:#131313; border:1px solid #2a2a2a; border-radius:2px; color:var(--ink-2); font:inherit; font-size:14px; font-weight:600; cursor:pointer}
-.pasta-chip span{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
-.pasta-chip:hover{border-color:#444; color:var(--ink)}
-.pasta-chip.on{border-color:var(--yellow); color:var(--yellow); background:rgba(242,194,48,.06)}
-.pasta-chip.on span{color:var(--yellow)}
-.pasta-chip:focus-visible,.pasta-tog:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.pastas-area{display:grid; gap:16px; scroll-margin-top:90px}
 .pasta-form{display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap}
-.pasta-form .box{min-width:200px; padding:6px 9px; font-size:14px}
-.pasta-grupo{display:grid; gap:10px}
-.pasta-h{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding-bottom:8px; border-bottom:1px solid var(--line)}
-.pasta-tog{display:inline-flex; align-items:center; gap:8px; background:none; border:0; padding:2px 0; color:var(--ink); font-family:var(--display); font-weight:800; font-stretch:80%; font-size:17px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer}
-.pasta-tog i{font-style:normal; color:var(--ink-3); font-size:13px; width:12px}
-.pasta-tog span{font-family:var(--mono); font-size:12px; color:var(--ink-3); letter-spacing:0}
-.pasta-acts{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
-.pasta-acts .link{background:none; border:0; padding:0; color:var(--ink-3); font:inherit; font-size:13px; text-decoration:underline; text-underline-offset:3px; cursor:pointer}
-.pasta-acts .link:hover{color:var(--ink)}
-.pasta-acts .link.perigo:hover,.pasta-acts .link.danger{color:var(--red-2)}
+.pasta-form .box{min-width:220px; padding:7px 10px; font-size:16px}
+/* cabeçalho de seção (Pastas / Sem pasta) */
+.pastas-topo{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; padding-bottom:8px; border-bottom:1px solid var(--line)}
+.pt-titulo{font-family:var(--display); font-weight:900; font-stretch:80%; font-size:20px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink)}
+.pt-dica{font-size:14px; color:var(--ink-3)}
+/* pastas em cards grandes, com a aba de pasta em cima */
+.pastas-grade{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr)); gap:26px 14px; padding-top:14px}
+.pasta-tile{
+  --pt-borda:#34302a; --pt-fundo:linear-gradient(170deg,#211e1a 0%,#16140f 100%);
+  position:relative; display:grid; gap:6px; align-content:start; min-height:132px; padding:16px 16px 14px;
+  background:var(--pt-fundo); border:1px solid var(--pt-borda); border-radius:3px 10px 10px 10px;
+  color:var(--ink); text-align:left; font:inherit; cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.35); transition:transform .15s, border-color .15s, box-shadow .15s;
+}
+.pasta-tile::before{ /* aba da pasta */
+  content:''; position:absolute; left:-1px; bottom:100%; width:46%; height:13px;
+  background:#211e1a; border:1px solid var(--pt-borda); border-bottom:0; border-radius:7px 12px 0 0;
+}
+.pasta-tile::after{ /* faixa amarela da aba */
+  content:''; position:absolute; left:12px; top:-8px; width:28%; height:3px; border-radius:2px; background:var(--yellow); opacity:.75;
+}
+.pasta-tile:hover{--pt-borda:var(--yellow); transform:translateY(-3px); box-shadow:0 16px 30px rgba(0,0,0,.45)}
+.pasta-tile:focus-visible{outline:2px solid var(--yellow); outline-offset:4px}
+.pt-nome{font-family:var(--display); font-weight:900; font-stretch:78%; font-size:26px; line-height:1.02; letter-spacing:.02em; text-transform:uppercase; overflow-wrap:break-word}
+.pt-conta{font-family:var(--mono); font-size:12.5px; color:var(--yellow)}
+.pt-rostos{display:flex; align-items:center; margin-top:auto; padding-top:8px; padding-left:6px}
+.pt-rosto{width:38px; height:38px; margin-left:-8px; border-radius:50%; overflow:hidden; display:grid; place-items:center; background:#2a2622; border:2px solid #16140f; font-family:var(--display); font-weight:900; font-size:16px; color:var(--ink-2); flex:none}
+.pt-rosto img{width:100%; height:100%; object-fit:cover; object-position:50% 20%}
+.pt-rosto.mais{font-family:var(--mono); font-size:12px; font-weight:700; color:var(--yellow)}
+.pt-vazia{font-size:13px; color:var(--ink-3); margin-top:auto; padding-top:8px}
+.pt-pessoas{display:grid; gap:8px; margin-top:auto; padding-top:8px}
+.pt-pessoa{display:flex; align-items:center; gap:10px; min-width:0}
+.pt-pessoa .pt-rosto{width:46px; height:46px; margin-left:0; border-color:#2c2925}
+.pt-pessoa b{font-weight:600; font-size:15px; color:var(--ink-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+/* card de "Nova pasta" */
+.pasta-tile.nova{--pt-borda:#3a362f; --pt-fundo:transparent; border-style:dashed; place-items:center; align-content:center; text-align:center; box-shadow:none; color:var(--ink-3)}
+.pasta-tile.nova::before{background:#0b0b0b; border-style:dashed}
+.pasta-tile.nova::after{display:none}
+.pasta-tile.nova .pt-nome{font-size:18px; color:var(--ink-2)}
+.pt-mais{font-family:var(--display); font-weight:900; font-size:40px; line-height:.8; color:var(--yellow)}
+.pasta-tile.nova:hover{--pt-borda:var(--yellow); color:var(--ink)}
+.pasta-tile.nova.editando{cursor:default; transform:none; place-items:stretch; text-align:left; gap:10px; border-style:solid; --pt-borda:var(--yellow)}
+.pasta-tile.nova.editando .box{width:100%; padding:8px 10px; font-size:16px}
+.pt-acts{display:flex; gap:6px; flex-wrap:wrap}
+/* dentro de uma pasta */
+.pasta-aberta{display:grid; gap:16px}
+.pa-topo{display:grid; grid-template-columns:auto minmax(0,1fr); grid-template-areas:"voltar acts" "titulo titulo"; align-items:center; gap:16px 18px; padding:14px 18px 18px; background:linear-gradient(170deg,#211e1a,#14120f); border:1px solid #34302a; border-left:3px solid var(--yellow); border-radius:3px}
+.pa-topo .pa-voltar{grid-area:voltar}
+.pa-topo .pa-acts{grid-area:acts}
+.pa-topo .pa-titulo{grid-area:titulo}
+.pa-voltar{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#0f0e0c; border:1px solid #34302a; border-radius:2px; color:var(--ink-2); font:inherit; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap}
+.pa-voltar:hover{border-color:var(--yellow); color:var(--ink)}
+.pa-voltar:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.pa-titulo{display:flex; align-items:center; gap:14px; flex-wrap:wrap; min-width:0}
+.pa-titulo h3{margin:0; font-family:var(--display); font-weight:900; font-stretch:78%; font-size:36px; line-height:1; letter-spacing:.02em; text-transform:uppercase; overflow-wrap:break-word; min-width:0}
+.pa-icone{width:34px; height:26px; flex:none; position:relative; background:var(--yellow); border-radius:2px 5px 5px 5px; opacity:.9}
+.pa-icone::before{content:''; position:absolute; left:0; top:-6px; width:45%; height:7px; background:var(--yellow); border-radius:3px 6px 0 0}
+.pa-conta{font-family:var(--mono); font-size:13px; color:var(--yellow)}
+.pa-acts{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+.pa-acts .perigo:hover{border-color:var(--red); color:var(--red-2)}
+@media (max-width:640px){
+  .pa-topo{grid-template-columns:1fr; grid-template-areas:"voltar" "titulo" "acts"}
+  .pa-acts{justify-content:flex-start}
+  .pa-titulo h3{font-size:28px}
+}
 .fighter.boss{border-color:rgba(255,201,22,.7); padding-top:20px}
 .fighter.boss::before{content:""; position:absolute; left:-1px; right:-1px; top:-1px; height:6px; background:var(--hazard); border-radius:3px 3px 0 0}
 .badge.boss{background:var(--yellow); color:var(--on-yellow); border-color:var(--yellow)}
@@ -2974,7 +3022,7 @@ function rowFor(id){
   const x = SHEETS[id], s = x.sheet, d = calcFor(s);
   return {id, s, d, qv: s.qv ?? d.qvMax, es: s.es ?? d.esMax, dono: x.dono, savedAt: x.savedAt};
 }
-const byName = (a,b)=> (a.s.info.nome||'~').localeCompare(b.s.info.nome||'~', 'pt');
+const byName = (a,b)=> (a.s.info.nome||'~').localeCompare(b.s.info.nome||'~', 'pt', {numeric:true, sensitivity:'base'});
 function fighterCard(r, npc){
   const {id, s, d, qv, es, dono} = r;
   const b = BELTS[s.belt] || BELTS[0], C = CLASSES[s.classe], st = STYLES[s.estilo], g = GANGS.find(x=>x.g===s.info.gangue);
@@ -3067,13 +3115,14 @@ function renderShield(){
 const PASTA_KEY = k => `gaengdan.pastas.${k}`;
 const PASTA_SEL = {npcs:'*', lideres:'*'};          // '*' = todas, '' = sem pasta, ou o nome
 const PASTA_EDIT = {npcs:null, lideres:null};       // 'nova' ou {ren: nome}
-const PASTA_FECHADAS = new Set();
 const kindOf = s => s.npc?.tipo === 'lider' ? 'lideres' : 'npcs';
+/* ordem natural: "Distrito 2" vem antes de "Distrito 10" */
+const ordemNatural = (a, b) => String(a).localeCompare(String(b), 'pt', {numeric:true, sensitivity:'base'});
 function pastasSalvas(k){ try{ const v = JSON.parse(localStorage.getItem(PASTA_KEY(k)) || '[]'); return Array.isArray(v) ? v.filter(x=>typeof x === 'string' && x) : []; }catch(e){ return []; } }
 function gravarPastas(k, lista){ try{ localStorage.setItem(PASTA_KEY(k), JSON.stringify([...new Set(lista)])); }catch(e){} }
 function pastasDe(k){
   const usadas = Object.values(SHEETS).map(x=>x.sheet.npc).filter(n=>n && kindOf({npc:n}) === k).map(n=>n.pasta).filter(Boolean);
-  return [...new Set([...pastasSalvas(k), ...usadas])].sort((a,b)=>a.localeCompare(b, 'pt'));
+  return [...new Set([...pastasSalvas(k), ...usadas])].sort(ordemNatural);
 }
 const opcoesPasta = (k, atual) => `<option value="">Sem pasta</option>` + pastasDe(k).map(p=>`<option value="${esc(p)}" ${p === atual ? 'selected' : ''}>${esc(p)}</option>`).join('');
 function renderPastas(k, rows, vazio){
@@ -3082,38 +3131,67 @@ function renderPastas(k, rows, vazio){
   if(PASTA_SEL[k] !== '*' && PASTA_SEL[k] !== '' && !pastas.includes(PASTA_SEL[k])) PASTA_SEL[k] = '*';
   const sel = PASTA_SEL[k], ed = PASTA_EDIT[k];
   const daPasta = p => rows.filter(r=> p ? r.s.npc?.pasta === p : !pastas.includes(r.s.npc?.pasta || ''));
-  const chip = (v, rot, n) => `<button class="pasta-chip ${sel === v ? 'on' : ''}" data-pasta-sel="${k}" data-v="${esc(v)}" aria-pressed="${sel === v}">${rot}<span>${n}</span></button>`;
-  const semPasta = daPasta('').length;
-  const barra = `<div class="pastas-bar" role="toolbar" aria-label="Pastas">
-    ${chip('*', 'Todas', rows.length)}
-    ${pastas.map(p=>chip(p, `📁 ${esc(p)}`, daPasta(p).length)).join('')}
-    ${pastas.length && semPasta ? chip('', 'Sem pasta', semPasta) : ''}
-    ${ed === 'nova'
-      ? `<span class="pasta-form"><input class="box" data-pasta-nome="${k}" maxlength="40" placeholder="${k === 'lideres' ? 'Ex.: Distrito Norte' : 'Ex.: Capangas do Galpão'}" aria-label="Nome da nova pasta"><button class="btn sm" data-pasta-criar="${k}">Criar</button><button class="btn sm ghost" data-pasta-cancel="${k}">Cancelar</button></span>`
-      : `<button class="btn sm ghost pasta-nova" data-pasta-nova="${k}">+ Nova pasta</button>`}
-  </div>`;
-  const grupo = (p, lista) => {
-    const fech = PASTA_FECHADAS.has(`${k}:${p}`);
-    const renomeando = ed && ed.ren === p;
-    return `<section class="pasta-grupo">
-      <header class="pasta-h">
-        ${renomeando
-          ? `<span class="pasta-form"><input class="box" data-pasta-novonome="${k}" data-v="${esc(p)}" maxlength="40" value="${esc(p)}" aria-label="Novo nome da pasta"><button class="btn sm" data-pasta-renok="${k}" data-v="${esc(p)}">Salvar</button><button class="btn sm ghost" data-pasta-cancel="${k}">Cancelar</button></span>`
-          : `<button class="pasta-tog" data-pasta-tog="${k}" data-v="${esc(p)}" aria-expanded="${!fech}"><i aria-hidden="true">${fech ? '▸' : '▾'}</i>${p ? '📁 ' + esc(p) : 'Sem pasta'}<span>${lista.length}</span></button>`}
-        <span class="pasta-acts">
-          ${lista.length ? `<button class="btn sm ghost" data-tok-pasta="${k}" data-v="${esc(p)}" title="Coloca no Owlbear o token de todos desta pasta">🎯 Todos no Owlbear</button>` : ''}
-          ${p && !renomeando ? `<button class="link" data-pasta-ren="${k}" data-v="${esc(p)}">Renomear</button><button class="link perigo" data-pasta-del="${k}" data-v="${esc(p)}">Apagar pasta</button>` : ''}
-        </span>
+  const grade = lista => `<div class="fighters">${lista.map(r=>fighterCard(r, true)).join('')}</div>`;
+  const unid = n => `${n} ficha${n === 1 ? '' : 's'}`;
+  const formNova = `<div class="pasta-tile nova editando">
+      <span class="pt-nome">Nova pasta</span>
+      <input class="box" data-pasta-nome="${k}" maxlength="40" placeholder="${k === 'lideres' ? 'Ex.: Distrito 16' : 'Ex.: Capangas do Galpão'}" aria-label="Nome da nova pasta">
+      <span class="pt-acts"><button class="btn sm" data-pasta-criar="${k}">Criar</button><button class="btn sm ghost" data-pasta-cancel="${k}">Cancelar</button></span>
+    </div>`;
+
+  /* dentro de uma pasta: título grande, voltar e ações */
+  if(sel !== '*' && pastas.length){
+    const lista = daPasta(sel), renomeando = ed && ed.ren === sel;
+    box.innerHTML = `<div class="pasta-aberta">
+      <header class="pa-topo">
+        <button class="pa-voltar" data-pasta-sel="${k}" data-v="*"><span aria-hidden="true">←</span> Todas as pastas</button>
+        <div class="pa-titulo">
+          <span class="pa-icone" aria-hidden="true"></span>
+          ${renomeando
+            ? `<span class="pasta-form"><input class="box" data-pasta-novonome="${k}" data-v="${esc(sel)}" maxlength="40" value="${esc(sel)}" aria-label="Novo nome da pasta"><button class="btn sm" data-pasta-renok="${k}" data-v="${esc(sel)}">Salvar</button><button class="btn sm ghost" data-pasta-cancel="${k}">Cancelar</button></span>`
+            : `<h3>${sel ? esc(sel) : 'Sem pasta'}</h3>`}
+          <span class="pa-conta">${unid(lista.length)}</span>
+        </div>
+        <div class="pa-acts">
+          ${lista.length ? `<button class="btn sm" data-tok-pasta="${k}" data-v="${esc(sel)}" title="Coloca no Owlbear o token de todos desta pasta">🎯 Todos no Owlbear</button>` : ''}
+          ${sel && !renomeando ? `<button class="btn sm ghost" data-pasta-ren="${k}" data-v="${esc(sel)}">Renomear</button><button class="btn sm ghost perigo" data-pasta-del="${k}" data-v="${esc(sel)}">Apagar pasta</button>` : ''}
+        </div>
       </header>
-      ${fech ? '' : `<div class="fighters">${lista.length ? lista.map(r=>fighterCard(r, true)).join('') : '<div class="empty" style="grid-column:1/-1">Pasta vazia. Mova fichas para cá pelo seletor 📁 de cada ficha.</div>'}</div>`}
-    </section>`;
+      ${lista.length ? grade(lista) : '<div class="empty">Pasta vazia. Mova fichas para cá pelo seletor 📁 de cada ficha.</div>'}
+    </div>`;
+    return;
+  }
+
+  /* sem nenhuma pasta: só as fichas, com o botão de criar a primeira */
+  if(!pastas.length){
+    box.innerHTML = `<div class="pastas-topo"><span class="pt-titulo">Pastas</span><span class="pt-dica">Nenhuma pasta ainda. Crie uma para organizar ${k === 'lideres' ? 'os líderes (ex.: por distrito)' : 'os NPCs'}.</span></div>
+      <div class="pastas-grade">${ed === 'nova' ? formNova : `<button class="pasta-tile nova" data-pasta-nova="${k}"><span class="pt-mais" aria-hidden="true">+</span><span class="pt-nome">Nova pasta</span></button>`}</div>
+      ${rows.length ? grade(rows) : `<div class="fighters">${vazio}</div>`}`;
+    return;
+  }
+
+  /* raiz: as pastas em cards grandes (como um explorador) e, embaixo, quem está sem pasta */
+  const tile = p => {
+    const lista = daPasta(p);
+    const rosto = r => `<span class="pt-rosto" title="${esc(r.s.info.nome || '')}">${r.s.photo ? `<img src="${esc(r.s.photo)}" alt="">` : esc(((r.s.info.nome || '?').trim().charAt(0) || '?').toUpperCase())}</span>`;
+    // poucas fichas (ex.: um líder por distrito): foto maior com o nome
+    const dentro = !lista.length ? '<span class="pt-vazia">vazia</span>'
+      : lista.length <= 2 ? `<span class="pt-pessoas">${lista.map(r=>`<span class="pt-pessoa">${rosto(r)}<b>${esc(r.s.info.nome || 'Sem nome')}</b></span>`).join('')}</span>`
+      : `<span class="pt-rostos">${lista.slice(0, 5).map(rosto).join('')}${lista.length > 5 ? `<span class="pt-rosto mais">+${lista.length - 5}</span>` : ''}</span>`;
+    return `<button class="pasta-tile" data-pasta-sel="${k}" data-v="${esc(p)}" aria-label="Abrir a pasta ${esc(p)}, ${unid(lista.length)}">
+      <span class="pt-nome">${esc(p)}</span>
+      <span class="pt-conta">${unid(lista.length)}</span>
+      ${dentro}
+    </button>`;
   };
-  let corpo;
-  if(!rows.length && !pastas.length) corpo = `<div class="fighters">${vazio}</div>`;
-  else if(!pastas.length) corpo = `<div class="fighters">${rows.map(r=>fighterCard(r, true)).join('')}</div>`;
-  else if(sel === '*') corpo = pastas.map(p=>grupo(p, daPasta(p))).join('') + (semPasta ? grupo('', daPasta('')) : '');
-  else corpo = grupo(sel, daPasta(sel));
-  box.innerHTML = barra + corpo;
+  const semPasta = daPasta('');
+  box.innerHTML = `<div class="pastas-topo"><span class="pt-titulo">Pastas</span><span class="pt-dica">${pastas.length} pasta${pastas.length === 1 ? '' : 's'} · clique para abrir</span></div>
+    <div class="pastas-grade">
+      ${pastas.map(tile).join('')}
+      ${ed === 'nova' ? formNova : `<button class="pasta-tile nova" data-pasta-nova="${k}"><span class="pt-mais" aria-hidden="true">+</span><span class="pt-nome">Nova pasta</span></button>`}
+    </div>
+    ${semPasta.length ? `<div class="pastas-topo"><span class="pt-titulo">Sem pasta</span><span class="pt-dica">${unid(semPasta.length)} · use o seletor 📁 para guardar numa pasta</span>
+      <button class="btn sm ghost" data-tok-pasta="${k}" data-v="" style="margin-left:auto">🎯 Todos no Owlbear</button></div>${grade(semPasta)}` : ''}`;
 }
 /* muda a pasta de várias fichas (grava no banco) */
 async function moverParaPasta(ids, pasta){
@@ -3135,11 +3213,15 @@ document.addEventListener('click', e=>{
   const b = e.target.closest('[data-pasta-sel],[data-pasta-nova],[data-pasta-criar],[data-pasta-cancel],[data-pasta-tog],[data-pasta-ren],[data-pasta-renok],[data-pasta-del]');
   if(!b) return;
   const d = b.dataset, k = d.pastaSel || d.pastaNova || d.pastaCriar || d.pastaCancel || d.pastaTog || d.pastaRen || d.pastaRenok || d.pastaDel;
-  if(d.pastaSel !== undefined){ PASTA_SEL[k] = d.v; renderShield(); return; }
+  if(d.pastaSel !== undefined){
+    PASTA_SEL[k] = d.v; renderShield();
+    const box = document.getElementById(k);
+    if(box && box.getBoundingClientRect().top < 0) box.scrollIntoView({block:'start', behavior:'smooth'});
+    return;
+  }
   if(d.pastaNova !== undefined){ PASTA_EDIT[k] = 'nova'; renderShield(); setTimeout(()=>document.querySelector(`[data-pasta-nome="${k}"]`)?.focus(), 0); return; }
   if(d.pastaCancel !== undefined){ PASTA_EDIT[k] = null; renderShield(); return; }
   if(d.pastaCriar !== undefined){ criarPasta(k); return; }
-  if(d.pastaTog !== undefined){ const c = `${k}:${d.v}`; if(PASTA_FECHADAS.has(c)) PASTA_FECHADAS.delete(c); else PASTA_FECHADAS.add(c); renderShield(); return; }
   if(d.pastaRen !== undefined){ PASTA_EDIT[k] = {ren:d.v}; renderShield(); setTimeout(()=>{ const i = document.querySelector(`[data-pasta-novonome="${k}"]`); if(i){ i.focus(); i.select(); } }, 0); return; }
   if(d.pastaRenok !== undefined){ renomearPasta(k, d.v); return; }
   if(d.pastaDel !== undefined){ armOrRun(b, ()=>apagarPasta(k, d.v)); return; }
