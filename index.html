@@ -666,6 +666,23 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
 .npc-form{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)) 110px auto; gap:12px 14px; align-items:end}
 @media (max-width:1000px){ .npc-form{grid-template-columns:1fr 1fr} .npc-btns{grid-column:1/-1} }
 .npc-btns{display:flex; gap:8px; flex-wrap:wrap}
+/* v3.2 · fichas só com nome e foto */
+.fotos-npc{display:grid; gap:12px; margin-top:18px; padding-top:16px; border-top:1px solid var(--line)}
+.fotos-topo{display:grid; gap:4px}
+.fotos-topo b{font-family:var(--display); font-weight:900; font-stretch:80%; font-size:17px; letter-spacing:.08em; text-transform:uppercase}
+.fotos-topo span{font-size:14px; color:var(--ink-3)}
+.fotos-drop{display:grid; justify-items:center; gap:4px; padding:20px 16px; background:#0f0e0c; border:1px dashed #3a362f; border-radius:3px; text-align:center; cursor:pointer; transition:border-color .15s, background .15s}
+.fotos-drop:hover,.fotos-drop.arrastando{border-color:var(--yellow); background:rgba(242,194,48,.05)}
+.fotos-drop:focus-within{outline:2px solid var(--yellow); outline-offset:2px}
+.fotos-drop .fd-ic{font-size:26px}
+.fotos-drop b{font-size:16px; color:var(--ink)}
+.fotos-drop small{font-size:13px; color:var(--ink-3)}
+.fotos-lista{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr)); gap:8px}
+.fotos-lista:empty{display:none}
+.foto-item{display:grid; grid-template-columns:48px minmax(0,1fr) auto; gap:10px; align-items:center; padding:6px; background:#121212; border:1px solid #262626; border-radius:2px}
+.foto-item img{width:48px; height:64px; object-fit:cover; border-radius:2px; background:#000}
+.foto-item .in{padding:8px 10px}
+.fotos-acoes{display:flex; gap:8px; flex-wrap:wrap}
 .npc-quick{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
 .f-actions{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; margin-left:auto}
 /* v3.1 · pasta e token no card */
@@ -1717,7 +1734,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.1</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.2</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -1999,7 +2016,8 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
       <div class="npc-form">
         <label class="f"><span>Tipo</span>
           <select class="in" id="npcTipo">
-            <option value="capanga">Capanga</option>
+            <option value="semcargo">Sem cargo (aluno, morador)</option>
+            <option value="capanga" selected>Capanga</option>
             <option value="lutador">Lutador</option>
             <option value="veterano">Veterano</option>
             <option value="chefe">Chefe (boss)</option>
@@ -2015,6 +2033,20 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
         </div>
       </div>
       <p class="hint" style="margin:12px 0 0">O aleatório sorteia nome, vulgo, gangue, estilo, classe, arquétipos, dados e golpes de acordo com a faixa. Chefes ganham +50% de Q.V e +2 de C.A. Abra a ficha do NPC para ajustar qualquer coisa.</p>
+      <div class="fotos-npc">
+        <div class="fotos-topo"><b>Fichas só com nome e foto</b><span>Cria fichas em branco com o nome e a foto de cada personagem, sem sortear nada, para você montar depois. Usa o Tipo, a Faixa e a Pasta escolhidos acima.</span></div>
+        <label class="fotos-drop" id="fotosDrop" tabindex="0" role="button" aria-label="Escolher fotos dos personagens">
+          <input type="file" id="fotosNpc" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
+          <span class="fd-ic" aria-hidden="true">📷</span>
+          <b>Escolher fotos</b>
+          <small>ou arraste as imagens para cá · o nome vem do nome do arquivo e dá para mudar</small>
+        </label>
+        <div class="fotos-lista" id="fotosLista"></div>
+        <div class="fotos-acoes" id="fotosAcoes" hidden>
+          <button class="btn red" id="btnFotosCriar">Criar fichas</button>
+          <button class="btn ghost" id="btnFotosLimpar">Limpar</button>
+        </div>
+      </div>
     </section>
     <div class="pastas-area" id="npcs"></div>
   </div>
@@ -3078,7 +3110,7 @@ function fighterCard(r, npc){
           <button class="btn sm ghost" data-npc-del="${esc(id)}">Apagar</button>
           <button class="btn sm" data-npc-open="${esc(id)}">Abrir ficha</button>
         </span>`
-      : `<span>${esc(ago(r.savedAt))}</span><button class="btn sm" data-open="${esc(id)}">Abrir ficha</button>`}
+      : `<span>${esc(ago(r.savedAt))}</span><span class="f-actions"><button class="btn sm ghost" data-ficha-del="${esc(id)}" title="Apaga esta ficha de jogador de vez">Apagar</button><button class="btn sm" data-open="${esc(id)}">Abrir ficha</button></span>`}
     </div>
   </article>`;
 }
@@ -3104,7 +3136,11 @@ function renderShield(){
     : `<div class="empty" style="grid-column:1/-1; text-align:left; line-height:1.5">Nenhum lutador ainda.<br>Mande o link do site para os jogadores: cada um cria a conta, confirma o e-mail e clica em <b>Criar novo lutador</b>. As fichas aparecem aqui sozinhas.</div>`;
   renderLideres(lideres);
   renderPastas('npcs', npcs, `<div class="empty" style="grid-column:1/-1">Nenhum NPC ainda. Escolha o tipo e clique em <b>Gerar aleatório</b> para criar um na hora.</div>`);
-  const sp = $('#npcPasta'); if(sp){ const atual = sp.value || (PASTA_SEL.npcs !== '*' ? PASTA_SEL.npcs : ''); sp.innerHTML = opcoesPasta('npcs', atual); }
+  const sp = $('#npcPasta');
+  if(sp){
+    const atual = sp.value || (PASTA_SEL.npcs !== '*' ? PASTA_SEL.npcs : '');
+    sp.innerHTML = opcoesPasta('npcs', atual) + `<option value="@ano" ${atual === '@ano' ? 'selected' : ''}>Pelo ano escolar (Alunos do 1º, 2º ou 3º ano)</option>`;
+  }
 }
 
 /* =====================================================================
@@ -3118,7 +3154,20 @@ const PASTA_EDIT = {npcs:null, lideres:null};       // 'nova' ou {ren: nome}
 const kindOf = s => s.npc?.tipo === 'lider' ? 'lideres' : 'npcs';
 /* ordem natural: "Distrito 2" vem antes de "Distrito 10" */
 const ordemNatural = (a, b) => String(a).localeCompare(String(b), 'pt', {numeric:true, sensitivity:'base'});
-function pastasSalvas(k){ try{ const v = JSON.parse(localStorage.getItem(PASTA_KEY(k)) || '[]'); return Array.isArray(v) ? v.filter(x=>typeof x === 'string' && x) : []; }catch(e){ return []; } }
+/* pastas que já vêm prontas (criadas uma vez; dá para renomear ou apagar depois) */
+const PASTAS_PRONTAS = {npcs:['Alunos do 1º ano', 'Alunos do 2º ano', 'Alunos do 3º ano'], lideres:[]};
+const pastaDoAno = ano => { const m = String(ano || '').match(/^([123])º ano$/); return m ? `Alunos do ${m[1]}º ano` : ''; };
+function pastasSalvas(k){
+  try{
+    const flag = `${PASTA_KEY(k)}.prontas`;
+    if(PASTAS_PRONTAS[k]?.length && !localStorage.getItem(flag)){
+      const atual = JSON.parse(localStorage.getItem(PASTA_KEY(k)) || '[]');
+      localStorage.setItem(PASTA_KEY(k), JSON.stringify([...new Set([...(Array.isArray(atual) ? atual : []), ...PASTAS_PRONTAS[k]])]));
+      localStorage.setItem(flag, '1');
+    }
+    const v = JSON.parse(localStorage.getItem(PASTA_KEY(k)) || '[]'); return Array.isArray(v) ? v.filter(x=>typeof x === 'string' && x) : [];
+  }catch(e){ return []; }
+}
 function gravarPastas(k, lista){ try{ localStorage.setItem(PASTA_KEY(k), JSON.stringify([...new Set(lista)])); }catch(e){} }
 function pastasDe(k){
   const usadas = Object.values(SHEETS).map(x=>x.sheet.npc).filter(n=>n && kindOf({npc:n}) === k).map(n=>n.pasta).filter(Boolean);
@@ -3265,7 +3314,7 @@ async function apagarPasta(k, p){
    imagem e avisa a extensão do Owlbear do mestre por um canal ao vivo
    do Supabase. A extensão coloca o token no meio da tela, já ligado à ficha.
    ===================================================================== */
-const TOKEN_COR = {capanga:'#9a958d', lutador:'#5b9dff', veterano:'#a77bf0', chefe:'#e0362c', lider:'#f2c230'};
+const TOKEN_COR = {semcargo:'#47c28a', capanga:'#9a958d', lutador:'#5b9dff', veterano:'#a77bf0', chefe:'#e0362c', lider:'#f2c230'};
 const carregarImg = src => new Promise((ok, nao)=>{ const i = new Image(); i.onload = ()=>ok(i); i.onerror = ()=>nao(new Error('não carregou a imagem')); i.src = src; });
 async function desenharToken(s, px = 300){
   const c = document.createElement('canvas'); c.width = c.height = px;
@@ -4502,6 +4551,13 @@ document.addEventListener('click', e=>{
   if(d.npcOpen){ openPlayer(d.npcOpen, true); return; }
   if(d.npcDup){ dupNpc(d.npcDup); return; }
   if(d.npcDel){ armOrRun(t, ()=>delNpc(d.npcDel)); return; }
+  if(d.fichaDel){
+    // ficha de jogador: avisa com o nome antes de apagar (não dá para desfazer)
+    const x = SHEETS[d.fichaDel], nome = x?.sheet.info?.nome || 'Lutador sem nome', dono = x ? playerName(x.dono) : '';
+    if(!t.dataset.armed) toast(`Apagar “${nome}”?`, `Ficha de ${dono || 'um jogador'}. Clique em Confirmar para apagar de vez; não dá para desfazer. Se quiser guardar uma cópia, abra a ficha e use Exportar antes.`);
+    armOrRun(t, async ()=>{ await delNpc(d.fichaDel); toast(`Ficha “${nome}” apagada`, dono ? `Era de ${dono}.` : ''); });
+    return;
+  }
   if(d.npcHp){ npcHp(d.npcHp, d.op); return; }
   if(d.poptype){ POP_TIPO = d.poptype; renderPopForm(); return; }
   if(d.poproll){ $('#popRolagem').value = d.poproll; return; }
@@ -4678,6 +4734,7 @@ const POP_TIPOS = {
 };
 const POP_ROLLS = ['dFOR','dCON','dAGI','dINT','dPRE','dFOR+dAGI','dAGI+dINT','dCON+dFOR','dPRE+dINT','1d20'];
 const NPC_TIPOS = {
+  semcargo: {n:'Sem cargo', belts:[0,2], learn:.5, civil:true},   // aluno ou morador comum, fora da hierarquia das gangues
   capanga:  {n:'Capanga',  belts:[0,1], learn:.55},
   lutador:  {n:'Lutador',  belts:[1,3], learn:.75},
   veterano: {n:'Veterano', belts:[3,5], learn:.85},
@@ -4793,11 +4850,11 @@ function randomNpc(tipo, faixa){
   s.belt = faixa === 'auto' ? rint(T.belts[0], T.belts[1]) : +faixa;
   s.lvl = rint(1, BELTS[s.belt].lv);
   s.info.nome = `${pick(NOMES)} ${pick(SOBRENOMES)}`;
-  s.info.apelido = Math.random() < (T.boss ? .9 : .45) ? pick(VULGOS) : '';
+  s.info.apelido = Math.random() < (T.boss ? .9 : T.civil ? .2 : .45) ? pick(VULGOS) : '';
   const gangs = GANGS.filter(g=>g.g !== 'Sem gangue');
-  s.info.gangue = Math.random() < .85 ? pick(gangs).g : 'Sem gangue';
-  s.info.ano = tipo === 'capanga' ? pick(['1º ano','2º ano','3º ano']) : pick(['2º ano','3º ano','Fora da escola']);
-  s.info.idade = String(T.boss ? rint(18,28) : rint(15,19));
+  s.info.gangue = Math.random() < (T.civil ? .3 : .85) ? pick(gangs).g : 'Sem gangue';
+  s.info.ano = tipo === 'capanga' || T.civil ? pick(['1º ano','2º ano','3º ano']) : pick(['2º ano','3º ano','Fora da escola']);
+  s.info.idade = String(T.boss ? rint(18,28) : T.civil ? rint(15,18) : rint(15,19));
   s.estilo = pick(Object.keys(STYLES));
   s.classe = Math.random() < (tipo === 'capanga' ? .5 : 1) ? pick(Object.keys(CLASSES).filter(Boolean)) : '';
   const pool = ARCHS.map(a=>a.id).sort(()=>Math.random() - .5);
@@ -4838,7 +4895,8 @@ async function createNpcs(random){
   for(let i = 0; i < qtd; i++){
     const s = random ? randomNpc(tipo, faixa) : blankNpc(tipo, faixa);
     if(nomeBase) s.info.nome = qtd > 1 ? `${nomeBase} ${i+1}` : nomeBase;
-    if(pasta) s.npc = {...s.npc, pasta};
+    const destino = pasta === '@ano' ? pastaDoAno(s.info.ano) : pasta;
+    if(destino) s.npc = {...s.npc, pasta: destino};
     rows.push({dados: s});
   }
   const btns = [$('#btnNpcRandom'), $('#btnNpcBlank')]; btns.forEach(b=>b.disabled = true);
@@ -4859,6 +4917,80 @@ async function dupNpc(id){
   if(error){ toast('Não foi possível duplicar', traduz(error)); return; }
   setSheet(data); MY_FICHAS.unshift(data); renderShield();
 }
+/* ---------------- Fichas só com nome e foto (v3.2) ---------------- */
+let FOTOS_NPC = [];   // [{nome, photo}]
+const nomeDoArquivo = n => String(n || '').replace(/\.[a-z0-9]+$/i, '').replace(/[_\-.]+/g, ' ').replace(/\s+/g, ' ').trim()
+  .replace(/(^|\s)(\p{L})/gu, (m, esp, l)=>esp + l.toUpperCase()).slice(0, 60);
+/* mesmo recorte da foto da ficha: 240×320, JPEG */
+function fotoParaFicha(file){
+  return new Promise((ok, nao)=>{
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = ()=>{
+      const W = 240, H = 320, c = document.createElement('canvas'); c.width = W; c.height = H;
+      const s = Math.max(W/img.width, H/img.height), w = img.width*s, h = img.height*s;
+      c.getContext('2d').drawImage(img, (W-w)/2, (H-h)/2, w, h);
+      URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', .8));
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); nao(new Error(`não deu para ler ${file.name}`)); };
+    img.src = url;
+  });
+}
+async function adicionarFotosNpc(files){
+  const imgs = [...files].filter(f=>/^image\//.test(f.type)).slice(0, 40 - FOTOS_NPC.length);
+  if(!imgs.length) return;
+  for(const f of imgs){
+    try{ FOTOS_NPC.push({nome: nomeDoArquivo(f.name), photo: await fotoParaFicha(f)}); }
+    catch(e){ toast('Foto ignorada', e.message); }
+  }
+  renderFotosNpc();
+}
+function renderFotosNpc(){
+  const lista = $('#fotosLista');
+  lista.innerHTML = FOTOS_NPC.map((f,i)=>`<div class="foto-item">
+      <img src="${f.photo}" alt="">
+      <input class="in" data-foto-nome="${i}" maxlength="60" value="${esc(f.nome)}" placeholder="Nome do personagem" aria-label="Nome do personagem ${i+1}">
+      <button class="x" data-foto-rm="${i}" aria-label="Tirar ${esc(f.nome || 'esta foto')}">×</button>
+    </div>`).join('');
+  $('#fotosAcoes').hidden = !FOTOS_NPC.length;
+  $('#btnFotosCriar').textContent = FOTOS_NPC.length > 1 ? `Criar ${FOTOS_NPC.length} fichas` : 'Criar ficha';
+}
+async function criarFichasComFotos(){
+  if(!sb || !AUTH.mestre || !FOTOS_NPC.length) return;
+  const tipo = $('#npcTipo').value, faixa = $('#npcFaixa').value, pasta = $('#npcPasta').value || '';
+  const rows = FOTOS_NPC.map(f=>{
+    const s = blankNpc(tipo, faixa);
+    if(f.nome.trim()) s.info.nome = f.nome.trim().slice(0, 60);
+    s.photo = f.photo;
+    if(pasta && pasta !== '@ano') s.npc = {...s.npc, pasta};
+    return {dados: s};
+  });
+  const b = $('#btnFotosCriar'); b.disabled = true; b.textContent = 'Criando…';
+  const {data, error} = await sb.from('fichas').insert(rows).select('id,dono,dados,atualizado_em');
+  b.disabled = false;
+  if(error){ renderFotosNpc(); toast('Não foi possível criar', traduz(error)); return; }
+  data.forEach(r=>{ setSheet(r); if(!MY_FICHAS.some(f=>f.id === r.id)) MY_FICHAS.unshift(r); });
+  FOTOS_NPC = []; renderFotosNpc(); renderShield();
+  toast(data.length > 1 ? `${data.length} fichas criadas` : `${data[0].dados.info.nome} criado`, 'Só com nome e foto. Abra cada ficha para montar o resto.');
+}
+document.addEventListener('change', e=>{ if(e.target.id === 'fotosNpc'){ adicionarFotosNpc(e.target.files); e.target.value = ''; } });
+document.addEventListener('keydown', e=>{ if(e.target.id === 'fotosDrop' && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); $('#fotosNpc').click(); } });
+document.addEventListener('input', e=>{ const i = e.target.dataset?.fotoNome; if(i !== undefined && FOTOS_NPC[+i]) FOTOS_NPC[+i].nome = e.target.value; });
+document.addEventListener('click', e=>{
+  const rm = e.target.closest('[data-foto-rm]');
+  if(rm){ FOTOS_NPC.splice(+rm.dataset.fotoRm, 1); renderFotosNpc(); return; }
+  if(e.target.closest('#btnFotosCriar')){ criarFichasComFotos(); return; }
+  if(e.target.closest('#btnFotosLimpar')){ FOTOS_NPC = []; renderFotosNpc(); }
+});
+['dragenter','dragover'].forEach(ev=>document.addEventListener(ev, e=>{
+  const z = e.target.closest?.('#fotosDrop'); if(!z) return;
+  e.preventDefault(); z.classList.add('arrastando');
+}));
+['dragleave','drop'].forEach(ev=>document.addEventListener(ev, e=>{
+  const z = e.target.closest?.('#fotosDrop'); if(!z) return;
+  e.preventDefault(); z.classList.remove('arrastando');
+  if(ev === 'drop' && e.dataTransfer?.files?.length) adicionarFotosNpc(e.dataTransfer.files);
+}));
+
 async function delNpc(id){
   const {error} = await sb.from('fichas').delete().eq('id', id);
   if(error){ toast('Não foi possível apagar', traduz(error)); return; }
