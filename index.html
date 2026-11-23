@@ -668,6 +668,32 @@ body.ro #sheetView :is(input,select,textarea,.tok,.pip,.chip,.photo){pointer-eve
 .npc-btns{display:flex; gap:8px; flex-wrap:wrap}
 .npc-quick{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
 .f-actions{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; margin-left:auto}
+/* v3.1 · pasta e token no card */
+.f-org{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap}
+.f-pasta{display:flex; align-items:center; gap:6px; min-width:0; flex:1 1 150px; font-size:14px}
+.f-pasta select{flex:1; min-width:0; max-width:220px; padding:5px 8px; background:#121212; border:1px solid var(--line-2); border-radius:2px; color:var(--ink-2); font:inherit; font-size:13px}
+.f-pasta select:focus{outline:2px solid var(--yellow); outline-offset:0}
+.f-tok{display:flex; gap:6px; margin-left:auto}
+/* v3.1 · pastas */
+.pastas-area{display:grid; gap:14px}
+.pastas-bar{display:flex; flex-wrap:wrap; align-items:center; gap:6px}
+.pasta-chip{display:inline-flex; align-items:center; gap:7px; padding:7px 11px; background:#131313; border:1px solid #2a2a2a; border-radius:2px; color:var(--ink-2); font:inherit; font-size:14px; font-weight:600; cursor:pointer}
+.pasta-chip span{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.pasta-chip:hover{border-color:#444; color:var(--ink)}
+.pasta-chip.on{border-color:var(--yellow); color:var(--yellow); background:rgba(242,194,48,.06)}
+.pasta-chip.on span{color:var(--yellow)}
+.pasta-chip:focus-visible,.pasta-tog:focus-visible{outline:2px solid var(--yellow); outline-offset:2px}
+.pasta-form{display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap}
+.pasta-form .box{min-width:200px; padding:6px 9px; font-size:14px}
+.pasta-grupo{display:grid; gap:10px}
+.pasta-h{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding-bottom:8px; border-bottom:1px solid var(--line)}
+.pasta-tog{display:inline-flex; align-items:center; gap:8px; background:none; border:0; padding:2px 0; color:var(--ink); font-family:var(--display); font-weight:800; font-stretch:80%; font-size:17px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer}
+.pasta-tog i{font-style:normal; color:var(--ink-3); font-size:13px; width:12px}
+.pasta-tog span{font-family:var(--mono); font-size:12px; color:var(--ink-3); letter-spacing:0}
+.pasta-acts{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.pasta-acts .link{background:none; border:0; padding:0; color:var(--ink-3); font:inherit; font-size:13px; text-decoration:underline; text-underline-offset:3px; cursor:pointer}
+.pasta-acts .link:hover{color:var(--ink)}
+.pasta-acts .link.perigo:hover,.pasta-acts .link.danger{color:var(--red-2)}
 .fighter.boss{border-color:rgba(255,201,22,.7); padding-top:20px}
 .fighter.boss::before{content:""; position:absolute; left:-1px; right:-1px; top:-1px; height:6px; background:var(--hazard); border-radius:3px 3px 0 0}
 .badge.boss{background:var(--yellow); color:var(--on-yellow); border-color:var(--yellow)}
@@ -1643,7 +1669,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.0</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.1</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -1915,7 +1941,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
         </ul>
       </div>
     </section>
-    <div class="fighters" id="lideres"></div>
+    <div class="pastas-area" id="lideres"></div>
   </div>
 
   <!-- NPCs & BOSSES -->
@@ -1934,6 +1960,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
         <label class="f"><span>Faixa</span><select class="in" id="npcFaixa"></select></label>
         <label class="f"><span>Nome (opcional)</span><input class="in" id="npcNome" maxlength="60" placeholder="Gerado se ficar vazio"></label>
         <label class="f"><span>Quantidade</span><input class="in mono" id="npcQtd" type="number" min="1" max="8" value="1"></label>
+        <label class="f"><span>Pasta</span><select class="in" id="npcPasta"><option value="">Sem pasta</option></select></label>
         <div class="npc-btns">
           <button class="btn red" id="btnNpcRandom">Gerar aleatório</button>
           <button class="btn" id="btnNpcBlank">Criar em branco</button>
@@ -1941,7 +1968,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
       </div>
       <p class="hint" style="margin:12px 0 0">O aleatório sorteia nome, vulgo, gangue, estilo, classe, arquétipos, dados e golpes de acordo com a faixa. Chefes ganham +50% de Q.V e +2 de C.A. Abra a ficha do NPC para ajustar qualquer coisa.</p>
     </section>
-    <div class="fighters" id="npcs"></div>
+    <div class="pastas-area" id="npcs"></div>
   </div>
 
   <!-- ROLAGENS AO VIVO -->
@@ -2989,6 +3016,13 @@ function fighterCard(r, npc){
         <button class="btn sm danger" data-npc-hp="${esc(id)}" data-op="-">Dano</button>
         <button class="btn sm green" data-npc-hp="${esc(id)}" data-op="+">Curar</button>
       </div>` : ''}
+    <div class="f-org">
+      ${npc ? `<label class="f-pasta" title="Pasta desta ficha"><span aria-hidden="true">📁</span><select data-npc-pasta="${esc(id)}" aria-label="Pasta de ${esc(s.info.nome || 'NPC')}">${opcoesPasta(kindOf(s), s.npc?.pasta || '')}</select></label>` : '<span></span>'}
+      <span class="f-tok">
+        <button class="btn sm ghost" data-tok-obr="${esc(id)}" title="Recorta a foto em token e coloca no mapa aberto no Owlbear">🎯 Token no Owlbear</button>
+        <button class="btn sm ghost" data-tok-dl="${esc(id)}" title="Baixar o token em PNG" aria-label="Baixar o token de ${esc(s.info.nome || 'NPC')}">⬇</button>
+      </span>
+    </div>
     <div class="f-foot">
       <span class="pips" title="Testes contra morte">${[0,1,2].map(i=>`<span class="pip ${i<s.tcm?'on':''}"></span>`).join('')}</span>
       ${npc ? `<span class="f-actions">
@@ -3021,9 +3055,227 @@ function renderShield(){
   $('#fighters').innerHTML = players.length ? players.map(r=>fighterCard(r, false)).join('')
     : `<div class="empty" style="grid-column:1/-1; text-align:left; line-height:1.5">Nenhum lutador ainda.<br>Mande o link do site para os jogadores: cada um cria a conta, confirma o e-mail e clica em <b>Criar novo lutador</b>. As fichas aparecem aqui sozinhas.</div>`;
   renderLideres(lideres);
-  $('#npcs').innerHTML = npcs.length ? npcs.map(r=>fighterCard(r, true)).join('')
-    : `<div class="empty" style="grid-column:1/-1">Nenhum NPC ainda. Escolha o tipo e clique em <b>Gerar aleatório</b> para criar um na hora.</div>`;
+  renderPastas('npcs', npcs, `<div class="empty" style="grid-column:1/-1">Nenhum NPC ainda. Escolha o tipo e clique em <b>Gerar aleatório</b> para criar um na hora.</div>`);
+  const sp = $('#npcPasta'); if(sp){ const atual = sp.value || (PASTA_SEL.npcs !== '*' ? PASTA_SEL.npcs : ''); sp.innerHTML = opcoesPasta('npcs', atual); }
 }
+
+/* =====================================================================
+   v3.1 · PASTAS DE NPCs E LÍDERES
+   A pasta de cada ficha fica na própria ficha (npc.pasta), então vale em
+   qualquer computador. Pastas vazias ficam guardadas neste navegador.
+   ===================================================================== */
+const PASTA_KEY = k => `gaengdan.pastas.${k}`;
+const PASTA_SEL = {npcs:'*', lideres:'*'};          // '*' = todas, '' = sem pasta, ou o nome
+const PASTA_EDIT = {npcs:null, lideres:null};       // 'nova' ou {ren: nome}
+const PASTA_FECHADAS = new Set();
+const kindOf = s => s.npc?.tipo === 'lider' ? 'lideres' : 'npcs';
+function pastasSalvas(k){ try{ const v = JSON.parse(localStorage.getItem(PASTA_KEY(k)) || '[]'); return Array.isArray(v) ? v.filter(x=>typeof x === 'string' && x) : []; }catch(e){ return []; } }
+function gravarPastas(k, lista){ try{ localStorage.setItem(PASTA_KEY(k), JSON.stringify([...new Set(lista)])); }catch(e){} }
+function pastasDe(k){
+  const usadas = Object.values(SHEETS).map(x=>x.sheet.npc).filter(n=>n && kindOf({npc:n}) === k).map(n=>n.pasta).filter(Boolean);
+  return [...new Set([...pastasSalvas(k), ...usadas])].sort((a,b)=>a.localeCompare(b, 'pt'));
+}
+const opcoesPasta = (k, atual) => `<option value="">Sem pasta</option>` + pastasDe(k).map(p=>`<option value="${esc(p)}" ${p === atual ? 'selected' : ''}>${esc(p)}</option>`).join('');
+function renderPastas(k, rows, vazio){
+  const box = document.getElementById(k); if(!box) return;
+  const pastas = pastasDe(k);
+  if(PASTA_SEL[k] !== '*' && PASTA_SEL[k] !== '' && !pastas.includes(PASTA_SEL[k])) PASTA_SEL[k] = '*';
+  const sel = PASTA_SEL[k], ed = PASTA_EDIT[k];
+  const daPasta = p => rows.filter(r=> p ? r.s.npc?.pasta === p : !pastas.includes(r.s.npc?.pasta || ''));
+  const chip = (v, rot, n) => `<button class="pasta-chip ${sel === v ? 'on' : ''}" data-pasta-sel="${k}" data-v="${esc(v)}" aria-pressed="${sel === v}">${rot}<span>${n}</span></button>`;
+  const semPasta = daPasta('').length;
+  const barra = `<div class="pastas-bar" role="toolbar" aria-label="Pastas">
+    ${chip('*', 'Todas', rows.length)}
+    ${pastas.map(p=>chip(p, `📁 ${esc(p)}`, daPasta(p).length)).join('')}
+    ${pastas.length && semPasta ? chip('', 'Sem pasta', semPasta) : ''}
+    ${ed === 'nova'
+      ? `<span class="pasta-form"><input class="box" data-pasta-nome="${k}" maxlength="40" placeholder="${k === 'lideres' ? 'Ex.: Distrito Norte' : 'Ex.: Capangas do Galpão'}" aria-label="Nome da nova pasta"><button class="btn sm" data-pasta-criar="${k}">Criar</button><button class="btn sm ghost" data-pasta-cancel="${k}">Cancelar</button></span>`
+      : `<button class="btn sm ghost pasta-nova" data-pasta-nova="${k}">+ Nova pasta</button>`}
+  </div>`;
+  const grupo = (p, lista) => {
+    const fech = PASTA_FECHADAS.has(`${k}:${p}`);
+    const renomeando = ed && ed.ren === p;
+    return `<section class="pasta-grupo">
+      <header class="pasta-h">
+        ${renomeando
+          ? `<span class="pasta-form"><input class="box" data-pasta-novonome="${k}" data-v="${esc(p)}" maxlength="40" value="${esc(p)}" aria-label="Novo nome da pasta"><button class="btn sm" data-pasta-renok="${k}" data-v="${esc(p)}">Salvar</button><button class="btn sm ghost" data-pasta-cancel="${k}">Cancelar</button></span>`
+          : `<button class="pasta-tog" data-pasta-tog="${k}" data-v="${esc(p)}" aria-expanded="${!fech}"><i aria-hidden="true">${fech ? '▸' : '▾'}</i>${p ? '📁 ' + esc(p) : 'Sem pasta'}<span>${lista.length}</span></button>`}
+        <span class="pasta-acts">
+          ${lista.length ? `<button class="btn sm ghost" data-tok-pasta="${k}" data-v="${esc(p)}" title="Coloca no Owlbear o token de todos desta pasta">🎯 Todos no Owlbear</button>` : ''}
+          ${p && !renomeando ? `<button class="link" data-pasta-ren="${k}" data-v="${esc(p)}">Renomear</button><button class="link perigo" data-pasta-del="${k}" data-v="${esc(p)}">Apagar pasta</button>` : ''}
+        </span>
+      </header>
+      ${fech ? '' : `<div class="fighters">${lista.length ? lista.map(r=>fighterCard(r, true)).join('') : '<div class="empty" style="grid-column:1/-1">Pasta vazia. Mova fichas para cá pelo seletor 📁 de cada ficha.</div>'}</div>`}
+    </section>`;
+  };
+  let corpo;
+  if(!rows.length && !pastas.length) corpo = `<div class="fighters">${vazio}</div>`;
+  else if(!pastas.length) corpo = `<div class="fighters">${rows.map(r=>fighterCard(r, true)).join('')}</div>`;
+  else if(sel === '*') corpo = pastas.map(p=>grupo(p, daPasta(p))).join('') + (semPasta ? grupo('', daPasta('')) : '');
+  else corpo = grupo(sel, daPasta(sel));
+  box.innerHTML = barra + corpo;
+}
+/* muda a pasta de várias fichas (grava no banco) */
+async function moverParaPasta(ids, pasta){
+  const erros = [];
+  await Promise.all(ids.map(async id=>{
+    const x = SHEETS[id]; if(!x) return;
+    const s = clone(x.raw);
+    s.npc = {...(s.npc || {})};
+    if(pasta) s.npc.pasta = pasta; else delete s.npc.pasta;
+    setSheet({id, dono:x.dono, dados:s, atualizado_em:new Date().toISOString()});
+    const {error} = await sb.from('fichas').update({dados:s}).eq('id', id);
+    if(error) erros.push(error);
+  }));
+  renderShield();
+  if(erros.length) toast('Não salvou a pasta', traduz(erros[0]));
+}
+const idsNaPasta = (k, p) => Object.keys(SHEETS).filter(id=>{ const n = SHEETS[id].sheet.npc; return n && kindOf({npc:n}) === k && (n.pasta || '') === p; });
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-pasta-sel],[data-pasta-nova],[data-pasta-criar],[data-pasta-cancel],[data-pasta-tog],[data-pasta-ren],[data-pasta-renok],[data-pasta-del]');
+  if(!b) return;
+  const d = b.dataset, k = d.pastaSel || d.pastaNova || d.pastaCriar || d.pastaCancel || d.pastaTog || d.pastaRen || d.pastaRenok || d.pastaDel;
+  if(d.pastaSel !== undefined){ PASTA_SEL[k] = d.v; renderShield(); return; }
+  if(d.pastaNova !== undefined){ PASTA_EDIT[k] = 'nova'; renderShield(); setTimeout(()=>document.querySelector(`[data-pasta-nome="${k}"]`)?.focus(), 0); return; }
+  if(d.pastaCancel !== undefined){ PASTA_EDIT[k] = null; renderShield(); return; }
+  if(d.pastaCriar !== undefined){ criarPasta(k); return; }
+  if(d.pastaTog !== undefined){ const c = `${k}:${d.v}`; if(PASTA_FECHADAS.has(c)) PASTA_FECHADAS.delete(c); else PASTA_FECHADAS.add(c); renderShield(); return; }
+  if(d.pastaRen !== undefined){ PASTA_EDIT[k] = {ren:d.v}; renderShield(); setTimeout(()=>{ const i = document.querySelector(`[data-pasta-novonome="${k}"]`); if(i){ i.focus(); i.select(); } }, 0); return; }
+  if(d.pastaRenok !== undefined){ renomearPasta(k, d.v); return; }
+  if(d.pastaDel !== undefined){ armOrRun(b, ()=>apagarPasta(k, d.v)); return; }
+});
+document.addEventListener('keydown', e=>{
+  const el = e.target;
+  if(e.key === 'Enter' && el.dataset?.pastaNome){ e.preventDefault(); criarPasta(el.dataset.pastaNome); }
+  if(e.key === 'Enter' && el.dataset?.pastaNovonome){ e.preventDefault(); renomearPasta(el.dataset.pastaNovonome, el.dataset.v); }
+  if(e.key === 'Escape' && (el.dataset?.pastaNome || el.dataset?.pastaNovonome)){ PASTA_EDIT.npcs = PASTA_EDIT.lideres = null; renderShield(); }
+});
+document.addEventListener('change', e=>{
+  const el = e.target; if(!el.dataset?.npcPasta) return;
+  moverParaPasta([el.dataset.npcPasta], el.value);
+});
+function criarPasta(k){
+  const nome = (document.querySelector(`[data-pasta-nome="${k}"]`)?.value || '').trim().slice(0, 40);
+  if(!nome){ document.querySelector(`[data-pasta-nome="${k}"]`)?.focus(); return; }
+  gravarPastas(k, [...pastasSalvas(k), nome]);
+  PASTA_EDIT[k] = null; renderShield();
+  toast(`Pasta “${nome}” criada`, 'Mova fichas para ela pelo seletor 📁 de cada ficha.');
+}
+async function renomearPasta(k, antigo){
+  const nome = (document.querySelector(`[data-pasta-novonome="${k}"]`)?.value || '').trim().slice(0, 40);
+  PASTA_EDIT[k] = null;
+  if(!nome || nome === antigo){ renderShield(); return; }
+  gravarPastas(k, pastasSalvas(k).map(p=> p === antigo ? nome : p).concat(nome));
+  if(PASTA_SEL[k] === antigo) PASTA_SEL[k] = nome;
+  await moverParaPasta(idsNaPasta(k, antigo), nome);
+}
+async function apagarPasta(k, p){
+  gravarPastas(k, pastasSalvas(k).filter(x=>x !== p));
+  if(PASTA_SEL[k] === p) PASTA_SEL[k] = '*';
+  const ids = idsNaPasta(k, p);
+  if(ids.length) await moverParaPasta(ids, ''); else renderShield();
+  toast(`Pasta “${p}” apagada`, ids.length ? `${ids.length} ficha${ids.length > 1 ? 's' : ''} voltou para “Sem pasta”. Nenhuma ficha foi apagada.` : '');
+}
+
+/* =====================================================================
+   v3.1 · TOKEN NO OWLBEAR
+   O site recorta a foto em token redondo (anel na cor do tipo), sobe a
+   imagem e avisa a extensão do Owlbear do mestre por um canal ao vivo
+   do Supabase. A extensão coloca o token no meio da tela, já ligado à ficha.
+   ===================================================================== */
+const TOKEN_COR = {capanga:'#9a958d', lutador:'#5b9dff', veterano:'#a77bf0', chefe:'#e0362c', lider:'#f2c230'};
+const carregarImg = src => new Promise((ok, nao)=>{ const i = new Image(); i.onload = ()=>ok(i); i.onerror = ()=>nao(new Error('não carregou a imagem')); i.src = src; });
+async function desenharToken(s, px = 300){
+  const c = document.createElement('canvas'); c.width = c.height = px;
+  const g = c.getContext('2d');
+  const cor = s.npc ? (TOKEN_COR[s.npc.tipo] || TOKEN_COR.capanga) : '#f2c230';
+  const r = px / 2, anel = px * 0.055;
+  g.save(); g.beginPath(); g.arc(r, r, r - anel, 0, Math.PI * 2); g.clip();
+  if(s.photo){
+    const img = await carregarImg(s.photo);
+    // recorte quadrado: centro na horizontal, puxado para cima (retratos têm o rosto no alto)
+    const lado = Math.min(img.width, img.height);
+    const sx = (img.width - lado) / 2, sy = img.height > img.width ? (img.height - lado) * 0.18 : (img.height - lado) / 2;
+    g.drawImage(img, sx, sy, lado, lado, anel, anel, px - anel * 2, px - anel * 2);
+  } else {
+    g.fillStyle = '#1b1a19'; g.fillRect(0, 0, px, px);
+    g.fillStyle = cor; g.font = `900 ${px * 0.42}px Archivo, Arial Black, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(((s.info?.nome || '?').trim().charAt(0) || '?').toUpperCase(), r, r * 1.04);
+  }
+  g.restore();
+  g.lineWidth = anel; g.strokeStyle = cor; g.beginPath(); g.arc(r, r, r - anel / 2, 0, Math.PI * 2); g.stroke();
+  g.lineWidth = Math.max(2, px * 0.012); g.strokeStyle = 'rgba(0,0,0,.75)'; g.beginPath(); g.arc(r, r, r - anel - g.lineWidth / 2, 0, Math.PI * 2); g.stroke();
+  return c;
+}
+const nomeArquivo = s => (s.info?.nome || 'token').normalize('NFD').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-').toLowerCase() || 'token';
+async function baixarToken(id){
+  const x = SHEETS[id]; if(!x) return;
+  try{
+    const c = await desenharToken(x.sheet, 512);
+    const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = `token-${nomeArquivo(x.sheet)}.png`; a.click();
+  }catch(e){ toast('Não deu para gerar o token', String(e.message || e)); }
+}
+let TOK_CH = null, TOK_PRONTO = null;
+const TOK_ESPERA = new Map();
+/* mesmo nome de canal que a extensão calcula: código da conta do mestre (uid + e-mail), que os jogadores não sabem */
+async function nomeCanalTokens(){
+  const bytes = new TextEncoder().encode(`${AUTH.user.id}:${String(AUTH.user.email || '').toLowerCase()}`);
+  const h = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))).map(b=>b.toString(16).padStart(2, '0')).join('');
+  return `gaengdan-tok-${h.slice(0, 32)}`;
+}
+function canalTokens(){
+  if(TOK_PRONTO) return TOK_PRONTO;
+  TOK_PRONTO = nomeCanalTokens().then(nome=>new Promise((ok, nao)=>{
+    TOK_CH = sb.channel(nome, {config:{broadcast:{self:false}}});
+    TOK_CH.on('broadcast', {event:'ok'}, ({payload})=>{
+      const p = payload || {}, w = TOK_ESPERA.get(p.pid); if(!w) return;
+      clearTimeout(w.t); TOK_ESPERA.delete(p.pid);
+      if(p.erro) toast('O Owlbear não colocou o token', p.erro);
+      else toast(p.n > 1 ? `${p.n} tokens colocados no Owlbear` : `Token de ${w.nome} colocado no Owlbear`, 'Já ligado à ficha: vida, E.S e status aparecem no token.');
+    }).subscribe(st=>{
+      if(st === 'SUBSCRIBED') ok(TOK_CH);
+      else if(st === 'CHANNEL_ERROR' || st === 'TIMED_OUT'){ TOK_PRONTO = null; nao(new Error('Sem conexão ao vivo com o servidor.')); }
+    });
+  }));
+  return TOK_PRONTO;
+}
+async function tokensNoOwlbear(ids){
+  if(!sb || !AUTH.mestre || !ids.length) return;
+  toast(ids.length > 1 ? `Preparando ${ids.length} tokens…` : 'Preparando o token…', 'Recortando a foto e mandando para o Owlbear.');
+  try{
+    const itens = [];
+    for(const id of ids.slice(0, 24)){
+      const x = SHEETS[id]; if(!x) continue;
+      const c = await desenharToken(x.sheet, 300);
+      const blob = await new Promise(r=>c.toBlob(r, 'image/png'));
+      const caminho = `tokens/${AUTH.user.id}/${id}-${Date.now().toString(36)}.png`;
+      const up = await sb.storage.from('celular').upload(caminho, blob, {contentType:'image/png', cacheControl:'31536000', upsert:false});
+      if(up.error) throw up.error;
+      itens.push({ficha:id, nome:(x.sheet.info?.nome || 'Token').slice(0, 60), url: sb.storage.from('celular').getPublicUrl(caminho).data.publicUrl});
+    }
+    const ch = await canalTokens();
+    const pid = Math.random().toString(36).slice(2);
+    const nome = itens[0]?.nome || 'token';
+    TOK_ESPERA.set(pid, {nome, t: setTimeout(()=>{
+      TOK_ESPERA.delete(pid);
+      toast('O Owlbear não respondeu', 'Abra a sala no Owlbear, com a extensão Gaengdan ligada e você entrando como mestre (mesma conta do site). Se preferir, use ⬇ para baixar o token e arraste para o mapa.');
+    }, 9000)});
+    await ch.send({type:'broadcast', event:'token', payload:{pid, itens}});
+  }catch(e){
+    toast('Não deu para mandar o token', /bucket|row-level|security/i.test(String(e.message || e)) ? 'Falta rodar o supabase/schema-6.sql (espaço de imagens do celular).' : traduz(e));
+  }
+}
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-tok-obr],[data-tok-dl],[data-tok-pasta]'); if(!b) return;
+  if(b.dataset.tokDl) { baixarToken(b.dataset.tokDl); return; }
+  if(b.dataset.tokObr){ tokensNoOwlbear([b.dataset.tokObr]); return; }
+  if(b.dataset.tokPasta){
+    const k = b.dataset.tokPasta, p = b.dataset.v;
+    const pastas = pastasDe(k);
+    const ids = Object.keys(SHEETS).filter(id=>{ const n = SHEETS[id].sheet.npc; return n && kindOf({npc:n}) === k && (p ? n.pasta === p : !pastas.includes(n.pasta || '')); });
+    tokensNoOwlbear(ids);
+  }
+});
 function renderRef(){
   if(!$('#refBelts').children.length){
     $('#refBelts').innerHTML = BELTS.map(b=>`<tr><th><span class="badge" style="border:0; padding:0"><span class="dot" style="background:${b.c}"></span></span> ${b.n}</th><td>${b.lv}</td><td>${b.xp}</td></tr>`).join('');
@@ -4499,10 +4751,12 @@ async function createNpcs(random){
   if(!sb || !AUTH.mestre) return;
   const tipo = $('#npcTipo').value, faixa = $('#npcFaixa').value, nomeBase = $('#npcNome').value.trim();
   const qtd = random ? clamp(parseInt($('#npcQtd').value) || 1, 1, 8) : 1;
+  const pasta = $('#npcPasta').value || '';
   const rows = [];
   for(let i = 0; i < qtd; i++){
     const s = random ? randomNpc(tipo, faixa) : blankNpc(tipo, faixa);
     if(nomeBase) s.info.nome = qtd > 1 ? `${nomeBase} ${i+1}` : nomeBase;
+    if(pasta) s.npc = {...s.npc, pasta};
     rows.push({dados: s});
   }
   const btns = [$('#btnNpcRandom'), $('#btnNpcBlank')]; btns.forEach(b=>b.disabled = true);
@@ -5599,8 +5853,7 @@ function renderLideres(rows){
   const btn = $('#btnImportLideres');
   btn.textContent = faltam === LIDERES.length ? 'Importar líderes do livro' : faltam ? `Importar os ${faltam} que faltam` : 'Todos importados';
   btn.disabled = faltam === 0;
-  box.innerHTML = rows.length ? rows.map(r=>fighterCard(r, true)).join('')
-    : '<div class="empty" style="grid-column:1/-1">Nenhum líder ainda. Clique em <b>Importar líderes do livro</b> para criar os 15 de uma vez.</div>';
+  renderPastas('lideres', rows, '<div class="empty" style="grid-column:1/-1">Nenhum líder ainda. Clique em <b>Importar líderes do livro</b> para criar os 15 de uma vez.</div>');
 }
 document.addEventListener('click', e=>{ if(e.target.closest('#btnImportLideres')) importLideres(); });
 
