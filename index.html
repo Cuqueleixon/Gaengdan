@@ -1734,7 +1734,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.2</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.3</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -2322,11 +2322,11 @@ const CLASSES = {
 };
 const ARCHS = [
   {id:'constante',  n:'Lutador Constante',          d:'+4 de Q.V e +4 de E.S.', qv:4, es:4},
-  {id:'preparado',  n:'Corpo Preparado',            d:'Aumento do dado de CON.', inc:1},
+  {id:'preparado',  n:'Corpo Preparado',            d:'Aumento do dado de CON.', inc:1, incAttr:'CON'},
   {id:'folego',     n:'Fôlego Controlado',          d:'+4 de E.S e +2 por nível.', es:s=>4+2*s.N},
   {id:'treino',     n:'Treino Diário',              d:'+1 no acerto de FOR ou AGI e +4 + CON de Q.V.', qv:s=>4+s.CON},
-  {id:'mente',      n:'Mente Disciplinada',         d:'Aumento do dado de INT e +1 de C.A.', inc:1, ca:1},
-  {id:'flexivel',   n:'Corpo Flexível',             d:'Aumento do dado de AGI e +4 de E.S.', inc:1, es:4},
+  {id:'mente',      n:'Mente Disciplinada',         d:'Aumento do dado de INT e +1 de C.A.', inc:1, incAttr:'INT', ca:1},
+  {id:'flexivel',   n:'Corpo Flexível',             d:'Aumento do dado de AGI e +4 de E.S.', inc:1, incAttr:'AGI', es:4},
   {id:'ossos',      n:'Ossos Fortes',               d:'+2 de C.A e +1 de Bloqueio.', ca:2},
   {id:'resist',     n:'Resistência Natural',        d:'Recebe seu CON como bônus de vida máxima.', qv:s=>s.CON},
   {id:'emocional',  n:'Controle Emocional',         d:'+2 no acerto e +2 em dados de INT.'},
@@ -2335,8 +2335,8 @@ const ARCHS = [
   {id:'saudavel',   n:'Estilo de Vida Saudável',    d:'+15 de E.S.', es:15},
   {id:'leve',       n:'Corpo Leve',                 d:'+3,5 de Movimentação e +1 de acerto com AGI.', mov:3.5},
   {id:'pausa',      n:'Estágio de Pausa',           d:'Descanso curto funciona como descanso longo.'},
-  {id:'mentalInt',  n:'Treino Mental (INT)',        d:'Aumento de INT e +12 de Q.V.', inc:1, qv:12},
-  {id:'mentalPre',  n:'Treino Mental (PRE)',        d:'Aumento de PRE e +15 de E.S.', inc:1, es:15},
+  {id:'mentalInt',  n:'Treino Mental (INT)',        d:'Aumento de INT e +12 de Q.V.', inc:1, incAttr:'INT', qv:12},
+  {id:'mentalPre',  n:'Treino Mental (PRE)',        d:'Aumento de PRE e +15 de E.S.', inc:1, incAttr:'PRE', es:15},
   {id:'musculo',    n:'Recuperar Músculo',          d:'Em combate, use a ação de movimento para se curar em 8 + CON.'},
   {id:'concreto',   n:'Bloquear Concreto',          d:'Ao receber um ataque, pode usar sua reação como contra-ataque.'},
   {id:'rua',        n:'Instinto de Rua',            d:'+1 de C.A e +1 de movimentação ao lutar dentro do seu próprio distrito.'},
@@ -3532,12 +3532,17 @@ function calc(){
     add('qv', Math.round(sum('qv') * LIDER_BONUS.qv), 'Líder de gangue'); add('es', Math.round(sum('es') * LIDER_BONUS.es), 'Líder de gangue');
     add('ca', LIDER_BONUS.ca, 'Líder de gangue'); add('mov', LIDER_BONUS.mov, 'Líder de gangue');
   }
-  const incAvail = 2 + S.belt + activeArchs().filter(a=>a.inc).length;
+  /* aumentos de status: os da faixa são livres; os de arquétipo só valem no atributo dele
+     (ex.: Treino Mental (INT) só aumenta INT). Um arquétipo sem atributo definido conta como livre. */
+  const incFixos = {}; let incLivre = 2 + S.belt;
+  activeArchs().filter(a=>a.inc).forEach(a=>{ if(a.incAttr) incFixos[a.incAttr] = (incFixos[a.incAttr]||0) + a.inc; else incLivre += a.inc; });
   const incUsed = Object.values(A).reduce((a,v)=>a+(v-6)/2, 0);
+  const incAvail = incLivre + Object.values(incFixos).reduce((a,b)=>a+b, 0);
+  const incLivreUsado = Object.keys(A).reduce((a,k)=>a + Math.max(0, (A[k]-6)/2 - (incFixos[k]||0)), 0);
   const pcConvN = S.pcConv.length;
   const pcTec = S.tecs.reduce((a,t)=>a+(+t.nivel||0), 0);
   return {N, bd, qvMax:Math.max(1,sum('qv')), esMax:Math.max(0,sum('es')), ca:sum('ca'), mov:sum('mov'),
-          incAvail, incUsed, pcEarned:N, pcTec, pcConvN, pcAvail:N - pcTec - pcConvN};
+          incAvail, incUsed, incFixos, incLivre, incLivreUsado, pcEarned:N, pcTec, pcConvN, pcAvail:N - pcTec - pcConvN};
 }
 const tipOf = rows => rows.map(([w,v])=>`${w}: ${v>0?'+':''}${fmt(v)}`).join(' · ');
 
@@ -3652,12 +3657,14 @@ function renderAttrs(){
       <button class="die ${v>6?'up':''}" data-roll-attr="${a.k}" aria-label="Rolar ${a.n} d${v}"><span>d${v}</span></button>
       <div class="stepper">
         <button data-attr="${a.k}" data-d="-2" ${v<=6?'disabled':''} aria-label="Diminuir ${a.n}">−</button>
-        <button data-attr="${a.k}" data-d="2" ${v>=18?'disabled':''} aria-label="Aumentar ${a.n}">+</button>
+        <button data-attr="${a.k}" data-d="2" ${v>=18 || !podeAumentar(a.k) ? 'disabled' : ''} aria-label="Aumentar ${a.n}" title="${podeAumentar(a.k) || v>=18 ? '' : 'Sem aumento disponível para ' + a.k}">+</button>
       </div>
     </div>`;
   }).join('');
-  const over = D.incUsed > D.incAvail;
-  $('#incNote').innerHTML = `Aumentos de status: <b class="mono ${over?'warn':''}">${D.incUsed} / ${D.incAvail}</b>${over?' <span class="warn">— acima do permitido</span>':D.incUsed<D.incAvail?' <span class="warn">— você tem aumento disponível</span>':''}`;
+  const over = D.incLivreUsado > D.incLivre;
+  const fixos = Object.entries(D.incFixos || {}).map(([k,n])=>{ const u = Math.min(n, (S.attrs[k]-6)/2); return `<b class="mono">${k} ${u}/${n}</b>`; }).join(' · ');
+  $('#incNote').innerHTML = `Aumentos de status: <b class="mono ${over?'warn':''}">${D.incUsed} / ${D.incAvail}</b>${over?' <span class="warn">— acima do permitido</span>':D.incUsed<D.incAvail?' <span class="warn">— você tem aumento disponível</span>':''}`
+    + (fixos ? `<br><span class="muted">Livres (da faixa): <b class="mono">${Math.min(D.incLivreUsado, D.incLivre)}/${D.incLivre}</b> · só no atributo do arquétipo: ${fixos}</span>` : '');
 }
 
 function renderDerived(){
@@ -3825,6 +3832,12 @@ const LIMITES = {
 };
 /* sem limite para NPCs e quando o mestre edita a ficha de outra pessoa */
 const semLimite = () => !!S.npc || (typeof EDIT_OTHER !== 'undefined' && EDIT_OTHER);
+/* dá para subir este atributo? Usa o aumento do arquétipo dele, se sobrar; senão, um livre da faixa. NPC e mestre não têm limite. */
+function podeAumentar(k){
+  if(semLimite()) return true;
+  const usados = (S.attrs[k]-6)/2, fixos = (D.incFixos || {})[k] || 0;
+  return usados < fixos || (D.incLivreUsado ?? 0) < (D.incLivre ?? 0);
+}
 const limGolpes = () => LIMITES.golpes[S.belt] ?? 1;
 const limTec = () => LIMITES.tecnicas[S.belt] ?? 1;
 function golpesAprendidos(){
@@ -4593,7 +4606,10 @@ document.addEventListener('click', e=>{
   if(t.id==='photo'){ $('#photoFile').click(); return; }
 
   if(d.rollAttr){ rollAttr(d.rollAttr); return; }
-  if(d.attr){ S.attrs[d.attr] = clamp(S.attrs[d.attr] + (+d.d), 6, 18); save(); renderAll(); return; }
+  if(d.attr){
+    if(+d.d > 0 && !podeAumentar(d.attr)){ toast('Sem aumento para ' + d.attr, 'Os aumentos livres acabaram e nenhum arquétipo seu dá aumento neste atributo.'); return; }
+    S.attrs[d.attr] = clamp(S.attrs[d.attr] + (+d.d), 6, 18); save(); renderAll(); return;
+  }
   if(d.vit){ changeVital(d.vit, d.op, $('#'+d.vit+'Amt').value); $('#'+d.vit+'Amt').value=''; return; }
   if(d.act!==undefined){ S.actions[+d.act] = !S.actions[+d.act]; save(); renderCombat(); return; }
   if(d.cuse!==undefined){ const i=+d.cuse; S.classUsed = S.classUsed>i ? i : i+1; save(); renderCombat(); return; }
@@ -4862,7 +4878,8 @@ function randomNpc(tipo, faixa){
   // dados: 2 iniciais + 1 por faixa + arquétipos que aumentam dado, puxando para os dados do estilo
   const st = STYLES[s.estilo], w = {FOR:3, CON:2, AGI:3, INT:1, PRE:1};
   st.m.forEach(m=>{ const p = parseDmg(m); if(p) p.dice.forEach(k=>w[k]++); });
-  let inc = 2 + s.belt + s.arch.filter(id=>ARCHS.find(a=>a.id===id)?.inc).length;
+  let inc = 2 + s.belt;
+  s.arch.forEach(id=>{ const a = ARCHS.find(x=>x.id===id); if(!a?.inc) return; if(a.incAttr && s.attrs[a.incAttr] < 18) s.attrs[a.incAttr] += 2; else inc++; });
   while(inc-- > 0){
     const avail = Object.keys(w).filter(k=>s.attrs[k] < 18); if(!avail.length) break;
     let r = Math.random() * avail.reduce((a,k)=>a + w[k], 0), k = avail[0];
