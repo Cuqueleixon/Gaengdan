@@ -126,6 +126,50 @@ table{border-collapse:collapse; width:100%}
 .d-extra .callout{padding:3.4mm 4.4mm}
 .d-extra .callout p{font-size:8.7pt; line-height:1.48; color:var(--ink-2)}
 .d-extra .lbl{display:block; color:var(--yellow); margin-bottom:1.4mm}
+/* câmera de vigilância de 1994 flagrando o líder (no lugar do antigo "gancho de aventura") */
+.callout.cctv{position:relative; margin:0; padding:0; min-height:34mm; overflow:hidden; background:#040504; border-left:2px solid var(--yellow)}
+/* o rosto (--fx, --fy) fica no centro do quadro, ampliado --z vezes a largura do quadro */
+.cctv-img{position:absolute; left:50%; top:50%; width:calc(var(--z) * 100%); height:auto; max-width:none; border:0;
+  transform:translate(calc(var(--fx) * -100%), calc(var(--fy) * -100%));
+  filter:grayscale(1) sepia(.55) hue-rotate(58deg) saturate(1.5) contrast(1.35) brightness(.82)}
+.cctv::after{ /* linhas de vídeo + vinheta da lente */
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:
+    repeating-linear-gradient(180deg, rgba(0,0,0,.32) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0,0,0,.7) 100%);
+}
+.cctv-alvo{ /* mira travada no rosto */
+  position:absolute; left:35%; top:15%; width:30%; height:64%; z-index:1;
+  background:
+    linear-gradient(var(--yellow),var(--yellow)) left top/3.2mm .45mm no-repeat, linear-gradient(var(--yellow),var(--yellow)) left top/.45mm 3.2mm no-repeat,
+    linear-gradient(var(--yellow),var(--yellow)) right top/3.2mm .45mm no-repeat, linear-gradient(var(--yellow),var(--yellow)) right top/.45mm 3.2mm no-repeat,
+    linear-gradient(var(--yellow),var(--yellow)) left bottom/3.2mm .45mm no-repeat, linear-gradient(var(--yellow),var(--yellow)) left bottom/.45mm 3.2mm no-repeat,
+    linear-gradient(var(--yellow),var(--yellow)) right bottom/3.2mm .45mm no-repeat, linear-gradient(var(--yellow),var(--yellow)) right bottom/.45mm 3.2mm no-repeat;
+}
+.cctv-alvo b{position:absolute; left:0; top:100%; margin-top:.9mm; padding:.35mm 1.4mm; background:var(--yellow); color:var(--on-yellow);
+  font-family:var(--mono); font-weight:700; font-size:5.6pt; letter-spacing:.04em; white-space:nowrap}
+.cctv-osd{position:absolute; inset:0; z-index:2; font-family:var(--mono); font-weight:700; font-size:6.4pt; letter-spacing:.06em; color:#dfffe0;
+  text-shadow:0 0 2px rgba(150,255,160,.6), .3mm 0 rgba(255,60,60,.35), -.3mm 0 rgba(60,160,255,.35)}
+.cctv-osd > span{position:absolute}
+.cctv-rec{left:2.6mm; top:2.2mm; display:flex; align-items:center; gap:1.2mm}
+.cctv-rec i{width:1.9mm; height:1.9mm; border-radius:50%; background:#ff2b1f; box-shadow:0 0 1.2mm #ff2b1f}
+.cctv-cam{right:2.6mm; top:2.2mm}
+.cctv-data{left:2.6mm; bottom:2.2mm}
+.cctv-gang{right:2.6mm; top:5.4mm; color:var(--yellow)}
+@media screen and (prefers-reduced-motion: no-preference){
+  .cctv-rec i{animation:cctv-pisca 1.2s steps(1) infinite}
+  .cctv-alvo{animation:cctv-segue 7s ease-in-out infinite}
+  .cctv-img{animation:cctv-treme 5s steps(1) infinite}
+  .cctv::before{ /* faixa de ruído rolando, como fita gravada */
+    content:''; position:absolute; left:0; right:0; height:22%; top:-25%; z-index:1; pointer-events:none; mix-blend-mode:screen;
+    background:linear-gradient(180deg, transparent, rgba(200,255,200,.1) 45%, rgba(200,255,200,.18) 50%, rgba(200,255,200,.06) 58%, transparent);
+    animation:cctv-faixa 4.5s linear infinite;
+  }
+}
+@keyframes cctv-pisca{50%{opacity:0}}
+@keyframes cctv-segue{0%,100%{transform:translate(0,0)} 30%{transform:translate(1.2mm,.5mm)} 55%{transform:translate(-.8mm,-.4mm)} 80%{transform:translate(.4mm,.9mm)}}
+@keyframes cctv-treme{0%,92%,97%,100%{margin-left:0} 93%{margin-left:.6mm} 95%{margin-left:-.4mm}}   /* margem, não transform: o transform centraliza o rosto */
+@keyframes cctv-faixa{to{top:110%}}
 .d-meta{margin-top:4mm; border-top:1px solid var(--line)}
 .d-meta div{display:flex; justify-content:space-between; gap:3mm; padding:2.3mm 0; border-bottom:1px solid var(--line)}
 .d-meta .v{font-weight:800; font-stretch:85%; font-size:9.6pt; text-transform:uppercase; letter-spacing:.03em; color:var(--ink); text-align:right}
@@ -1198,6 +1242,9 @@ const esc = s => s;
 // índice de distritos
 $('#d-index tbody').innerHTML = DISTRICTS.map((d,i)=>`<tr><td class="n">${pad(i+1)}</td><td class="nm">${d.t.replace(/^Distrito (da |do |dos |de )?/,'')}</td><td>${d.g}</td><td>${d.l}</td><td class="pg" data-pg="d-${i+1}"></td></tr>`).join('');
 
+// câmera de vigilância: onde fica o rosto do líder em cada retrato (x, y em fração da imagem) e o zoom
+const FOCO = [[.42,.17],[.34,.15,1.5],[.5,.29],[.57,.22],[.55,.18],[.47,.36],[.6,.22],[.4,.15],[.53,.15],[.64,.15,1.5],[.5,.26],[.46,.12,2.3],[.4,.19],[.47,.19],[.43,.29]];
+
 // páginas de distrito
 $('#districts').innerHTML = DISTRICTS.map((d,i)=>`
 <section class="page district" data-run="Distritos" id="d-${i+1}">
@@ -1221,7 +1268,16 @@ $('#districts').innerHTML = DISTRICTS.map((d,i)=>`
     <div class="d-txt">${d.p.map(p=>`<p${/^Em 1994/.test(p)?' class="y1994"':''}>${p}</p>`).join('')}</div>
   </div>
   <div class="d-extra">
-    <div class="callout"><span class="lbl">Gancho de aventura</span><p>${DX[i].h}</p></div>
+    <figure class="callout cctv" style="--fx:${FOCO[i][0]}; --fy:${FOCO[i][1]}; --z:${FOCO[i][2] || 1.35}" aria-label="Imagem de câmera de vigilância: ${d.l}, ${d.t}">
+      <img class="cctv-img" src="assets/d${pad(i+1)}.jpg" alt="">
+      <span class="cctv-alvo" aria-hidden="true"><b>ALVO · ${d.l}</b></span>
+      <span class="cctv-osd" aria-hidden="true">
+        <span class="cctv-rec"><i></i>REC</span>
+        <span class="cctv-cam">CAM ${pad(i+1)} · ${d.t.replace(/^Distrito (da |do |dos |de )?/,'').toUpperCase()}</span>
+        <span class="cctv-data">${String(3 + (i * 7) % 26).padStart(2,'0')}/11/1994 &nbsp;${String(19 + (i * 3) % 5).padStart(2,'0')}:${String((i * 23 + 7) % 60).padStart(2,'0')}</span>
+        <span class="cctv-gang">${d.g}</span>
+      </span>
+    </figure>
     <div class="callout"><span class="lbl">Regra do território</span><p>${DX[i].x}</p></div>
   </div>
 </section>`).join('');
