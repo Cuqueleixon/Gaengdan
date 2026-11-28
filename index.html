@@ -1851,7 +1851,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.6</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.7</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -3735,14 +3735,14 @@ function activeArchs(){ return S.arch.map((id,i)=> S.belt >= ARCH_SLOTS[i].belt 
 const val = (x,ctx)=> typeof x==='function' ? x(ctx) : (x||0);
 
 function calc(){
-  const A = S.attrs, N = levelTotal(), ctx = {...A, N};
+  const A = S.attrs, N = levelTotal(), G = N - 1, ctx = {...A, N: G};   /* N = nível do personagem; G = níveis subidos (o livro: "a cada level" que sobe). Nas fórmulas dos arquétipos, N = G. */
   const bd = {qv:[], es:[], ca:[], mov:[]};
   const add = (k, v, why)=>{ if(v) bd[k].push([why, v]); };
 
   add('qv', 7*A.CON + N, `7×CON + Nível (${N})`);
-  add('qv', N*(2+A.CON), `Níveis (${N} × (2+CON))`);
+  add('qv', G*(2+A.CON), `Níveis subidos (${G} × (2+CON))`);
   add('es', 4*A.PRE + N, `4×PRE + Nível (${N})`);
-  add('es', N*(1+A.PRE), `Níveis (${N} × (1+PRE))`);
+  add('es', G*(1+A.PRE), `Níveis subidos (${G} × (1+PRE))`);
   add('ca', A.CON + A.AGI, 'CON + AGI');
   add('mov', Math.floor((A.AGI + A.INT)/1.5), '(AGI + INT) / 1,5');
 
