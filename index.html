@@ -1722,6 +1722,102 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
 body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 
 /* animação dos dados (a mesma do Owlbear: gravação VHS de 1994) */
+/* v3.6 · cor do personagem, reputação, sequelas e linha do tempo */
+.cor-row{display:flex; gap:8px; flex-wrap:wrap}
+.cor-sw{width:30px; height:30px; border-radius:50%; background:var(--c); border:2px solid #333; cursor:pointer; padding:0}
+.cor-sw:hover{border-color:#777} .cor-sw.on{border-color:#fff; box-shadow:0 0 0 2px #000, 0 0 12px var(--c)}
+.cor-sw:disabled{cursor:default; opacity:.7}
+.rep-list{display:grid; gap:4px}
+.rep-row{display:grid; grid-template-columns:minmax(0,1fr) auto 120px; gap:10px; align-items:center; padding:5px 8px; background:var(--panel-2); border:1px solid var(--line); border-radius:2px}
+.rep-g{font-weight:700; font-size:13.5px; display:flex; flex-direction:column; min-width:0}
+.rep-g small{font-family:var(--mono); font-size:10.5px; font-weight:500; color:var(--ink-3); letter-spacing:.04em}
+.rep-pips{display:flex; gap:3px}
+.rep-pip{width:16px; height:16px; border:1px solid var(--line-2); background:transparent; border-radius:2px; padding:0; cursor:pointer}
+.rep-pip.zero{width:8px; border-color:transparent; background:var(--line-2)}
+.rep-pip.neg.on{background:var(--red); border-color:var(--red)}
+.rep-pip.pos.on{background:var(--green); border-color:var(--green)}
+.rep-pip.zero.on{background:var(--ink-3)}
+.rep-pip:disabled{cursor:default}
+.rep-n{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); text-align:right}
+.rep-n.neg{color:var(--red-2)} .rep-n.pos{color:var(--green)}
+@media (max-width:560px){ .rep-row{grid-template-columns:1fr auto} .rep-n{grid-column:1 / -1; text-align:left} }
+.seq-list{display:grid; gap:6px}
+.seq{display:grid; grid-template-columns:minmax(0,180px) minmax(0,1fr) auto; gap:10px; align-items:center; padding:8px 10px; background:var(--panel-2); border:1px solid var(--line); border-left:3px solid var(--red); border-radius:2px}
+.seq b{font-size:14px} .seq span{font-size:13px; color:var(--ink-2)}
+@media (max-width:560px){ .seq{grid-template-columns:1fr auto} .seq span{grid-column:1 / -1} }
+.diario-add{display:flex; gap:8px; margin-bottom:12px} .diario-add .box{flex:1}
+.timeline{display:grid; gap:2px; border-left:2px solid var(--line-2); margin-left:8px; padding-left:16px}
+.tl-dia{font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--yellow); margin:10px 0 4px -16px; padding-left:16px; position:relative}
+.tl-dia::before{content:''; position:absolute; left:-6px; top:4px; width:8px; height:8px; background:var(--yellow); border-radius:50%}
+.tl-i{display:grid; grid-template-columns:22px minmax(0,1fr) auto auto; gap:8px; align-items:center; padding:5px 0; font-size:14px}
+.tl-ico{text-align:center; color:var(--ink-2)} .tl-h{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.tl-caiu .tl-ico,.tl-morte .tl-ico,.tl-sequela .tl-ico{color:var(--red-2)} .tl-nivel .tl-ico,.tl-faixa .tl-ico{color:var(--yellow)} .tl-xp .tl-ico{color:var(--green)}
+.tl-morte .tl-txt{color:var(--red-2); font-weight:700}
+.tl-x{border:0; background:none; color:var(--ink-3); cursor:pointer; font-size:16px; line-height:1; opacity:0} .tl-i:hover .tl-x,.tl-x:focus-visible{opacity:1}
+/* v3.6 · Tenkawa: mapa de território e jornal */
+.tenkawa{max-width:1280px; margin:0 auto; padding:22px 18px 60px; display:grid; gap:16px}
+.tk-head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap}
+.tk-head .hint{color:var(--red-2); max-width:520px}
+.tk-grid{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:16px; align-items:start}
+@media (max-width:980px){ .tk-grid{grid-template-columns:1fr} }
+.tk-svg{width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:3px}
+.tk-d{cursor:default; outline:none}
+.tenkawa .tk-d{cursor:pointer}
+.tk-d .tk-borda{fill:none; stroke:rgba(255,255,255,.18); stroke-width:1}
+.tk-d:hover .tk-borda,.tk-d:focus-visible .tk-borda{stroke:#fff; stroke-width:2}
+.tk-d.sel .tk-borda{stroke:var(--yellow); stroke-width:3}
+.tk-d.mudou .tk-borda{stroke-dasharray:4 3; stroke:rgba(255,255,255,.55)}
+.tk-n{font:900 15px var(--mono, monospace); fill:rgba(255,255,255,.45)}
+.tk-nome{font:700 11.5px Archivo, sans-serif; fill:#fff; letter-spacing:.02em}
+.tk-dono{font:500 9.5px var(--mono, monospace); fill:rgba(255,255,255,.75); letter-spacing:.06em; text-transform:uppercase}
+.tk-nome.escuro,.tk-dono.escuro{fill:#141414}
+.tk-mar{font:700 10px var(--mono, monospace); fill:#3f6b9c; letter-spacing:.4em}
+.tk-edit{display:grid; gap:4px; margin-top:12px}
+.tk-ed-h{font-size:13px; color:var(--ink-3); margin-bottom:4px}
+.tk-ed{display:grid; grid-template-columns:170px minmax(0,190px) minmax(0,1fr); gap:6px; align-items:center; padding:3px 6px; border-radius:2px}
+.tk-ed.sel{background:rgba(242,194,48,.1); outline:1px solid rgba(242,194,48,.4)}
+.tk-ed-n{font-family:var(--mono); font-size:11.5px; color:var(--ink-2)}
+@media (max-width:640px){ .tk-ed{grid-template-columns:1fr 1fr} .tk-ed-n{grid-column:1 / -1} }
+.tk-pub{display:grid; gap:8px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--line)}
+.tk-pub textarea{min-height:80px}
+.tk-news{display:grid; gap:10px}
+.tk-n-i{padding:12px 14px; background:#efe6d2; color:#1a1712; border-radius:2px; box-shadow:0 2px 0 #000}
+.tk-n-meta{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:#6b5f4a}
+.tk-n-i h3{margin:4px 0 6px; font:900 21px/1.1 Archivo, serif; font-stretch:80%; text-transform:uppercase; color:#111}
+.tk-n-i p{margin:0; font-size:14px; line-height:1.45; color:#2b261d}
+.tk-n-acts{display:flex; gap:6px; margin-top:10px}
+/* golpe especial (cut-in) */
+.cutin{position:fixed; inset:0; z-index:205; pointer-events:none; display:grid; align-items:center; animation:ciFora .35s 2.25s forwards}
+@keyframes ciFora{to{opacity:0}}
+.ci-faixa{position:relative; height:clamp(150px,30vh,280px); background:#0b0a0c; border-top:4px solid var(--c); border-bottom:4px solid var(--c); overflow:hidden; transform:skewY(-4deg); animation:ciEntra .28s cubic-bezier(.2,.9,.2,1) both; box-shadow:0 0 60px rgba(0,0,0,.8)}
+@keyframes ciEntra{from{transform:skewY(-4deg) translateX(-110%)} to{transform:skewY(-4deg) translateX(0)}}
+.ci-linhas{position:absolute; inset:0; background:repeating-linear-gradient(90deg, transparent 0 28px, rgba(255,255,255,.08) 28px 30px); animation:ciVel .25s linear infinite}
+@keyframes ciVel{to{background-position:-60px 0}}
+.ci-faixa::before{content:''; position:absolute; inset:0; background:linear-gradient(90deg, var(--c) 0%, transparent 55%); opacity:.45}
+.ci-foto{position:absolute; left:6%; top:-10%; height:120%; aspect-ratio:3/4; object-fit:cover; object-position:50% 18%; filter:contrast(1.2) saturate(1.1); border-left:4px solid var(--c); border-right:4px solid var(--c); transform:skewY(4deg); animation:ciFoto .5s .08s cubic-bezier(.2,.9,.2,1) both}
+.ci-ini{display:grid; place-items:center; background:#1a1a1a; font:900 90px Archivo, sans-serif; color:var(--c)}
+@keyframes ciFoto{from{transform:skewY(4deg) translateX(-60px) scale(1.2); opacity:0} to{transform:skewY(4deg) none; opacity:1}}
+.ci-txt{position:absolute; left:calc(6% + clamp(150px,30vh,280px) * .9 + 40px); right:4%; top:50%; transform:translateY(-50%) skewY(4deg); display:flex; flex-direction:column; gap:4px}
+.ci-nome{font-family:var(--mono); font-size:clamp(12px,1.6vw,18px); letter-spacing:.3em; text-transform:uppercase; color:var(--c)}
+.ci-golpe{font:900 clamp(30px,6vw,84px)/.95 Archivo, sans-serif; font-stretch:72%; text-transform:uppercase; color:#fff; text-shadow:4px 4px 0 #000, 0 0 30px var(--c); animation:ciGolpe .45s .15s cubic-bezier(.2,1.4,.3,1) both}
+@keyframes ciGolpe{from{transform:scale(1.6); opacity:0} to{transform:none; opacity:1}}
+.ci-nv{font-family:var(--mono); font-size:clamp(10px,1.1vw,13px); letter-spacing:.2em; color:rgba(255,255,255,.6)}
+/* plantão em VHS */
+.plantao{position:fixed; inset:0; z-index:210; background:#000; display:grid; place-items:center; animation:plIn .25s steps(3)}
+@keyframes plIn{from{filter:brightness(3) contrast(2); transform:scaleY(.02)} to{filter:none; transform:none}}
+.pl-tela{position:relative; width:min(1100px,100vw); aspect-ratio:16/9; max-height:100vh; background:radial-gradient(ellipse at 50% 40%, #1b2440, #05070d 75%); overflow:hidden; font-family:var(--mono); color:#f4f4f4}
+.pl-tela::after{content:''; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 2px, transparent 2px 4px); mix-blend-mode:multiply}
+.pl-osd{position:absolute; top:4%; left:4%; right:4%; display:flex; justify-content:space-between; font-size:clamp(12px,1.8vw,20px); letter-spacing:.12em; text-shadow:2px 2px 0 #000}
+.pl-vivo{color:#ff3b30; animation:plPisca 1s steps(1) infinite}
+@keyframes plPisca{50%{opacity:.2}}
+.pl-faixa{position:absolute; top:20%; left:0; padding:.3em 1.2em .3em 4%; background:#c8102e; font:900 clamp(26px,5vw,64px) Archivo, sans-serif; font-stretch:75%; letter-spacing:.08em; box-shadow:6px 6px 0 #000}
+.pl-local{position:absolute; top:36%; left:4%; font-size:clamp(11px,1.5vw,16px); letter-spacing:.2em; color:#f2c230; text-transform:uppercase}
+.pl-titulo{position:absolute; top:42%; left:4%; right:4%; margin:0; font:900 clamp(24px,4.4vw,56px)/1.05 Archivo, sans-serif; font-stretch:80%; text-transform:uppercase; text-shadow:3px 3px 0 #000}
+.pl-texto{position:absolute; top:66%; left:4%; right:12%; margin:0; font-family:Archivo, sans-serif; font-size:clamp(13px,1.6vw,19px); line-height:1.4; color:#cfd6e6}
+.pl-ticker{position:absolute; left:0; right:0; bottom:0; padding:.55em 0; background:#f2c230; color:#111; font-weight:700; font-size:clamp(12px,1.5vw,17px); white-space:nowrap; overflow:hidden}
+.pl-ticker span{display:inline-block; padding-left:100%; animation:plTicker 16s linear infinite}
+@keyframes plTicker{to{transform:translateX(-100%)}}
+.plantao .ab-x{position:absolute; top:14px; right:14px; width:40px; height:40px; border:1px solid rgba(255,255,255,.25); background:rgba(0,0,0,.55); color:#fff; font-size:22px; cursor:pointer; opacity:.4}
 /* v3.5 · cor da borda do token */
 .tok-cor .tc-linha{display:flex; gap:16px; align-items:center; flex-wrap:wrap}
 .tok-cor .tc-prev{width:132px; height:132px; flex:none}
@@ -1754,12 +1850,13 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.5</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.6</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
     <button class="navbtn" data-nav="inicio">Início</button>
     <button class="navbtn" data-nav="ficha" id="navFicha" hidden>Minha ficha</button>
+    <button class="navbtn" data-nav="tenkawa" id="navTenkawa" hidden>Tenkawa <span class="tc hot" id="tcNews"></span></button>
     <button class="navbtn gm" data-nav="mestre" id="navMestre" hidden>Escudo do mestre</button>
     <a class="navbtn" href="livro/index.html" target="_blank" rel="noopener">Livro de regras ↗</a>
   </nav>
@@ -1793,6 +1890,34 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
   <div class="card gate-card" id="gateCard">
     <h2 class="sec"><span class="n">ENTRADA</span>Entrar na mesa<span class="kr">입장</span></h2>
     <div id="gateBody"><p class="hint">Conectando à sua conta…</p></div>
+  </div>
+</section>
+
+<!-- ================= TENKAWA: TERRITÓRIO E JORNAL (v3.6) ================= -->
+<section class="tenkawa" id="tenkawaView" hidden>
+  <div class="tk-head">
+    <div><p class="eyebrow">Tenkawa · 1994</p><h1 class="shield-title">A cidade</h1></div>
+    <p class="hint" id="tkAviso"></p>
+  </div>
+  <div class="tk-grid">
+    <section class="panel tk-mapa-p">
+      <div class="panel-h"><h2>Território</h2><span class="aside" id="tkLegenda">quem manda em cada distrito</span></div>
+      <div class="tk-mapa" id="tkMapa"></div>
+      <div class="tk-edit" id="tkEdit" hidden></div>
+    </section>
+    <section class="panel tk-jornal-p">
+      <div class="panel-h"><h2>Jornal de Tenkawa <span class="kr">天川新聞</span></h2></div>
+      <form class="tk-pub" id="tkPub" hidden>
+        <input class="box" id="tkTitulo" maxlength="140" placeholder="Manchete: “Briga na Estação Fantasma deixa 3 feridos”" aria-label="Manchete" required>
+        <textarea class="box" id="tkTexto" maxlength="1500" placeholder="O que os jornais (e as ruas) estão dizendo…" aria-label="Texto da notícia"></textarea>
+        <div class="row" style="gap:8px; flex-wrap:wrap">
+          <select class="box" id="tkDistrito" aria-label="Distrito da notícia"></select>
+          <button class="btn red" type="submit">Publicar</button>
+          <label class="chk"><input type="checkbox" id="tkJaTransmite" checked> Transmitir o plantão na hora</label>
+        </div>
+      </form>
+      <div class="tk-news" id="tkNews"></div>
+    </section>
   </div>
 </section>
 
@@ -1830,7 +1955,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 <div class="hero-stats">
       <div class="stat" id="stCA" data-tip=""><div class="v">0</div><div class="l">C.A</div></div>
       <div class="stat" id="stMOV" data-tip=""><div class="v">0</div><div class="l">Movim.</div></div>
-      <div class="stat" id="stN" data-tip="Nível total (Faixa Branca nível 1 = 0)"><div class="v">0</div><div class="l">Nível</div></div>
+      <div class="stat" id="stN" data-tip="Nível total (Faixa Branca nível 1 = 1)"><div class="v">0</div><div class="l">Nível</div></div>
       <div class="stat" id="stPC" data-tip="Pontos de Combate disponíveis"><div class="v">0</div><div class="l">PC</div></div>
     </div>
     <div class="hero-alerts">
@@ -1848,6 +1973,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
     <button class="tab" data-tab="golpes" role="tab">Golpes <span class="tc" id="tcGolpes"></span></button>
     <button class="tab" data-tab="inv" role="tab">Inventário <span class="tc" id="tcInv"></span></button>
     <button class="tab" data-tab="notas" role="tab">Notas</button>
+    <button class="tab" data-tab="diario" role="tab">Linha do tempo</button>
     <button class="tabs-act" data-win="dados">Rolar dados</button>
     <a class="tabs-act livro-btn" href="livro/index.html" target="_blank" rel="noopener" title="Abre o livro de regras numa nova aba">Livro de regras</a>
   </nav>
@@ -1860,6 +1986,14 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
         <div class="panel-h"><h2>Perfil</h2><button class="btn sm" data-win="perfil">Editar perfil</button></div>
         <dl class="facts" id="factsPerfil"></dl>
         <p class="gang-note" id="gangView" hidden></p>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h2>Cor do personagem</h2><span class="aside">aparece no VS, no K.O. e no golpe especial do Owlbear</span></div>
+        <div class="cor-row" id="corView"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h2>Reputação nas ruas</h2><span class="aside" id="repHint"></span></div>
+        <div class="rep-list" id="repView"></div>
       </section>
     </div>
 
@@ -1927,6 +2061,10 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
           </div>
         </section>
       </div>
+      <section class="panel">
+        <div class="panel-h"><h2>Sequelas <span class="tc" id="tcSeq"></span></h2><button class="btn sm red" id="btnSequela" title="Role quando o lutador cair em combate e sobreviver">🩸 Rolar sequela (d20)</button></div>
+        <div class="seq-list" id="seqView"></div>
+      </section>
     </div>
 
     <!-- GOLPES -->
@@ -1965,6 +2103,15 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
       </section>      <section class="panel">
         <div class="panel-h"><h2>Outros itens</h2></div>
         <textarea class="box" data-k="itens" placeholder="Walkman, cigarros, chave do armário…"></textarea>
+      </section>
+    </div>
+
+    <!-- LINHA DO TEMPO (v3.6) -->
+    <div class="pane" id="pane-diario" role="tabpanel">
+      <section class="panel">
+        <div class="panel-h"><h2>Linha do tempo</h2><span class="aside">a história do lutador, do mais novo para o mais antigo</span></div>
+        <div class="diario-add" id="diarioAdd"><input class="box" id="diarioTxt" maxlength="300" placeholder="Anote algo que aconteceu: “Derrotou o Navalha no Porto Cinzento”…" aria-label="Novo evento na linha do tempo"><button class="btn sm red" id="btnDiario">Anotar</button></div>
+        <div class="timeline" id="diarioView"></div>
       </section>
     </div>
 
@@ -2631,6 +2778,7 @@ const blank = () => ({
   tecs:[],
   notas:{aparencia:'',personalidade:'',historia:'',aliados:'',rivais:'',sessao:''},
   log:[],
+  cor:'', sequelas:[], rep:{}, diario:[],   // v3.6
 });
 let S = load();
 
@@ -2686,6 +2834,7 @@ function traduz(err){
 /* ---------------- Salvamento ---------------- */
 function save(){
   if(RO) return;
+  vigiarEventos();   // v3.6: XP, níveis, quedas e morte entram sozinhos na linha do tempo
   clearTimeout(saveT);
   setSaved('salvando…');
   saveT = setTimeout(()=>{ saveT = null; flush(); }, 700);
@@ -2722,6 +2871,7 @@ function avisarVida(id, d){
   const fx = d.fx && typeof d.fx === 'object' ? Object.fromEntries(Object.entries(d.fx).filter(([,v])=>v)) : {};
   ch.send({type:'broadcast', event:'vida', payload:{id, dados:{
     qv:d.qv, es:d.es, last:{qv:d.last?.qv, es:d.last?.es}, info:{nome:String(d.info?.nome || '').slice(0,60)}, npc:!!d.npc, fx,
+    cor:String(d.cor || ''), tcm:+d.tcm || 0,
   }}}).catch(()=>{});
 }
 
@@ -2893,6 +3043,7 @@ function route(){
   if((RO || EDIT_OTHER) && h !== 'ficha') leaveOther();
   if(AUTH.recovery) show('inicio');
   else if(h === 'mestre' && AUTH.mestre) show('mestre');
+  else if(h === 'tenkawa' && AUTH.user) show('tenkawa');
   else if(h === 'ficha' && (AUTH.chosen || RO || EDIT_OTHER)) show('ficha');
   else show('inicio');
 }
@@ -2902,6 +3053,8 @@ function show(view){
   $('#gateView').hidden = view !== 'inicio';
   $('#sheetView').hidden = view !== 'ficha';
   $('#shieldView').hidden = view !== 'mestre';
+  $('#tenkawaView').hidden = view !== 'tenkawa';
+  $('#navTenkawa').hidden = !AUTH.user;
   $('#roBanner').hidden = !(view === 'ficha' && other);
   $('#fichaTools').hidden = view !== 'ficha';
   $('#btnImport').hidden = RO; $('#btnNew').hidden = RO; $('#saved').hidden = RO;
@@ -2913,6 +3066,7 @@ function show(view){
   if(other) updateRoBanner();
   if(view === 'ficha'){ renderAll(); const ot = $('.tab.on'); setTab(ot ? ot.dataset.tab : 'perfil'); }
   if(view === 'mestre') startShield();
+  if(view === 'tenkawa') abrirTenkawa();
   if(view === 'inicio') renderGate();
   window.scrollTo(0, 0);
 }
@@ -2964,8 +3118,9 @@ function startRealtime(){
   startExtrasRealtime();
   aberturaCanal();
   canalVida();
+  tenkawaCanal(); plantaoCanal();
 }
-function stopRealtime(){ if(channel){ sb.removeChannel(channel); channel = null; LIVE = false; } stopExtrasRealtime(); aberturaSair(); if(VIDA_CH){ sb.removeChannel(VIDA_CH); VIDA_CH = null; } }
+function stopRealtime(){ if(channel){ sb.removeChannel(channel); channel = null; LIVE = false; } stopExtrasRealtime(); aberturaSair(); if(VIDA_CH){ sb.removeChannel(VIDA_CH); VIDA_CH = null; } tenkawaSair(); if(PL_CH){ sb.removeChannel(PL_CH); PL_CH = null; } }
 function onFichaChange(p){
   if(p.eventType === 'DELETE'){
     const id = p.old?.id;
@@ -3636,7 +3791,7 @@ function renderAll(){
   syncVitals();
   renderInputs(); renderPhoto(); renderGang(); renderBelt(); renderAttrs(); renderDerived();
   renderCombat(); renderFx(); renderClass(); renderMoves(); renderInv(); renderTec(); renderLog();
-  renderSheetViews(); renderWin();
+  renderSheetViews(); renderWin(); renderExtras();
 }
 function renderInputs(){
   $$('[data-k]').forEach(el=>{
@@ -4134,6 +4289,7 @@ function useTec(i){
   const test = t.tipo === 'P' ? null : rollTec(t);
   if(test && test.error){ toast('Fórmula inválida', test.error); return; }
   S.es -= g; renderDerived();
+  if((+t.nivel || 1) >= 3 && t.tipo !== 'P') golpeEspecial(nome, +t.nivel);   // v3.6: cut-in de anime
   const title = `${nome}${t.tipo==='T' ? ' · teste' : ''}${g ? ` (−${g} E.S)` : ''}`;
   if(test){ doRoll(title, ()=>aplicarBuffs(rollTec(t), buffs)); consumirBuffs(buffs); }
   else { log(nome, t.desc || '', null); toast(nome + (g ? ` · −${g} E.S` : ''), t.desc || ''); save(); }
@@ -6230,6 +6386,343 @@ function renderLideres(rows){
   renderPastas('lideres', rows, '<div class="empty" style="grid-column:1/-1">Nenhum líder ainda. Clique em <b>Importar líderes do livro</b> para criar os 15 de uma vez.</div>');
 }
 document.addEventListener('click', e=>{ if(e.target.closest('#btnImportLideres')) importLideres(); });
+
+/* =====================================================================
+   v3.6 · COR DO PERSONAGEM, SEQUELAS, REPUTAÇÃO E LINHA DO TEMPO
+   (o mesmo bloco existe nas fichas local e online)
+   ===================================================================== */
+const COR_PERSONAGEM = [
+  {n:'Vermelho', c:'#e0362c'}, {n:'Amarelo', c:'#f2c230'}, {n:'Azul', c:'#5b9dff'}, {n:'Verde', c:'#47c28a'}, {n:'Cinza', c:'#a9b0b8'},
+  {n:'Roxo', c:'#a77bf0'}, {n:'Laranja', c:'#ff8a3d'}, {n:'Rosa', c:'#ff6fa8'}, {n:'Turquesa', c:'#3fd0c9'}, {n:'Branco', c:'#ece5d8'},
+];
+/* as 15 gangues de Tenkawa (ordem dos distritos do livro) */
+const TENKAWA = [
+  {d:'Névoa Carmesim', g:'Akagiri Blades', l:'Shun Akamine'}, {d:'Kurogane', g:'Kurogane Dogs', l:'Daichi Inuzuka'},
+  {d:'Liberdade', g:'Seigi Crew', l:'Dendê'}, {d:'Porto Cinzento', g:'Kaihou', l:'Ren Ishikawa'},
+  {d:'Dragões Imperiais', g:'Hana no Kage', l:'Aiko Mizuhara'}, {d:'Prata', g:'Ginrei Wolves', l:'Kaito Aramaki'},
+  {d:'Demônios do Norte', g:'Tora Onis', l:'Ryu Nakajima'}, {d:'Estação Fantasma', g:'Yurei Ghosts', l:'Kiyomi Fujioka'},
+  {d:'Asa Leste', g:'Hokuto Flight', l:'Sora Minamoto'}, {d:'Ferroviário do Sul', g:'Ressha Breakers', l:'Tatsuya Kurobe'},
+  {d:'Carvalho Sul', g:'Aoi Syndicate', l:'Yuuta Nanase'}, {d:'Fossilizado', g:'Kaseki Clan', l:'Masaru Oogami'},
+  {d:'Gold River', g:"Kin'u Angels", l:'Noboru Tatsumi'}, {d:'Colina Oeste', g:'Nagaoka Riders', l:'Hinata Moriyama'},
+  {d:'Central de 1994', g:'Kage no Mura', l:'Kazuo Hayashida'},
+];
+const REP_NIVEIS = {'-3':'Jurado de morte', '-2':'Inimigo', '-1':'Mal visto', '0':'Desconhecido', '1':'Conhecido', '2':'Respeitado', '3':'Aliado'};
+/* sequelas: rolada (d20) quando o lutador cai em combate e sobrevive */
+const SEQUELAS = [
+  ['Cicatriz no rosto', 'Marca visível para sempre. +1 em testes de PRE para intimidar; −1 para convencer com gentileza.'],
+  ['Nariz quebrado', 'Ficou torto e a voz ficou anasalada. Só história.'],
+  ['Dente perdido', 'Sorriso de quem já brigou muito. +1 em testes de PRE para intimidar.'],
+  ['Costela trincada', '−1 de movimentação até o próximo descanso longo.'],
+  ['Dedo quebrado', '−1 nos testes de AGI com as mãos até o próximo descanso longo.'],
+  ['Olho roxo', '−1 nos testes de INT para perceber até o próximo descanso curto.'],
+  ['Concussão', 'Fica Desorientado no 1º turno do próximo combate.'],
+  ['Joelho estourado', '−1 de movimentação para sempre. O joelho nunca mais foi o mesmo.'],
+  ['Ombro deslocado', '−2 no dano de socos até o próximo descanso longo.'],
+  ['Medo', 'De quem te derrubou: −1 nos testes contra ele até vencer uma luta contra ele.'],
+  ['Raiva', 'De quem te derrubou: +1 no dano contra ele, mas −1 de C.A quando o enfrentar.'],
+  ['Pesadelos', 'O próximo descanso longo recupera só metade da E.S.'],
+  ['Marcado', 'A gangue que te derrubou te reconhece na rua: −1 de reputação com ela.'],
+  ['Orgulho ferido', 'Volta mais forte: +1 Inspiração de combate.'],
+  ['Tendão distendido', '−1 nos testes de AGI até o próximo descanso longo.'],
+  ['Mãos calejadas', 'Os nós dos dedos endureceram: +1 de dano em socos.'],
+  ['Lição aprendida', 'Você entendeu onde errou: +5 de XP.'],
+  ['Hematoma feio', 'Roxo do ombro à cintura por uma semana. Só história.'],
+  ['Sangue frio', 'Já viu o pior: +1 em testes de PRE para manter a calma.'],
+  ['Lenda das ruas', 'Caiu, mas não desistiu: +1 de reputação com a gangue que te derrubou.'],
+];
+const DIARIO_ICO = {xp:'★', nivel:'▲', faixa:'◆', caiu:'✕', morte:'✝', sequela:'🩸', rep:'⚑', nota:'✎'};
+const podeEditarRep = () => (typeof AUTH === 'undefined' || !AUTH.user || AUTH.mestre) && !isRO();   // com conta, só o mestre muda
+
+function diario(tipo, txt){
+  if(!Array.isArray(S.diario)) S.diario = [];
+  S.diario.push({t: Date.now(), tipo, txt: String(txt).slice(0, 300)});
+  if(S.diario.length > 200) S.diario = S.diario.slice(-200);
+}
+/* chamada a cada save(): compara com o último estado anotado (guardado na própria ficha) */
+function vigiarEventos(){
+  const a = {xp:+S.xp||0, belt:+S.belt||0, lvl:+S.lvl||1, caido:(S.qv ?? 1) <= 0, tcm:+S.tcm||0};
+  const v = S._vig;
+  if(v){
+    if(a.belt > v.belt) diario('faixa', `Conquistou a faixa ${BELTS[a.belt]?.n || ''}.`);
+    else if(a.belt === v.belt && a.lvl > v.lvl) diario('nivel', `Subiu para o nível ${a.lvl} da faixa ${BELTS[a.belt]?.n || ''}.`);
+    if(a.xp > v.xp && a.belt === v.belt && a.lvl === v.lvl) diario('xp', `Ganhou ${a.xp - v.xp} de XP.`);
+    if(a.caido && !v.caido && a.tcm < 3) diario('caiu', 'Caiu em combate.');
+    if(a.tcm >= 3 && v.tcm < 3) diario('morte', 'Morreu.');
+  }
+  S._vig = a;
+}
+function rolarSequela(){
+  if(isRO()) return;
+  const n = 1 + Math.floor(Math.random() * 20), [nome, efeito] = SEQUELAS[n - 1];
+  if(!Array.isArray(S.sequelas)) S.sequelas = [];
+  S.sequelas.push({n, nome, efeito, t: Date.now()});
+  diario('sequela', `Sequela: ${nome} (d20 = ${n}).`);
+  save(); renderAll();
+  toast(`🩸 Sequela: ${nome}`, `${efeito} (d20 = ${n})`);
+}
+function renderExtras(){
+  if(!FICHA_V36) return;   // um renderAll roda no carregamento antes deste bloco existir
+  // cor do personagem
+  const cw = $('#corView');
+  if(cw) cw.innerHTML = COR_PERSONAGEM.map(p=>`<button type="button" class="cor-sw ${S.cor === p.c ? 'on' : ''}" data-cor="${p.c}" style="--c:${p.c}" title="${p.n}" aria-label="Cor ${p.n}" aria-pressed="${S.cor === p.c}" ${isRO() ? 'disabled' : ''}></button>`).join('');
+  // reputação
+  const rv = $('#repView');
+  if(rv){
+    const ed = podeEditarRep();
+    rv.innerHTML = TENKAWA.map(x=>{
+      const v = +(S.rep?.[x.g] || 0);
+      return `<div class="rep-row"><span class="rep-g">${esc(x.g)}<small>${esc(x.d)}</small></span>
+        <span class="rep-pips">${[-3,-2,-1,0,1,2,3].map(n=>`<button type="button" class="rep-pip ${n<0?'neg':n>0?'pos':'zero'} ${(n<0 && v<=n) || (n>0 && v>=n) || (n===0 && v===0) ? 'on' : ''}" data-rep="${esc(x.g)}" data-v="${n}" title="${REP_NIVEIS[n]}" ${ed ? '' : 'disabled'}></button>`).join('')}</span>
+        <span class="rep-n ${v<0?'neg':v>0?'pos':''}">${REP_NIVEIS[v]}</span></div>`;
+    }).join('');
+    const h = $('#repHint'); if(h) h.textContent = ed ? 'Clique para mudar. Muda como os NPCs da gangue tratam o personagem.' : 'Só o mestre muda a reputação.';
+  }
+  // sequelas
+  const sv = $('#seqView');
+  if(sv){
+    const l = Array.isArray(S.sequelas) ? S.sequelas : [];
+    sv.innerHTML = l.length ? l.map((q,i)=>`<div class="seq"><b>${esc(q.nome)}</b><span>${esc(q.efeito)}</span>${isRO() ? '' : `<button type="button" class="btn sm ghost" data-seq-del="${i}" title="Curou ou passou">Curou</button>`}</div>`).join('')
+      : '<p class="hint" style="margin:0">Nenhuma sequela. Quando cair em combate e sobreviver, role uma.</p>';
+  }
+  const sb2 = $('#btnSequela'); if(sb2) sb2.hidden = isRO();
+  // linha do tempo
+  const dv = $('#diarioView');
+  if(dv){
+    const l = (Array.isArray(S.diario) ? S.diario : []).map((x,i)=>({...x, i})).reverse();
+    let dia = '';
+    dv.innerHTML = l.length ? l.map(x=>{
+      const d = new Date(x.t), ds = d.toLocaleDateString('pt-BR');
+      const cab = ds !== dia ? `<div class="tl-dia">${ds}</div>` : ''; dia = ds;
+      return `${cab}<div class="tl-i tl-${esc(x.tipo)}"><span class="tl-ico">${DIARIO_ICO[x.tipo] || '•'}</span><span class="tl-txt">${esc(x.txt)}</span><span class="tl-h">${d.toTimeString().slice(0,5)}</span>${isRO() ? '' : `<button type="button" class="tl-x" data-diario-del="${x.i}" aria-label="Apagar este evento">×</button>`}</div>`;
+    }).join('') : '<p class="hint" style="margin:0">A história deste lutador começa aqui. XP, níveis, quedas e sequelas entram sozinhos; use o campo acima para anotar o resto.</p>';
+  }
+  const da = $('#diarioAdd'); if(da) da.hidden = isRO();
+  const st = $('#tcSeq'); if(st) st.textContent = (S.sequelas || []).length || '';
+}
+document.addEventListener('click', e=>{
+  const c = e.target.closest('[data-cor]');
+  if(c && !isRO()){ S.cor = (S.cor === c.dataset.cor) ? '' : c.dataset.cor; save(); renderAll(); return; }
+  const r = e.target.closest('[data-rep]');
+  if(r && podeEditarRep()){
+    if(!S.rep || typeof S.rep !== 'object') S.rep = {};
+    const g = r.dataset.rep, v = +r.dataset.v, antes = +(S.rep[g] || 0);
+    const novo = (v === antes && v !== 0) ? (v > 0 ? v - 1 : v + 1) : v;
+    if(novo === antes) return;
+    if(novo) S.rep[g] = novo; else delete S.rep[g];
+    diario('rep', `Reputação com ${g}: ${REP_NIVEIS[novo]}.`);
+    save(); renderAll(); return;
+  }
+  if(e.target.closest('#btnSequela')){ rolarSequela(); return; }
+  const sd = e.target.closest('[data-seq-del]');
+  if(sd && !isRO()){ const q = S.sequelas?.[+sd.dataset.seqDel]; if(q){ S.sequelas.splice(+sd.dataset.seqDel, 1); diario('nota', `Curou: ${q.nome}.`); save(); renderAll(); } return; }
+  const dd = e.target.closest('[data-diario-del]');
+  if(dd && !isRO()){ S.diario.splice(+dd.dataset.diarioDel, 1); save(); renderAll(); return; }
+  if(e.target.closest('#btnDiario')){
+    const i = $('#diarioTxt'), t = i.value.trim(); if(!t || isRO()) return;
+    diario('nota', t); i.value = ''; save(); renderAll();
+  }
+});
+document.addEventListener('keydown', e=>{ if(e.key === 'Enter' && e.target.id === 'diarioTxt'){ e.preventDefault(); $('#btnDiario')?.click(); } });
+/* =====================================================================
+   v3.6 · TENKAWA: território dos 15 distritos, Jornal e plantão em VHS
+   Tabelas territorios e noticias (supabase/schema-9.sql). O plantão vai por
+   broadcast (canal gaengdan-plantao) para o site e para o Owlbear do mestre.
+   ===================================================================== */
+const GANG_COR = ['#b3261e','#6b6f76','#2e8b57','#2f6db0','#c2185b','#9aa4b1','#e07b1a','#6a4fa0','#1f8fb5','#8d6e3f','#2f7d6e','#7a5230','#c9a227','#4f7a28','#8e24aa'];
+/* mapa em quarteirões (x, y, largura, altura) no quadro 640 × 440; o mar fica a leste */
+const MAPA_Q = {1:[352,20,170,104], 2:[422,334,144,86], 3:[252,130,96,96], 4:[422,232,144,96], 5:[354,130,96,96],
+  6:[150,130,96,96], 7:[150,20,196,104], 8:[306,232,110,96], 9:[456,130,110,96], 10:[282,334,134,86],
+  11:[150,334,126,86], 12:[20,328,124,92], 13:[20,222,124,100], 14:[20,20,124,196], 15:[150,232,150,96]};
+function corDoDono(dono){
+  if(dono === 'MESA') return '#f2c230';
+  if(dono === 'DISPUTADO') return 'url(#tkListra)';
+  const i = TENKAWA.findIndex(x=>x.g === dono); return i >= 0 ? GANG_COR[i] : '#3a3a3a';
+}
+function mapaTenkawa(terr, sel){
+  const q = n=>MAPA_Q[n];
+  const blocos = TENKAWA.map((x,i)=>{
+    const n = i+1, [X,Y,Wd,Ht] = q(n), t = terr?.[n] || {dono:x.g, nota:''}, dono = t.dono || x.g;
+    const mesa = dono === 'MESA', disp = dono === 'DISPUTADO', perdeu = dono !== x.g;
+    const nomeDono = mesa ? 'A MESA' : disp ? 'EM DISPUTA' : dono;
+    return `<g class="tk-d ${sel === n ? 'sel' : ''} ${perdeu ? 'mudou' : ''}" data-tk="${n}" tabindex="0" role="button" aria-label="${esc(x.d)}: ${esc(nomeDono)}">
+      <title>${esc(x.d)} · ${esc(nomeDono)}${t.nota ? ' · ' + esc(t.nota) : ''}</title>
+      <rect x="${X}" y="${Y}" width="${Wd}" height="${Ht}" rx="2" fill="${corDoDono(dono)}" fill-opacity="${mesa ? .9 : .55}"/>
+      <rect x="${X}" y="${Y}" width="${Wd}" height="${Ht}" rx="2" class="tk-borda"/>
+      <text x="${X+7}" y="${Y+19}" class="tk-n">${String(n).padStart(2,'0')}</text>
+      <text x="${X+7}" y="${Y+Ht-22}" class="tk-nome ${mesa ? 'escuro' : ''}" style="font-size:${Math.min(11.5, (Wd-12)/(x.d.length*.6)).toFixed(1)}px">${esc(x.d)}</text>
+      <text x="${X+7}" y="${Y+Ht-9}" class="tk-dono ${mesa ? 'escuro' : ''}">${esc(nomeDono)}</text>
+    </g>`;
+  }).join('');
+  return `<svg viewBox="0 0 640 440" class="tk-svg" role="img" aria-label="Mapa de Tenkawa: quem controla cada distrito">
+    <defs><pattern id="tkListra" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#3a1210"/><rect width="5" height="10" fill="#b3261e"/></pattern></defs>
+    <rect x="0" y="0" width="640" height="440" fill="#0d0d0e"/>
+    <path d="M528,0 H640 V440 H572 V128 H528 Z" fill="#0f1c2b"/>
+    <text x="606" y="300" class="tk-mar" transform="rotate(90 606 300)">BAÍA DE TENKAWA</text>
+    <path d="M0,219 C70,213 120,226 147,228 S290,231 420,230 S530,226 640,238" fill="none" stroke="#2f5d9e" stroke-width="5" stroke-opacity=".65"/>
+    ${blocos}
+  </svg>`;
+}
+
+let TK = {terr:null, news:[], falta:false, ch:null, sel:0, visto:0};
+const TK_VISTO = 'gaengdan.jornal.visto';
+try{ TK.visto = +localStorage.getItem(TK_VISTO) || 0; }catch(e){}
+async function carregarTenkawa(){
+  if(!sb || !AUTH.user) return;
+  const [t, n] = await Promise.all([
+    sb.from('territorios').select('*'),
+    sb.from('noticias').select('*').order('criado_em', {ascending:false}).limit(40),
+  ]);
+  TK.falta = !!(t.error && /territorios|relation|schema cache|PGRST205|42P01/i.test(String(t.error.message||'') + String(t.error.code||'')));
+  TK.terr = {}; (t.data || []).forEach(r=>{ TK.terr[r.distrito] = r; });
+  TK.news = n.data || [];
+  contarNoticias(); renderTenkawa();
+}
+function tenkawaCanal(){
+  if(!sb || TK.ch || !AUTH.user) return;
+  TK.ch = sb.channel('tenkawa-' + AUTH.user.id)
+    .on('postgres_changes', {event:'*', schema:'public', table:'territorios'}, p=>{ const r = p.new; if(r?.distrito){ TK.terr = TK.terr || {}; TK.terr[r.distrito] = r; renderTenkawa(); } })
+    .on('postgres_changes', {event:'INSERT', schema:'public', table:'noticias'}, p=>{
+      const r = p.new; if(!r?.id || TK.news.some(x=>x.id === r.id)) return;
+      TK.news.unshift(r); contarNoticias(); renderTenkawa();
+      if(r.autor !== AUTH.user?.id) toast('📰 Jornal de Tenkawa', r.titulo);
+    })
+    .on('postgres_changes', {event:'DELETE', schema:'public', table:'noticias'}, p=>{ TK.news = TK.news.filter(x=>x.id !== p.old?.id); contarNoticias(); renderTenkawa(); })
+    .subscribe();
+  carregarTenkawa();
+}
+function tenkawaSair(){ if(TK.ch){ sb.removeChannel(TK.ch); TK.ch = null; } TK.terr = null; TK.news = []; }
+function contarNoticias(){
+  const novas = TK.news.filter(n=>new Date(n.criado_em).getTime() > TK.visto).length;
+  const el = $('#tcNews'); if(el) el.textContent = (VIEW !== 'tenkawa' && novas) ? novas : '';
+}
+function abrirTenkawa(){
+  tenkawaCanal(); carregarTenkawa();
+  TK.visto = Date.now(); try{ localStorage.setItem(TK_VISTO, String(TK.visto)); }catch(e){}
+  contarNoticias();
+}
+function renderTenkawa(){
+  if(VIEW !== 'tenkawa') return;
+  const mestre = !!AUTH.mestre;
+  $('#tkAviso').textContent = TK.falta ? 'Falta rodar o supabase/schema-9.sql no SQL Editor do Supabase para o mapa e o jornal funcionarem.' : '';
+  $('#tkMapa').innerHTML = mapaTenkawa(TK.terr, mestre ? TK.sel : 0);
+  // editor do mestre
+  const ed = $('#tkEdit'); ed.hidden = !mestre || TK.falta;
+  if(mestre){
+    const op = (v)=>[...TENKAWA.map(x=>[x.g, x.g]), ['MESA','A mesa (os jogadores)'], ['DISPUTADO','Em disputa']]
+      .map(([k,t])=>`<option value="${esc(k)}" ${k === v ? 'selected' : ''}>${esc(t)}</option>`).join('');
+    ed.innerHTML = `<div class="tk-ed-h">Clique num distrito no mapa ou mude aqui. Os jogadores veem na hora.</div>` + TENKAWA.map((x,i)=>{
+      const n = i+1, t = TK.terr?.[n] || {dono:x.g, nota:''};
+      return `<div class="tk-ed ${TK.sel === n ? 'sel' : ''}" id="tkEd${n}"><span class="tk-ed-n">${String(n).padStart(2,'0')} ${esc(x.d)}</span>
+        <select class="box" data-tk-dono="${n}" aria-label="Quem controla ${esc(x.d)}">${op(t.dono || x.g)}</select>
+        <input class="box" data-tk-nota="${n}" maxlength="300" value="${esc(t.nota || '')}" placeholder="nota (ex.: trégua até o festival)" aria-label="Nota sobre ${esc(x.d)}"></div>`;
+    }).join('');
+  }
+  // jornal
+  $('#tkPub').hidden = !mestre || TK.falta;
+  const sel = $('#tkDistrito');
+  if(sel && !sel.options.length) sel.innerHTML = '<option value="">Toda Tenkawa</option>' + TENKAWA.map((x,i)=>`<option value="${i+1}">${esc(x.d)}</option>`).join('');
+  $('#tkNews').innerHTML = TK.news.length ? TK.news.map(n=>{
+    const d = new Date(n.criado_em), dist = n.distrito ? TENKAWA[n.distrito-1]?.d : 'Tenkawa';
+    return `<article class="tk-n-i"><div class="tk-n-meta">${d.toLocaleDateString('pt-BR')} · ${esc(dist || '')}</div>
+      <h3>${esc(n.titulo)}</h3>${n.texto ? `<p>${esc(n.texto).replace(/\n/g,'<br>')}</p>` : ''}
+      ${mestre ? `<div class="tk-n-acts"><button class="btn sm" data-tk-plantao="${n.id}">📺 Transmitir plantão</button><button class="btn sm ghost" data-tk-apagar="${n.id}">Apagar</button></div>` : ''}</article>`;
+  }).join('') : `<p class="hint">${TK.falta ? '' : 'Nenhuma notícia ainda. ' + (mestre ? 'Publique a primeira manchete acima.' : 'Fique de olho nas ruas.')}</p>`;
+}
+async function mudarTerritorio(n, campos){
+  const atual = TK.terr?.[n] || {distrito:n, dono:TENKAWA[n-1].g, nota:''};
+  const row = {distrito:n, dono:atual.dono, nota:atual.nota || '', ...campos, atualizado_em:new Date().toISOString()};
+  TK.terr = TK.terr || {}; TK.terr[n] = row; renderTenkawa();
+  const {error} = await sb.from('territorios').upsert(row);
+  if(error) toast('Não salvou o território', traduz(error));
+}
+document.addEventListener('click', async e=>{
+  const d = e.target.closest('[data-tk]');
+  if(d && AUTH.mestre){ TK.sel = +d.dataset.tk; renderTenkawa(); $('#tkEd' + TK.sel)?.scrollIntoView({block:'nearest'}); $(`[data-tk-dono="${TK.sel}"]`)?.focus(); return; }
+  const p = e.target.closest('[data-tk-plantao]');
+  if(p && AUTH.mestre){ const n = TK.news.find(x=>String(x.id) === p.dataset.tkPlantao); if(n) enviarPlantao(n); return; }
+  const a = e.target.closest('[data-tk-apagar]');
+  if(a && AUTH.mestre){ armOrRun(a, async ()=>{ const {error} = await sb.from('noticias').delete().eq('id', a.dataset.tkApagar); if(error) toast('Não apagou', traduz(error)); else { TK.news = TK.news.filter(x=>String(x.id) !== a.dataset.tkApagar); renderTenkawa(); } }); }
+});
+document.addEventListener('change', e=>{
+  const s = e.target.closest('[data-tk-dono]'); if(s && AUTH.mestre){ mudarTerritorio(+s.dataset.tkDono, {dono:s.value}); return; }
+  const t = e.target.closest('[data-tk-nota]'); if(t && AUTH.mestre){ mudarTerritorio(+t.dataset.tkNota, {nota:t.value.trim()}); }
+});
+document.addEventListener('submit', async e=>{
+  if(e.target.id !== 'tkPub') return;
+  e.preventDefault(); if(!AUTH.mestre) return;
+  const titulo = $('#tkTitulo').value.trim(), texto = $('#tkTexto').value.trim(), distrito = +$('#tkDistrito').value || null;
+  if(!titulo) return;
+  const {data, error} = await sb.from('noticias').insert({titulo, texto, distrito}).select('*').single();
+  if(error){ toast('Não publicou', traduz(error)); return; }
+  $('#tkTitulo').value = ''; $('#tkTexto').value = '';
+  if(!TK.news.some(x=>x.id === data.id)) TK.news.unshift(data);
+  renderTenkawa(); toast('Notícia publicada', 'Os jogadores recebem um aviso.');
+  if($('#tkJaTransmite').checked) enviarPlantao(data);
+  else { plantaoCanal(); PL_CH.send({type:'broadcast', event:'noticia', payload:{titulo:data.titulo}}).catch(()=>{}); }   // aviso no Owlbear
+});
+
+/* ---------- plantão: telejornal VHS em tela cheia ---------- */
+let PL_CH = null;
+function plantaoCanal(){
+  if(!sb || PL_CH || !AUTH.user) return;
+  PL_CH = sb.channel('gaengdan-plantao', {config:{broadcast:{self:false}}})
+    .on('broadcast', {event:'plantao'}, ({payload})=>{ if(document.visibilityState !== 'hidden') plantaoTocar(payload); })
+    .subscribe();
+}
+async function enviarPlantao(n){
+  plantaoCanal();
+  const p = {titulo:String(n.titulo||'').slice(0,140), texto:String(n.texto||'').slice(0,600), distrito:n.distrito ? TENKAWA[n.distrito-1]?.d : ''};
+  await PL_CH.send({type:'broadcast', event:'plantao', payload:p}).catch(()=>{});
+  const noOwlbear = AB_CH && Object.values(AB_CH.presenceState()).some(l=>l.some(x=>x.owlbear));
+  if(noOwlbear) toast('Plantão no ar no Owlbear', 'Para você e para a sala. Quem está só no site vê por aqui.');
+  else plantaoTocar(p);
+}
+function plantaoTocar(p){
+  document.querySelector('.plantao')?.remove();
+  const w = document.createElement('div'); w.className = 'plantao'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', 'Plantão de notícias');
+  const agora = new Date(), hora = agora.toTimeString().slice(0,5);
+  w.innerHTML = `<div class="pl-tela"><div class="pl-osd"><span class="pl-vivo">● AO VIVO</span><span>TNK-TV 4 · ${hora}</span></div>
+    <div class="pl-faixa">PLANTÃO</div>
+    <div class="pl-local">${esc(p.distrito || 'Tenkawa')} · 1994</div>
+    <h2 class="pl-titulo"></h2><p class="pl-texto">${esc(p.texto || '')}</p>
+    <div class="pl-ticker"><span>${esc(p.titulo)} &nbsp;•&nbsp; JORNAL DE TENKAWA &nbsp;•&nbsp; ${esc(p.titulo)} &nbsp;•&nbsp; FIQUE EM CASA DEPOIS DAS 22H &nbsp;•&nbsp;</span></div></div>
+    <button class="ab-x" type="button" aria-label="Fechar o plantão" title="Fechar (Esc)">×</button>`;
+  document.body.appendChild(w);
+  const h = w.querySelector('.pl-titulo'), txt = String(p.titulo || ''); let i = 0;
+  const tipo = setInterval(()=>{ h.textContent = txt.slice(0, ++i); if(i >= txt.length) clearInterval(tipo); }, 38);
+  try{ // vinheta curta de telejornal
+    const ac = new (window.AudioContext || window.webkitAudioContext)(), t0 = ac.currentTime + .05;
+    [[659,0],[880,.16],[988,.32],[1319,.5]].forEach(([f,d])=>{ const o = ac.createOscillator(), g = ac.createGain(); o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(0, t0+d); g.gain.linearRampToValueAtTime(.12, t0+d+.02); g.gain.exponentialRampToValueAtTime(.001, t0+d+.45); o.connect(g); g.connect(ac.destination); o.start(t0+d); o.stop(t0+d+.5); });
+    setTimeout(()=>ac.close(), 2000);
+  }catch(e){}
+  const fechar = ()=>{ clearInterval(tipo); clearTimeout(fim); w.remove(); document.removeEventListener('keydown', esc2); };
+  const esc2 = e=>{ if(e.key === 'Escape') fechar(); };
+  const fim = setTimeout(fechar, Math.max(12000, txt.length * 38 + 9000));
+  document.addEventListener('keydown', esc2);
+  w.querySelector('.ab-x').addEventListener('click', fechar);
+}
+
+/* ---------- golpe especial: cut-in de anime (técnica própria nível 3+) ---------- */
+let CUT_CH = null;
+function golpeEspecial(golpe, nivel){
+  const p = {ficha: (typeof CUR !== 'undefined' && CUR.id) || '', nome: String(S.info.nome || 'Lutador').slice(0,60), golpe: String(golpe).slice(0,60), cor: S.cor || '#e0362c', nivel};
+  cutinTocar({...p, foto: S.photo || ''});
+  if(typeof sb !== 'undefined' && sb && typeof AUTH !== 'undefined' && AUTH.user){
+    if(!CUT_CH){ CUT_CH = sb.channel('gaengdan-cutin', {config:{broadcast:{self:false}}}); CUT_CH.subscribe(); }
+    CUT_CH.send({type:'broadcast', event:'cutin', payload:p}).catch(()=>{});
+  }
+}
+function cutinTocar(p){
+  document.querySelector('.cutin')?.remove();
+  const w = document.createElement('div'); w.className = 'cutin'; w.style.setProperty('--c', p.cor || '#e0362c'); w.setAttribute('aria-hidden', 'true');
+  w.innerHTML = `<div class="ci-faixa"><div class="ci-linhas"></div>${p.foto ? `<img class="ci-foto" src="${esc(p.foto)}" alt="">` : `<div class="ci-foto ci-ini">${esc((p.nome||'?').charAt(0))}</div>`}
+    <div class="ci-txt"><span class="ci-nome">${esc(p.nome)}</span><b class="ci-golpe">${esc(p.golpe)}</b><span class="ci-nv">TÉCNICA PRÓPRIA · NÍVEL ${+p.nivel || 3}</span></div></div>`;
+  document.body.appendChild(w);
+  setTimeout(()=>w.remove(), 2600);
+}
+
+var FICHA_V36 = true;
+renderExtras();
 
 document.addEventListener('change', e=>{
   if(e.target.id !== 'cargaTog') return;
