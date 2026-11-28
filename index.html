@@ -1719,6 +1719,16 @@ a.tabs-act, a.navbtn{text-decoration:none; display:inline-block}
 body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 
 /* animação dos dados (a mesma do Owlbear: gravação VHS de 1994) */
+/* v3.4 · abertura da sessão, tocada para a mesa inteira */
+.ab-wrap{display:flex; flex-direction:column; align-items:flex-end; gap:4px}
+.ab-wrap small{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--ink-3); max-width:340px; text-align:right}
+.abertura{position:fixed; inset:0; z-index:200; background:#000; display:grid; place-items:center}
+.abertura video{width:100%; height:100%; object-fit:contain; background:#000}
+.abertura .ab-x{position:absolute; top:14px; right:14px; width:40px; height:40px; border:1px solid rgba(255,255,255,.25); background:rgba(0,0,0,.55); color:#fff; font-size:22px; line-height:1; cursor:pointer; opacity:.35; transition:opacity .2s}
+.abertura .ab-x:hover,.abertura .ab-x:focus-visible{opacity:1}
+.abertura .ab-play{position:absolute; padding:16px 26px; font-size:16px}
+.abertura .ab-load{position:absolute; bottom:24px; left:50%; transform:translateX(-50%); font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55)}
+.abertura.tocando .ab-load{display:none}
 .dado-janela{
   position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); z-index:110;
   width:min(460px, calc(100vw - 16px)); height:min(320px, calc((100vw - 16px) * .7));
@@ -1734,7 +1744,7 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 <header class="topbar">
   <div class="brand">
     <div class="logo">GAENG<b>DAN</b></div>
-    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.3</span>
+    <span class="hangul" aria-hidden="true">갱단</span><span class="ver" title="Versão da ficha">v3.4</span>
     <span class="tagline">Tenkawa, 1994</span>
   </div>
   <nav class="nav" aria-label="Seções">
@@ -1974,6 +1984,10 @@ body.com-cel .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
       <h1 class="shield-title">Escudo do Mestre</h1>
     </div>
     <div class="shield-sum" id="shieldSum"></div>
+    <div class="ab-wrap">
+      <button class="btn red" id="btnAbertura" type="button" title="Toca a abertura na tela de todos que estão com o site aberto">▶ Tocar abertura para a mesa</button>
+      <small id="abQuem" aria-live="polite"></small>
+    </div>
   </div>
 
   <nav class="tabs" id="gmTabs" aria-label="Partes do escudo">
@@ -2922,8 +2936,9 @@ function startRealtime(){
     .on('postgres_changes', {event:'*', schema:'public', table:'fichas'}, onFichaChange)
     .subscribe(status=>{ LIVE = status === 'SUBSCRIBED'; if(VIEW === 'mestre') scheduleShield(); });
   startExtrasRealtime();
+  aberturaCanal();
 }
-function stopRealtime(){ if(channel){ sb.removeChannel(channel); channel = null; LIVE = false; } stopExtrasRealtime(); }
+function stopRealtime(){ if(channel){ sb.removeChannel(channel); channel = null; LIVE = false; } stopExtrasRealtime(); aberturaSair(); }
 function onFichaChange(p){
   if(p.eventType === 'DELETE'){
     const id = p.old?.id;
@@ -4346,6 +4361,59 @@ window.addEventListener('message', e=>{
   if(e.data?.gaengdan === 'dado' && e.data.fechar) dadoFechar();
 });
 document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && DADO_FRAME) dadoFechar(); });
+
+/* ---------------- Abertura da sessão (v3.4) ----------------
+   O mestre aperta o botão no escudo e a abertura toca na tela de todos que
+   estão com o site aberto, pelo canal de broadcast do Supabase. O vídeo mora
+   no repositório, em abertura/gaengdan-abertura.mp4. */
+const ABERTURA_SRC = 'abertura/gaengdan-abertura.mp4';
+let AB_CH = null, AB_OK = false, AB_EL = null;
+function aberturaCanal(){
+  if(!sb || AB_CH || !AUTH.user) return;
+  AB_CH = sb.channel('gaengdan-abertura', {config:{broadcast:{self:false}, presence:{key:AUTH.user.id}}})
+    .on('broadcast', {event:'tocar'}, ()=>{ if(document.visibilityState !== 'hidden') aberturaTocar(); })   // aba escondida: a pessoa está no Owlbear, que toca por lá
+    .on('presence', {event:'sync'}, aberturaQuem)
+    .subscribe(status=>{
+      AB_OK = status === 'SUBSCRIBED';
+      if(AB_OK) AB_CH.track({nome: String(AUTH.perfil?.nome || 'Jogador').slice(0,40), mestre: !!AUTH.mestre});
+      aberturaQuem();
+    });
+}
+function aberturaSair(){ if(AB_CH){ sb.removeChannel(AB_CH); AB_CH = null; AB_OK = false; } aberturaFechar(); }
+function aberturaQuem(){
+  const el = $('#abQuem'); if(!el) return;
+  if(!AB_OK){ el.textContent = 'conectando…'; return; }
+  const gente = Object.values(AB_CH.presenceState()).map(l=>l[0]).filter(p=>p && !p.mestre);
+  el.textContent = gente.length ? `${gente.length} na mesa: ${gente.map(p=>p.nome).join(', ')}` : 'nenhum jogador com o site aberto agora';
+}
+async function aberturaEnviar(){
+  if(!AUTH.mestre) return;
+  if(!AB_OK){ toast('Ainda conectando', 'Espere um instante e aperte de novo.'); aberturaCanal(); return; }
+  const r = await AB_CH.send({type:'broadcast', event:'tocar', payload:{em: Date.now()}});
+  if(r !== 'ok') toast('Não foi possível avisar os jogadores', 'A abertura vai tocar só na sua tela.');
+  aberturaTocar();
+}
+function aberturaTocar(){
+  aberturaFechar(); dadoFechar();
+  const w = document.createElement('div');
+  w.className = 'abertura'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', 'Abertura da sessão');
+  w.innerHTML = `<video playsinline preload="auto" src="${ABERTURA_SRC}"></video>
+    <button class="btn red ab-play" type="button" hidden>▶ Assistir à abertura</button>
+    <div class="ab-load">Carregando a abertura…</div>
+    <button class="ab-x" type="button" aria-label="Fechar a abertura" title="Fechar (Esc)">×</button>`;
+  document.body.appendChild(w); AB_EL = w;
+  const v = w.querySelector('video'), play = w.querySelector('.ab-play');
+  const tentar = ()=> v.play().then(()=>w.classList.add('tocando')).catch(()=>{ play.hidden = false; play.focus(); });
+  v.addEventListener('canplay', tentar, {once:true});
+  v.addEventListener('playing', ()=>{ w.classList.add('tocando'); play.hidden = true; });
+  v.addEventListener('ended', aberturaFechar);
+  v.addEventListener('error', ()=>{ aberturaFechar(); toast('Não deu para tocar a abertura', 'O vídeo não foi encontrado no site (pasta abertura/).'); });
+  play.addEventListener('click', ()=>{ play.hidden = true; v.play().catch(()=>{ play.hidden = false; }); });
+  w.querySelector('.ab-x').addEventListener('click', aberturaFechar);
+}
+function aberturaFechar(){ if(AB_EL){ const v = AB_EL.querySelector('video'); if(v){ v.pause(); v.removeAttribute('src'); v.load(); } AB_EL.remove(); AB_EL = null; } }
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && AB_EL) aberturaFechar(); });
+$('#btnAbertura')?.addEventListener('click', aberturaEnviar);
 document.addEventListener('change', e=>{
   if(!e.target.matches?.('[data-anim-dado]')) return;
   try{ localStorage.setItem(DADO_PREF, e.target.checked ? '1' : '0'); }catch(err){}
