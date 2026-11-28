@@ -121,6 +121,35 @@ table{border-collapse:collapse; width:100%}
 .d-fig{margin:0}
 .d-fig img{display:block; width:72mm; height:96mm; object-fit:cover; object-position:50% 16%; border:1px solid #2a2a2a; border-top:2px solid var(--yellow); border-radius:2px}
 .d-txt{font-size:9.2pt; line-height:1.52}
+/* v3.6 · mapa de Tenkawa, sequelas e guia de rua */
+.mapa-box{margin:2mm 0 4mm}
+.tk-svg{width:100%; height:auto; display:block; border:1px solid #262626; border-radius:2px}
+.tk-d .tk-borda{fill:none; stroke:rgba(255,255,255,.18); stroke-width:1}
+.tk-d.mudou .tk-borda{stroke-dasharray:4 3; stroke:rgba(255,255,255,.6)}
+.tk-n{font:900 15px var(--mono); fill:rgba(255,255,255,.45)}
+.tk-nome{font:700 11.5px Archivo, sans-serif; fill:#fff}
+.tk-dono{font:500 9.5px var(--mono); fill:rgba(255,255,255,.75); letter-spacing:.06em; text-transform:uppercase}
+.tk-nome.escuro,.tk-dono.escuro{fill:#141414}
+.tk-mar{font:700 10px var(--mono); fill:#3f6b9c; letter-spacing:.4em}
+.mapa-nota{font-size:9pt; color:var(--ink-2); margin:0 0 4mm}
+.mapa-leg{display:grid; grid-template-columns:repeat(3,1fr); gap:1.6mm 4mm; font-size:7.6pt; color:var(--ink-2)}
+.mapa-leg span{display:flex; align-items:center; gap:2mm}
+.mapa-leg i{width:3.2mm; height:3.2mm; border-radius:1px; flex:none; opacity:.85}
+.mapa-leg i.listra{background:repeating-linear-gradient(45deg,#b3261e 0 1.2mm,#3a1210 1.2mm 2.4mm)}
+.seq-tab{display:grid; grid-template-columns:1fr 1fr; gap:6mm; font-size:8.2pt}
+.seq-tab .tbl td{padding:1.4mm 2mm 1.4mm 0; line-height:1.3}
+.seq-tab .muted{color:var(--ink-3)}
+.rep-tab td{font-size:8.4pt; padding:1.4mm 2mm 1.4mm 0}
+.guia-blocos{display:flex; flex-direction:column; gap:5mm; margin-top:5mm}
+.guia{border:1px solid var(--line); border-left:2px solid var(--yellow); border-radius:2px; padding:3.4mm 4mm; background:var(--panel)}
+.guia header{display:flex; align-items:baseline; gap:3mm; margin-bottom:2.4mm; flex-wrap:wrap}
+.guia .gn{font-family:var(--mono); font-weight:700; font-size:8pt; color:var(--yellow)}
+.guia header b{font-weight:900; font-stretch:75%; font-size:15pt; text-transform:uppercase; line-height:1}
+.guia .gg{font-family:var(--mono); font-size:7.2pt; color:var(--ink-3); letter-spacing:.06em; text-transform:uppercase}
+.guia-c{display:grid; grid-template-columns:1.15fr 1fr; gap:5mm; font-size:8.4pt; line-height:1.42}
+.guia-c p{margin:0 0 1mm} .guia .lbl{font-size:6.8pt; letter-spacing:.16em; text-transform:uppercase; font-weight:700; margin:0 0 1mm}
+.guia ul,.guia ol{margin:0; padding-left:4.2mm} .guia li{margin-bottom:.8mm}
+.guia ol li::marker{font-family:var(--mono); color:var(--yellow); font-weight:700}
 .d-extra{margin-top:auto; padding-top:5mm; display:grid; grid-template-columns:1fr 1fr; gap:3mm}
 .d-extra.grown{margin-top:0; flex:1 0 auto}
 .d-extra .callout{padding:3.4mm 4.4mm}
@@ -423,6 +452,12 @@ table{border-collapse:collapse; width:100%}
     <tbody></tbody>
   </table>
 </section>
+<section class="page flow" data-run="Distritos" id="c-mapa">
+  <header class="d-head"><div><p class="eyebrow">Tenkawa · 1994</p><h2 class="h2">Mapa da cidade</h2></div><div class="d-idx">地図</div></header>
+  <div class="mapa-box" id="livroMapa"></div>
+  <p class="mapa-nota" id="mapaNota">Cada cor é uma gangue. Este mapa acompanha a campanha: quando o mestre muda quem controla um distrito, o livro mostra a mudança.</p>
+  <div class="mapa-leg" id="mapaLeg"></div>
+</section>
 <div id="districts" style="display:contents"></div>
 
 <!-- ============ CRIAÇÃO DE PERSONAGEM ============ -->
@@ -597,6 +632,35 @@ table{border-collapse:collapse; width:100%}
     <div class="grid2" style="margin-top:4mm">
       <div class="callout"><p class="lbl y" style="margin-bottom:1.6mm">Receber o dobro da vida em dano</p><p>Você recebe uma penalidade escolhida pelo mestre.</p></div>
       <div class="callout"><p class="lbl y" style="margin-bottom:1.6mm">Receber o dobro da vida + a vida em dano</p><p>Você instantaneamente perde dois testes contra a morte, podendo morrer no seu próximo turno se não for estabilizado.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="page flow" data-run="Regras alternativas" id="c-sequelas">
+  <div class="sec">
+    <h3 class="h3">Sequelas</h3>
+    <p>Toda queda deixa marca. Quando um lutador fica <b>Caído</b> e sobrevive à luta, ele rola <b>1d20</b> na tabela abaixo. A sequela fica anotada na ficha até curar (as que dizem “para sempre” não curam). O mestre pode trocar uma sequela que não combine com a cena.</p>
+    <div class="seq-tab" id="seqTab"></div>
+  </div>
+  <div class="grid2" style="margin-top:5mm">
+    <div class="sec">
+      <h3 class="h3">Reputação nas ruas</h3>
+      <p>Cada lutador tem uma reputação com cada uma das 15 gangues, de <b>−3</b> a <b>+3</b>. Só o mestre muda: vencer, poupar, trair, ajudar ou humilhar alguém da gangue mexe na reputação.</p>
+      <table class="tbl rep-tab"><tbody>
+        <tr><td class="n">+3</td><td><b>Aliado</b> · ajudam sem perguntar; abrem portas no distrito.</td></tr>
+        <tr><td class="n">+2</td><td><b>Respeitado</b> · ninguém da gangue começa briga com você.</td></tr>
+        <tr><td class="n">+1</td><td><b>Conhecido</b> · conversam antes de bater.</td></tr>
+        <tr><td class="n">0</td><td><b>Desconhecido</b> · mais um rosto na rua.</td></tr>
+        <tr><td class="n">−1</td><td><b>Mal visto</b> · preços dobram, ninguém dá informação.</td></tr>
+        <tr><td class="n">−2</td><td><b>Inimigo</b> · emboscadas quando você entra no distrito.</td></tr>
+        <tr><td class="n">−3</td><td><b>Jurado de morte</b> · o líder quer você fora de Tenkawa.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="sec">
+      <h3 class="h3">Território</h3>
+      <p>Em 1994 cada distrito pertence à própria gangue, mas isso muda. Um distrito pode passar para outra gangue, ficar <b>em disputa</b> ou cair nas mãos da <b>mesa</b>, depois de derrotar o líder ou de fechar um acordo com ele.</p>
+      <p>Controlar um distrito dá à mesa um lugar seguro para descansar e a regra do território a favor (a dos quadros de cada distrito). Também atrai a atenção de todas as outras gangues.</p>
+      <p>O mapa da página de distritos e o mapa do site mostram quem manda em cada distrito.</p>
     </div>
   </div>
 </section>
@@ -849,6 +913,24 @@ table{border-collapse:collapse; width:100%}
     </div>
   </div>
 </section>
+
+<!-- ============ GUIA DE RUA (v3.6) ============ -->
+<section class="page flow" data-run="Guia de rua" id="c-guia">
+  <header class="ch-head">
+    <p class="eyebrow"><span class="num">10</span>Capítulo</p>
+    <h2 class="h1">Guia de rua</h2>
+    <div class="kr">거리</div>
+    <p class="lead">Para o mestre: um lugar icônico, três rumores e uma tabela de encontros para cada um dos 15 distritos. Use quando os jogadores entrarem num bairro e você precisar de algo acontecendo agora.</p>
+  </header>
+  <div class="grid2">
+    <div class="callout"><p class="lbl y" style="margin-bottom:1.6mm">Lugar icônico</p><p>O ponto que todo mundo do distrito conhece. Bom para marcar encontros, esconder coisas e começar brigas.</p></div>
+    <div class="callout"><p class="lbl y" style="margin-bottom:1.6mm">Rumores</p><p>O que se fala nas ruas. Alguns são verdade, outros são isca: o mestre decide qual é qual.</p></div>
+    <div class="callout"><p class="lbl y" style="margin-bottom:1.6mm">Encontros (1d4)</p><p>Role quando o grupo cruzar o distrito, ou escolha um. Combina com a regra do território e com a reputação do grupo com a gangue.</p></div>
+    <div class="callout"><p class="lbl y" style="margin-bottom:1.6mm">Reputação muda tudo</p><p>Com reputação <b>+2</b> ou mais, troque o encontro hostil por um aviso. Com <b>−2</b> ou menos, todo encontro neutro vira uma emboscada.</p></div>
+  </div>
+  <div class="guia-blocos" id="guia1"></div>
+</section>
+<div id="guia" style="display:contents"></div>
 </main>
 
 <script>
@@ -1350,6 +1432,127 @@ $('#styles').innerHTML = STYLES.map((s,i)=>{
 }).join('');
 
 // numeração das folhas, cabeçalho e rodapé
+/* =====================================================================
+   v3.6 · MAPA DE TENKAWA, SEQUELAS E GUIA DE RUA
+   ===================================================================== */
+const escL = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const GANG_COR = ['#b3261e','#6b6f76','#2e8b57','#2f6db0','#c2185b','#9aa4b1','#e07b1a','#6a4fa0','#1f8fb5','#8d6e3f','#2f7d6e','#7a5230','#c9a227','#4f7a28','#8e24aa'];
+const MAPA_Q = {1:[352,20,170,104], 2:[422,334,144,86], 3:[252,130,96,96], 4:[422,232,144,96], 5:[354,130,96,96],
+  6:[150,130,96,96], 7:[150,20,196,104], 8:[306,232,110,96], 9:[456,130,110,96], 10:[282,334,134,86],
+  11:[150,334,126,86], 12:[20,328,124,92], 13:[20,222,124,100], 14:[20,20,124,196], 15:[150,232,150,96]};
+const curto = t => t.replace(/^Distrito (da |do |dos |de )?/, '');
+function corDono(dono){
+  if(dono === 'MESA') return '#f5c400';
+  if(dono === 'DISPUTADO') return 'url(#tkListra)';
+  const i = DISTRICTS.findIndex(x => x.g === dono); return i >= 0 ? GANG_COR[i] : '#3a3a3a';
+}
+function desenharMapa(terr){
+  const blocos = DISTRICTS.map((x, i) => {
+    const n = i + 1, [X, Y, Wd, Ht] = MAPA_Q[n], t = terr?.[n] || {dono:x.g, nota:''}, dono = t.dono || x.g;
+    const mesa = dono === 'MESA', nomeDono = mesa ? 'A MESA' : dono === 'DISPUTADO' ? 'EM DISPUTA' : dono, nm = curto(x.t);
+    return `<g class="tk-d ${dono !== x.g ? 'mudou' : ''}"><title>${escL(nm)} · ${escL(nomeDono)}${t.nota ? ' · ' + escL(t.nota) : ''}</title>
+      <rect x="${X}" y="${Y}" width="${Wd}" height="${Ht}" rx="2" fill="${corDono(dono)}" fill-opacity="${mesa ? .9 : .55}"/>
+      <rect x="${X}" y="${Y}" width="${Wd}" height="${Ht}" rx="2" class="tk-borda"/>
+      <text x="${X+7}" y="${Y+19}" class="tk-n">${String(n).padStart(2,'0')}</text>
+      <text x="${X+7}" y="${Y+Ht-22}" class="tk-nome ${mesa ? 'escuro' : ''}" style="font-size:${Math.min(11.5, (Wd-12)/(nm.length*.6)).toFixed(1)}px">${escL(nm)}</text>
+      <text x="${X+7}" y="${Y+Ht-9}" class="tk-dono ${mesa ? 'escuro' : ''}">${escL(nomeDono)}</text></g>`;
+  }).join('');
+  $('#livroMapa').innerHTML = `<svg viewBox="0 0 640 440" class="tk-svg" role="img" aria-label="Mapa de Tenkawa">
+    <defs><pattern id="tkListra" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#3a1210"/><rect width="5" height="10" fill="#b3261e"/></pattern></defs>
+    <rect width="640" height="440" fill="#0d0d0e"/><path d="M528,0 H640 V440 H572 V128 H528 Z" fill="#0f1c2b"/>
+    <text x="606" y="300" class="tk-mar" transform="rotate(90 606 300)">BAÍA DE TENKAWA</text>
+    <path d="M0,219 C70,213 120,226 147,228 S290,231 420,230 S530,226 640,238" fill="none" stroke="#2f5d9e" stroke-width="5" stroke-opacity=".65"/>${blocos}</svg>`;
+  const mudou = DISTRICTS.map((x, i) => ({x, i, t: terr?.[i+1]})).filter(o => o.t && o.t.dono && o.t.dono !== o.x.g);
+  $('#mapaLeg').innerHTML = DISTRICTS.map((x, i) => `<span><i style="background:${GANG_COR[i]}"></i>${escL(x.g)}</span>`).join('')
+    + `<span><i style="background:#f5c400"></i>A mesa</span><span><i class="listra"></i>Em disputa</span>`;
+  if(mudou.length) $('#mapaNota').innerHTML = `<b>Mudanças na campanha:</b> ${mudou.map(o => `${escL(curto(o.x.t))} → ${escL(o.t.dono === 'MESA' ? 'a mesa' : o.t.dono === 'DISPUTADO' ? 'em disputa' : o.t.dono)}`).join(' · ')}.`;
+}
+desenharMapa(null);
+// mapa ao vivo: lê a tabela pública "territorios" (site v3.6); sem internet, fica a situação de 1994
+fetch('https://fthwipiimuzgqzxossxw.supabase.co/rest/v1/territorios?select=distrito,dono,nota', {headers:{apikey:'sb_publishable_53S6PCUjo5mwKs2mqsvpEg_W_j6QHlf'}})
+  .then(r => r.ok ? r.json() : null).then(rows => { if(!Array.isArray(rows) || !rows.length) return; const t = {}; rows.forEach(r => t[r.distrito] = r); desenharMapa(t); }).catch(() => {});
+
+const SEQUELAS = [
+  ['Cicatriz no rosto','Marca visível para sempre. +1 em PRE para intimidar; −1 para convencer com gentileza.'],
+  ['Nariz quebrado','Ficou torto e a voz ficou anasalada. Só história.'],
+  ['Dente perdido','Sorriso de quem já brigou muito. +1 em PRE para intimidar.'],
+  ['Costela trincada','−1 de movimentação até o próximo descanso longo.'],
+  ['Dedo quebrado','−1 nos testes de AGI com as mãos até o próximo descanso longo.'],
+  ['Olho roxo','−1 nos testes de INT para perceber até o próximo descanso curto.'],
+  ['Concussão','Fica Desorientado no 1º turno do próximo combate.'],
+  ['Joelho estourado','−1 de movimentação para sempre.'],
+  ['Ombro deslocado','−2 no dano de socos até o próximo descanso longo.'],
+  ['Medo','De quem te derrubou: −1 nos testes contra ele até vencê-lo numa luta.'],
+  ['Raiva','De quem te derrubou: +1 no dano contra ele, −1 de C.A quando o enfrentar.'],
+  ['Pesadelos','O próximo descanso longo recupera só metade da E.S.'],
+  ['Marcado','−1 de reputação com a gangue que te derrubou.'],
+  ['Orgulho ferido','Volta mais forte: +1 Inspiração de combate.'],
+  ['Tendão distendido','−1 nos testes de AGI até o próximo descanso longo.'],
+  ['Mãos calejadas','Os nós dos dedos endureceram: +1 de dano em socos.'],
+  ['Lição aprendida','Você entendeu onde errou: +5 de XP.'],
+  ['Hematoma feio','Roxo do ombro à cintura por uma semana. Só história.'],
+  ['Sangue frio','Já viu o pior: +1 em PRE para manter a calma.'],
+  ['Lenda das ruas','+1 de reputação com a gangue que te derrubou.'],
+];
+$('#seqTab').innerHTML = [0, 10].map(o => `<table class="tbl"><tbody>${SEQUELAS.slice(o, o + 10).map((s, i) => `<tr><td class="n">${o + i + 1}</td><td><b>${s[0]}</b><br><span class="muted">${s[1]}</span></td></tr>`).join('')}</tbody></table>`).join('');
+
+/* guia de rua: lugar icônico, 3 rumores e 4 encontros por distrito (mesma ordem de DISTRICTS) */
+const GUIA = [
+ {l:['Cais 7 e o Mercado de Peixe','Às 4 da manhã, entre caixas de gelo e lanternas vermelhas, os Akagiri Blades conferem cada carga que chega. Quem compra peixe ali compra silêncio junto.'],
+  r:['Um barco de Okinawa atraca toda lua nova sem acender as luzes.','Shun Akamine nunca é visto fora da névoa — há quem diga que ele não existe.','Um velho do mercado afia facas que já mataram gente.'],
+  e:['Vigias dos Blades pedem identificação na entrada do cais.','Um pescador ferido pede ajuda para esconder uma caixa lacrada.','Contrabandistas rivais descarregando às pressas: ninguém pode ver.','A névoa sobe de repente e alguém começa a seguir o grupo.']},
+ {l:['O Alto-Forno nº 3','A siderúrgica fechou em 1989, mas o forno nunca esfriou de verdade: virou arena. Sexta à noite, o eco das apostas cobre o barulho dos ossos.'],
+  r:['Di Paulo lutou 40 vezes no forno e nunca caiu.','O ferro-velho compra qualquer coisa, inclusive o que sobrou de quem perdeu.','A matilha está recrutando alunos do 2º ano para uma guerra.'],
+  e:['Três Dogs cobram “pedágio” na ponte da fábrica.','Um operário demitido troca informação por comida.','Desafio aberto na arena: o prêmio é bom, os inimigos também.','Um cão enorme, de verdade, guardando o ferro-velho.']},
+ {l:['Rua das Bandeiras','Varal de bandeiras de todos os países, cheiro de dendê e churrasco, música saindo de um boteco. É o único lugar de Tenkawa onde a polícia pede licença para entrar.'],
+  r:['Dendê já mandou três gangues embora sem dar um soco.','Uma roda de capoeira treina lutadores à noite, de portas fechadas.','Alguém do Centro quer derrubar o bairro para erguer um shopping.'],
+  e:['Uma roda de capoeira chama o grupo para jogar (teste de AGI).','Moradores fecham a rua ao ver forasteiros com cara de briga.','Uma senhora oferece comida e conta um segredo do bairro.','Cobradores de outra gangue intimidando um comerciante.']},
+ {l:['Pátio dos Contêineres','Um labirinto de aço empilhado em seis andares, varrido por holofotes que giram. A Kaihou sabe o que há em cada contêiner, ou sabe quem paga para ninguém saber.'],
+  r:['Um contêiner azul não sai do porto há três anos.','Ren Ishikawa negocia com gente de fora do país.','O guindaste 12 é usado para fazer gente sumir.'],
+  e:['Estivadores com ganchos fazendo a ronda.','Uma negociação entre gangues em andamento.','Um clandestino escondido num contêiner pede ajuda.','O holofote para no grupo: alguém deu o alarme.']},
+ {l:['Hotel Imperial','Lustres, carpete vermelho e salões onde vereadores jantam com quem não deveriam. Ninguém briga no saguão; os acordos é que são sangrentos.'],
+  r:['Aiko Mizuhara tem fotos de metade da câmara municipal.','Um garçom vende o cardápio das reuniões secretas.','Um herdeiro rico procura lutadores para ser seus guarda-costas.'],
+  e:['Seguranças de terno pedem para o grupo se retirar.','Um mensageiro de luvas brancas entrega um convite sem remetente.','Um político bêbado provoca o lutador mais forte do grupo.','Fotógrafos na porta: alguém não quer aparecer no jornal.']},
+ {l:['Bilhar Lua de Prata','Fumaça, mesas verdes e pachinko piscando. Nos fundos, uma porta sem maçaneta leva ao cassino que oficialmente não existe.'],
+  r:['Kaito Aramaki ganhou o distrito numa única partida de mahjong.','Toda dívida com os Wolves vira um segredo cobrado depois.','Um crupiê marca as cartas para quem paga mais.'],
+  e:['Desafio de sinuca valendo uma informação.','Um devedor fugindo dos Wolves pede proteção.','Briga de bar com cadeiras voando.','Um informante oferece o estilo de luta de um rival.']},
+ {l:['O Ringue de Neve','Um estacionamento abandonado onde os Tora Onis lutam sem camisa, até no inverno. Quem entra só para olhar já aceitou o desafio.'],
+  r:['Ryu Nakajima mandou um lutador ao hospital por uma reverência mal feita.','Os Onis respeitam quem perde lutando até o fim.','Existe o “desafio dos cem”: cem lutas seguidas, sem descanso.'],
+  e:['Um Oni desafia o membro mais forte do grupo para um duelo.','O frio corta: −2 de E.S por cena ao ar livre.','Um aluno espancado caído na neve.','Uma iniciação da gangue: interromper é declarar guerra.']},
+ {l:['Plataforma 4 (desativada)','A estação fechou depois de um desabamento em 1987, mas os trens ainda ecoam lá embaixo. Os Yurei Ghosts usam os túneis para estar em todo lugar.'],
+  r:['Kiyomi Fujioka não é o nome verdadeiro dela.','Um túnel liga a estação ao porão da escola.','Quem entra sem guia sai três dias depois, quando sai.'],
+  e:['As luzes apagam: escuridão total.','Um mendigo conhece o caminho e cobra em cigarros.','Pichações recentes parecem falar com o grupo.','Um Ghost estava observando desde o começo.']},
+ {l:['Garagem 24 Horas','Oficina, posto e ponto de encontro: carros rebaixados, motos envenenadas e um mural com o recorde de travessia de Tenkawa.'],
+  r:['Sora Minamoto cruzou a cidade inteira em 11 minutos.','A Hokuto entrega qualquer coisa, para qualquer um, pelo preço certo.','Um piloto sumiu depois de recusar um serviço.'],
+  e:['Um racha improvisado: aposte ou saia da pista.','Uma entrega urgente precisa de escolta.','Blitz da polícia de moto.','Uma carona oferecida para o lugar errado.']},
+ {l:['Pátio de Manobras e o Vagão 38','Trilhos que não levam a lugar nenhum e vagões pintados com o símbolo dos Breakers. O vagão 38 é sala de reunião, enfermaria e cadeia.'],
+  r:['Tatsuya Kurobe dorme num vagão diferente a cada noite.','Um trem sem maquinista passa às 3h17.','Os Breakers sabotaram a linha do Centro em 1992.'],
+  e:['Emboscada entre os vagões.','Um trem de carga em movimento: lutar em cima dele pede teste de AGI.','Moleques do distrito vendem informação por moedas.','Um Breaker ferido foge de alguém.']},
+ {l:['Praça dos Carvalhos','Árvores antigas, crianças jogando beisebol e uma associação de moradores impecável. Tudo parece calmo — e é exatamente isso que a Aoi Syndicate vende.'],
+  r:['Yuuta Nanase escolhe vereadores como quem move peças de xadrez.','Um professor da escola trabalha para a Aoi.','A associação de moradores tem uma ficha de cada pessoa do bairro.'],
+  e:['Vizinhos chamam a polícia por qualquer barulho.','Um convite educado para conversar “como gente civilizada”.','Um aluno rico paga bem por um serviço sujo.','Seguranças particulares fazendo a ronda.']},
+ {l:['A Pedreira','Crateras, máquinas enferrujadas e fósseis que ninguém tirou do lugar. O Kaseki Clan vive entre as ruínas como se fosse uma fortaleza.'],
+  r:['Masaru Oogami desceu sozinho ao túnel novo e voltou diferente.','Há fósseis que colecionadores pagariam fortunas para ter.','O clã treina carregando pedras morro acima.'],
+  e:['Desabamento: teste de AGI para não ficar preso.','Catadores de sucata armados com ferramentas.','Um colecionador estrangeiro procura um guia.','Membros do clã num treino brutal: assistir ou participar?']},
+ {l:['Boulevard do Rio Dourado','Neon refletido na água, boates, karaokês e lojas de grife. Os Kin\'u Angels andam impecáveis e garantem que ninguém estrague a festa.'],
+  r:['Noboru Tatsumi nunca perdeu uma luta de terno.','Um karaokê guarda o dinheiro de três gangues.','Alguém de dentro está traindo os Angels.'],
+  e:['A boate barra quem não está bem vestido.','Uma noite de karaokê vira duelo de honra.','Um comerciante extorquido pede ajuda em segredo.','Convite para uma festa num barco no rio.']},
+ {l:['A Curva do Diabo','Estrada sinuosa no alto da colina, com Tenkawa inteira lá embaixo. Toda sexta, os Nagaoka Riders fecham a pista para os rachas.'],
+  r:['Hinata Moriyama nunca freou na Curva do Diabo.','A moto do último acidente foi sabotada.','Os Riders aceitam qualquer um que vença um racha.'],
+  e:['Racha: teste de AGI contra um piloto.','Faróis no escuro: uma gangue rival subindo a colina.','Um piloto ferido na beira da estrada.','A polícia armando uma blitz no pé da colina.']},
+ {l:['Fliperama Centro 94','Território neutro: barulho de fichas, jogos de luta e mesas onde as gangues assinam tréguas. Quem briga ali, briga contra todo mundo.'],
+  r:['Kazuo Hayashida decide quem governa cada distrito.','O subsolo do fliperama recebe as reuniões dos líderes.','Alguém quer que a próxima trégua fracasse.'],
+  e:['Um campeão de fliperama desafia o grupo valendo XP.','Líderes reunidos: olhe, mas não encoste.','Um mensageiro do Kage no Mura traz um recado.','Uma briga começa e todos olham para o grupo.']},
+];
+const blocoGuia = i => { const x = DISTRICTS[i], g = GUIA[i]; return `<article class="guia">
+  <header><span class="gn">${String(i+1).padStart(2,'0')}</span><b>${escL(curto(x.t))}</b><span class="gg">${escL(x.g)} · ${escL(x.l)}</span></header>
+  <div class="guia-c"><div><p class="lbl y">Lugar · ${escL(g.l[0])}</p><p>${escL(g.l[1])}</p><p class="lbl y" style="margin-top:2mm">Rumores</p><ul>${g.r.map(r => `<li>${escL(r)}</li>`).join('')}</ul></div>
+  <div><p class="lbl y">Encontros (1d4)</p><ol>${g.e.map(e => `<li>${escL(e)}</li>`).join('')}</ol></div></div></article>`; };
+$('#guia1').innerHTML = blocoGuia(0);
+{ const resto = DISTRICTS.map((_, i) => i).slice(1), pags = [];
+  for(let k = 0; k < resto.length; k += 3) pags.push(resto.slice(k, k + 3));
+  $('#guia').innerHTML = pags.map(p => `<section class="page flow" data-run="Guia de rua"><div class="guia-blocos">${p.map(blocoGuia).join('')}</div></section>`).join(''); }
+
 const PAGES = [...document.querySelectorAll('.book > .page, .book > div > .page')];
 const pageOf = {};
 PAGES.forEach((pg, i) => {
@@ -1375,7 +1578,8 @@ const CH = [
  ['06','Itens e consumíveis','Armas, objetos improvisados e recuperação','c-itens'],
  ['07','Classes','10 classes e seus bônus','c-classes'],
  ['08','Artes marciais','11 estilos e suas técnicas','c-artes'],
- ['09','Técnica própria','Como criar a sua, passo a passo','c-tecnica']
+ ['09','Técnica própria','Como criar a sua, passo a passo','c-tecnica'],
+ ['10','Guia de rua','Lugares, rumores e encontros dos 15 distritos','c-guia']
 ];
 $('#toc').innerHTML = CH.map(c=>`<li><span class="n">${c[0]}</span><span class="t">${c[1]}<small>${c[2]}</small></span><span class="p">${TOC[c[3]]||'—'}</span></li>`).join('');
 
